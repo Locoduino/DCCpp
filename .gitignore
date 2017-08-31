@@ -1,0 +1,11 @@
+VStudio/x64/
+VStudio/EEPROMex_VStudioMfc.sdf
+VStudio/stdafx.pch
+VStudio/EEPROMex_VStudioMfc.v12.suo
+VisualLibrary
+VStudio/*.opendb
+VStudio/.vs
+*.suo
+*.db
+
+*.log

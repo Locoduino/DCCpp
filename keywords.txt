@@ -1,0 +1,38 @@
+#######################################
+# Syntax Coloring Map For Matrix
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+EEPROM_ItemList		KEYWORD1
+CircularBuffer		KEYWORD1
+EEPROMextent		KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+readByte		KEYWORD2
+writeByte		KEYWORD2
+updateByte		KEYWORD2
+
+readAnything	KEYWORD2
+writeAnything	KEYWORD2
+updateAnything	KEYWORD2
+
+readString		KEYWORD2
+writeString		KEYWORD2
+updateString	KEYWORD2
+
+clear 			KEYWORD2
+getStartRead	KEYWORD2
+startWrite		KEYWORD2
+printStatus		KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+EEPROMLIST_EMPTY_OWNER		LITERAL1
