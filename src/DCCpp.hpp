@@ -23,13 +23,16 @@ class FunctionsState
 		bool IsActivated(byte inFunctionNumber);
 };
 
-class DCCpp
+class DCCppClass
 {
 	private:
+
 		bool programMode;
 		bool panicStopped;
 
-		static CurrentMonitor *mMonitor;
+		static volatile RegisterList mainRegs, progRegs;
+		static CurrentMonitor MainMonitor;
+		static CurrentMonitor ProgMonitor;
 
 		bool SetSpeed(volatile RegisterList *inReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft);
 		int ReadCv(volatile RegisterList *inReg, int inLocoId, byte inCvId);
@@ -37,11 +40,8 @@ class DCCpp
 		void SetFunctions(volatile RegisterList *inReg, int inLocoId, FunctionsState inStates);
 
 	public:
-		static volatile RegisterList mainRegs, progRegs;
-
-		DCCpp();
+		DCCppClass();
 		
-	public:
 		// begins
 		void begin();
 		void beginMain(uint8_t OptionalDirectionMotor, uint8_t Dummy, uint8_t SignalEnablePin, uint8_t CurrentMonitor);
@@ -68,8 +68,10 @@ class DCCpp
 #ifdef DCCPP_PRINT_DCCPP
 		static void showConfiguration();
 #endif
+
+		static DCCppClass DCCppInstance;
 };
 
-//-------------------------------------------------------------------
+#define DCCpp	DCCppClass::DCCppInstance
+
 #endif
-//-------------------------------------------------------------------

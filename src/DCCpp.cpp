@@ -17,11 +17,11 @@ EthernetServer INTERFACE(ETHERNET_PORT);                  // Create and instance
 // NEXT DECLARE GLOBAL OBJECTS TO PROCESS AND STORE DCC PACKETS AND MONITOR TRACK CURRENTS.
 // NOTE REGISTER LISTS MUST BE DECLARED WITH "VOLATILE" QUALIFIER TO ENSURE THEY ARE PROPERLY UPDATED BY INTERRUPT ROUTINES
 
-volatile RegisterList DCCpp::mainRegs(MAX_MAIN_REGISTERS);    // create list of registers for MAX_MAIN_REGISTER Main Track Packets
-volatile RegisterList DCCpp::progRegs(2);                     // create a shorter list of only two registers for Program Track Packets
+volatile RegisterList DCCppClass::mainRegs(MAX_MAIN_REGISTERS);    // create list of registers for MAX_MAIN_REGISTER Main Track Packets
+volatile RegisterList DCCppClass::progRegs(2);                     // create a shorter list of only two registers for Program Track Packets
 
-CurrentMonitor mainMonitor;  // create monitor for current on Main Track
-CurrentMonitor progMonitor;  // create monitor for current on Program Track
+CurrentMonitor DCCppClass::MainMonitor;  // create monitor for current on Main Track
+CurrentMonitor DCCppClass::ProgMonitor;  // create monitor for current on Program Track
 
 // FunctionsState
 
@@ -51,7 +51,7 @@ bool FunctionsState::IsActivated(byte inFunctionNumber)
 
 /// DCCpp class
 
-DCCpp::DCCpp() 
+DCCppClass::DCCppClass()
 { 
 	this->programMode = false; 
 	this->panicStopped = false;
@@ -65,8 +65,8 @@ DCCpp::DCCpp()
 	DCCppConfig::DirectionMotorA = 255;
 	DCCppConfig::DirectionMotorB = 255;
 
-	mainMonitor.begin(255, "");
-	progMonitor.begin(255, "");
+	MainMonitor.begin(255, "");
+	ProgMonitor.begin(255, "");
 }
 	
 static bool first = true;
@@ -75,7 +75,7 @@ static bool first = true;
 // MAIN ARDUINO LOOP
 ///////////////////////////////////////////////////////////////////////////////
 
-void DCCpp::loop()
+void DCCppClass::loop()
 {
 #ifdef USE_SERIALCOMMAND
 	SerialCommand::process();              // check for, and process, and new serial commands
@@ -91,8 +91,8 @@ void DCCpp::loop()
 
 	if (CurrentMonitor::checkTime())
 	{      // if sufficient time has elapsed since last update, check current draw on Main and Program Tracks 
-		mainMonitor.check();
-		progMonitor.check();
+		MainMonitor.check();
+		ProgMonitor.check();
 	}
 
 #ifdef USE_SENSOR
@@ -123,7 +123,7 @@ void DCCpp::loop()
 // beginMain(255, DCC_SIGNAL_PIN_MAIN, 3, A0);
 // beginProg(255, DCC_SIGNAL_PIN_PROG, 11, A1);
 
-void DCCpp::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
+void DCCppClass::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
 {
 	DCCppConfig::DirectionMotorA = inDirectionMotor;
 	DCCppConfig::SignalEnablePinMain = inSignalEnable;	// PWM
@@ -133,7 +133,7 @@ void DCCpp::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSignalE
 	if (DCCppConfig::SignalEnablePinMain == 255)
 		return;
 
-	mainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
+	MainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
 
 	// CONFIGURE TIMER_1 TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC1B INTERRUPT PINS
 
@@ -178,7 +178,7 @@ void DCCpp::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSignalE
 	digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
 }
 
-void DCCpp::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
+void DCCppClass::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
 {
 	DCCppConfig::DirectionMotorB = inDirectionMotor;
 	DCCppConfig::SignalEnablePinProg = inSignalEnable;
@@ -188,7 +188,7 @@ void DCCpp::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_t inS
 	if (DCCppConfig::SignalEnablePinProg == 255)
 		return;
 
-	progMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
+	ProgMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
 
 	// CONFIGURE EITHER TIMER_0 (UNO) OR TIMER_3 (MEGA) TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC0B (UNO) OR OC3B (MEGA) INTERRUPT PINS
 
@@ -276,7 +276,7 @@ void DCCpp::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_t inS
 	digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
 }
 
-void DCCpp::begin()
+void DCCppClass::begin()
 {
 #ifdef SDCARD_CS
 	pinMode(SDCARD_CS, OUTPUT);
@@ -478,7 +478,7 @@ void DCCpp::showConfiguration()
 }
 #endif
 
-void DCCpp::PanicStop(bool inStop)
+void DCCppClass::PanicStop(bool inStop)
 {
 	this->panicStopped = inStop;
 
@@ -495,19 +495,19 @@ void DCCpp::PanicStop(bool inStop)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, inStop ? LOW : HIGH);
 }
 
-void DCCpp::StartProgramMode()
+void DCCppClass::StartProgramMode()
 {
 	this->programMode = true;
 }
 
-void DCCpp::EndProgramMode()
+void DCCppClass::EndProgramMode()
 {
 	this->programMode = false;
 }
 
 /***************************** Driving functions */
 
-bool DCCpp::SetSpeed(volatile RegisterList *inReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
+bool DCCppClass::SetSpeed(volatile RegisterList *inReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
 {
 	int val = 0;
 
@@ -532,7 +532,7 @@ bool DCCpp::SetSpeed(volatile RegisterList *inReg, int inLocoId, int inStepsNumb
 	return true;
 }
 
-void DCCpp::SetFunctions(volatile RegisterList *inpRegs, int inLocoId, FunctionsState inStates)
+void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int inLocoId, FunctionsState inStates)
 {
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("DCCpp SetFunctions for loco"));
@@ -633,7 +633,7 @@ void DCCpp::SetFunctions(volatile RegisterList *inpRegs, int inLocoId, Functions
 		inpRegs->setFunction(inLocoId, 223, fiveByte2);
 }
 
-void DCCpp::WriteCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
+void DCCppClass::WriteCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
 {
 	inReg->writeCVByte(inCv, inValue, 100, 101);
 
@@ -645,7 +645,7 @@ void DCCpp::WriteCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte i
 #endif
 }
 
-int DCCpp::ReadCv(volatile RegisterList *inReg, int inLocoId, byte inCv)
+int DCCppClass::ReadCv(volatile RegisterList *inReg, int inLocoId, byte inCv)
 {
 	return inReg->readCVmain(1, 100+inCv, 100+inCv);
 }
