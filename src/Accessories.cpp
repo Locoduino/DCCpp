@@ -10,7 +10,7 @@ Part of DCC++ BASE STATION for the Arduino
 #include "Accessories.h"
 
 #ifdef USE_ACCESSORIES
-#include "SerialCommand.h"
+#include "TextCommand.h"
 #include "DCCpp_Uno.h"
 #include "EEStore.h"
 #include <EEPROM.h>
@@ -22,7 +22,7 @@ void Turnout::activate(int s){
   char c[20];
   data.tStatus=(s>0);                                    // if s>0 set turnout=ON, else if zero or negative set turnout=OFF
   sprintf(c,"a %d %d %d",data.address,data.subAddress,data.tStatus);
-  SerialCommand::parse(c);
+  TextCommand::parse(c);
 #ifdef USE_EEPROM
   if(num>0)
     EEPROM.put(num,data.tStatus);

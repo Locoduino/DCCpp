@@ -9,8 +9,8 @@ Part of DCC++ BASE STATION for the Arduino
 
 // See SerialCommand::parse() below for defined text commands.
 
-#include "SerialCommand.h"
-#ifdef USE_SERIALCOMMAND
+#include "TextCommand.h"
+#ifdef USE_TEXTCOMMAND
 
 #include "DCCpp_Uno.h"
 #include "Comm.h"
@@ -19,14 +19,14 @@ extern int __heap_start, *__brkval;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-char SerialCommand::commandString[MAX_COMMAND_LENGTH+1];
-volatile RegisterList *SerialCommand::mRegs;
-volatile RegisterList *SerialCommand::pRegs;
-CurrentMonitor *SerialCommand::mMonitor;
+char TextCommand::commandString[MAX_COMMAND_LENGTH+1];
+volatile RegisterList *TextCommand::mRegs;
+volatile RegisterList *TextCommand::pRegs;
+CurrentMonitor *TextCommand::mMonitor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SerialCommand::init(volatile RegisterList *_mRegs, volatile RegisterList *_pRegs, CurrentMonitor *_mMonitor){
+void TextCommand::init(volatile RegisterList *_mRegs, volatile RegisterList *_pRegs, CurrentMonitor *_mMonitor){
   mRegs=_mRegs;
   pRegs=_pRegs;
   mMonitor=_mMonitor;
@@ -35,7 +35,7 @@ void SerialCommand::init(volatile RegisterList *_mRegs, volatile RegisterList *_
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SerialCommand::process(){
+void TextCommand::process(){
   char c;
     
   #if COMM_TYPE == 0
@@ -72,7 +72,7 @@ void SerialCommand::process(){
    
 ///////////////////////////////////////////////////////////////////////////////
 
-void SerialCommand::parse(char *com){
+void TextCommand::parse(char *com){
   
   switch(com[0]){
 

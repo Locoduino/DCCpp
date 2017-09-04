@@ -23,7 +23,7 @@ class FunctionsState
 		bool IsActivated(byte inFunctionNumber);
 };
 
-class DCCpp
+class DCCppClass
 {
 	private:
 		bool programMode;
@@ -39,7 +39,7 @@ class DCCpp
 	public:
 		static volatile RegisterList mainRegs, progRegs;
 
-		DCCpp();
+		DCCppClass();
 		
 	public:
 		// begins
@@ -68,7 +68,11 @@ class DCCpp
 #ifdef DCCPP_PRINT_DCCPP
 		static void showConfiguration();
 #endif
+
+		static DCCppClass DCCppInstance;
 };
+
+#define DCCpp	DCCppClass::DCCppInstance
 
 //-------------------------------------------------------------------
 #endif

@@ -14,11 +14,13 @@ byte mac[] = MAC_ADDRESS;                                // Create MAC address (
 EthernetServer INTERFACE(ETHERNET_PORT);                  // Create and instance of an EnternetServer
 #endif
 
+DCCppClass DCCppClass::DCCppInstance;
+
 // NEXT DECLARE GLOBAL OBJECTS TO PROCESS AND STORE DCC PACKETS AND MONITOR TRACK CURRENTS.
 // NOTE REGISTER LISTS MUST BE DECLARED WITH "VOLATILE" QUALIFIER TO ENSURE THEY ARE PROPERLY UPDATED BY INTERRUPT ROUTINES
 
-volatile RegisterList DCCpp::mainRegs(MAX_MAIN_REGISTERS);    // create list of registers for MAX_MAIN_REGISTER Main Track Packets
-volatile RegisterList DCCpp::progRegs(2);                     // create a shorter list of only two registers for Program Track Packets
+volatile RegisterList DCCppClass::mainRegs(MAX_MAIN_REGISTERS);    // create list of registers for MAX_MAIN_REGISTER Main Track Packets
+volatile RegisterList DCCppClass::progRegs(2);                     // create a shorter list of only two registers for Program Track Packets
 
 CurrentMonitor mainMonitor;  // create monitor for current on Main Track
 CurrentMonitor progMonitor;  // create monitor for current on Program Track
@@ -51,7 +53,7 @@ bool FunctionsState::IsActivated(byte inFunctionNumber)
 
 /// DCCpp class
 
-DCCpp::DCCpp() 
+DCCppClass::DCCppClass()
 { 
 	this->programMode = false; 
 	this->panicStopped = false;
@@ -75,10 +77,10 @@ static bool first = true;
 // MAIN ARDUINO LOOP
 ///////////////////////////////////////////////////////////////////////////////
 
-void DCCpp::loop()
+void DCCppClass::loop()
 {
-#ifdef USE_SERIALCOMMAND
-	SerialCommand::process();              // check for, and process, and new serial commands
+#ifdef USE_TEXTCOMMAND
+	TextCommand::process();              // check for, and process, and new serial commands
 #endif
 
 	if (first)
@@ -123,7 +125,7 @@ void DCCpp::loop()
 // beginMain(255, DCC_SIGNAL_PIN_MAIN, 3, A0);
 // beginProg(255, DCC_SIGNAL_PIN_PROG, 11, A1);
 
-void DCCpp::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
+void DCCppClass::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
 {
 	DCCppConfig::DirectionMotorA = inDirectionMotor;
 	DCCppConfig::SignalEnablePinMain = inSignalEnable;	// PWM
@@ -178,7 +180,7 @@ void DCCpp::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSignalE
 	digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
 }
 
-void DCCpp::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
+void DCCppClass::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
 {
 	DCCppConfig::DirectionMotorB = inDirectionMotor;
 	DCCppConfig::SignalEnablePinProg = inSignalEnable;
@@ -276,7 +278,7 @@ void DCCpp::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_t inS
 	digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
 }
 
-void DCCpp::begin()
+void DCCppClass::begin()
 {
 #ifdef SDCARD_CS
 	pinMode(SDCARD_CS, OUTPUT);
@@ -336,7 +338,7 @@ void DCCpp::begin()
 
 #define DCC_SIGNAL(R,N) \
   if(R.currentBit==R.currentReg->activePacket->nBits){    /* IF no more bits in this DCC Packet */ \
-    R.currentBit=0;                                       /*   reset current bit pointer and determine which Register and Packet to process next--- */ \
+	R.currentBit=0;                                       /*   reset current bit pointer and determine which Register and Packet to process next--- */ \
 	if (R.nRepeat>0 && R.currentReg == R.reg) {               /*   IF current Register is first Register AND should be repeated */ \
 		R.nRepeat--;                                        /*     decrement repeat count; result is this same Packet will be repeated */ \
 	} \
@@ -356,10 +358,10 @@ void DCCpp::begin()
 	\
 	if (R.currentReg->activePacket->buf[R.currentBit / 8] & R.bitMask[R.currentBit % 8]) {     /* IF bit is a ONE */ \
 		OCR ## N ## A = DCC_ONE_BIT_TOTAL_DURATION_TIMER ## N;                               /*   set OCRA for timer N to full cycle duration of DCC ONE bit */ \
-    OCR ## N ## B=DCC_ONE_BIT_PULSE_DURATION_TIMER ## N;                               /*   set OCRB for timer N to half cycle duration of DCC ONE but */ \
+	OCR ## N ## B=DCC_ONE_BIT_PULSE_DURATION_TIMER ## N;                               /*   set OCRB for timer N to half cycle duration of DCC ONE but */ \
   } else{                                                                              /* ELSE it is a ZERO */ \
-    OCR ## N ## A=DCC_ZERO_BIT_TOTAL_DURATION_TIMER ## N;                              /*   set OCRA for timer N to full cycle duration of DCC ZERO bit */ \
-    OCR ## N ## B=DCC_ZERO_BIT_PULSE_DURATION_TIMER ## N;                              /*   set OCRB for timer N to half cycle duration of DCC ZERO bit */ \
+	OCR ## N ## A=DCC_ZERO_BIT_TOTAL_DURATION_TIMER ## N;                              /*   set OCRA for timer N to full cycle duration of DCC ZERO bit */ \
+	OCR ## N ## B=DCC_ZERO_BIT_PULSE_DURATION_TIMER ## N;                              /*   set OCRB for timer N to half cycle duration of DCC ZERO bit */ \
   }                                                                                    /* END-ELSE */ \
 	\
 	R.currentBit++;     /* point to next bit in current Packet */
@@ -368,19 +370,19 @@ void DCCpp::begin()
 // NOW USE THE ABOVE MACRO TO CREATE THE CODE FOR EACH INTERRUPT
 
 ISR(TIMER1_COMPB_vect) {              // set interrupt service for OCR1B of TIMER-1 which flips direction bit of Motor Shield Channel A controlling Main Track
-	DCC_SIGNAL(DCCpp::mainRegs, 1)
+	DCC_SIGNAL(DCCppClass::mainRegs, 1)
 }
 
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)      // Configuration for UNO
 
 ISR(TIMER0_COMPB_vect) {              // set interrupt service for OCR1B of TIMER-0 which flips direction bit of Motor Shield Channel B controlling Prog Track
-	DCC_SIGNAL(DCCpp::progRegs, 0)
+	DCC_SIGNAL(DCCppClass::progRegs, 0)
 }
 
 #else      // Configuration for MEGA
 
 ISR(TIMER3_COMPB_vect) {              // set interrupt service for OCR3B of TIMER-3 which flips direction bit of Motor Shield Channel B controlling Prog Track
-	DCC_SIGNAL(DCCpp::progRegs, 3)
+	DCC_SIGNAL(DCCppClass::progRegs, 3)
 }
 
 #endif
@@ -390,7 +392,7 @@ ISR(TIMER3_COMPB_vect) {              // set interrupt service for OCR3B of TIME
 // PRINT CONFIGURATION INFO TO SERIAL PORT REGARDLESS OF INTERFACE TYPE
 // - ACTIVATED ON STARTUP IF SHOW_CONFIG_PIN IS TIED HIGH 
 
-void DCCpp::showConfiguration() 
+void DCCppClass::showConfiguration()
 {
 	int mac_address[] = MAC_ADDRESS;
 
@@ -478,7 +480,7 @@ void DCCpp::showConfiguration()
 }
 #endif
 
-void DCCpp::PanicStop(bool inStop)
+void DCCppClass::PanicStop(bool inStop)
 {
 	this->panicStopped = inStop;
 
@@ -495,19 +497,19 @@ void DCCpp::PanicStop(bool inStop)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, inStop ? LOW : HIGH);
 }
 
-void DCCpp::StartProgramMode()
+void DCCppClass::StartProgramMode()
 {
 	this->programMode = true;
 }
 
-void DCCpp::EndProgramMode()
+void DCCppClass::EndProgramMode()
 {
 	this->programMode = false;
 }
 
 /***************************** Driving functions */
 
-bool DCCpp::SetSpeed(volatile RegisterList *inReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
+bool DCCppClass::SetSpeed(volatile RegisterList *inReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
 {
 	int val = 0;
 
@@ -532,7 +534,7 @@ bool DCCpp::SetSpeed(volatile RegisterList *inReg, int inLocoId, int inStepsNumb
 	return true;
 }
 
-void DCCpp::SetFunctions(volatile RegisterList *inpRegs, int inLocoId, FunctionsState inStates)
+void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int inLocoId, FunctionsState inStates)
 {
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("DCCpp SetFunctions for loco"));
@@ -633,7 +635,7 @@ void DCCpp::SetFunctions(volatile RegisterList *inpRegs, int inLocoId, Functions
 		inpRegs->setFunction(inLocoId, 223, fiveByte2);
 }
 
-void DCCpp::WriteCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
+void DCCppClass::WriteCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
 {
 	inReg->writeCVByte(inCv, inValue, 100, 101);
 
@@ -645,7 +647,7 @@ void DCCpp::WriteCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte i
 #endif
 }
 
-int DCCpp::ReadCv(volatile RegisterList *inReg, int inLocoId, byte inCv)
+int DCCppClass::ReadCv(volatile RegisterList *inReg, int inLocoId, byte inCv)
 {
 	return inReg->readCVmain(1, 100+inCv, 100+inCv);
 }

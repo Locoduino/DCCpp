@@ -9,7 +9,7 @@ Part of DCC++ BASE STATION for the Arduino
 #include "Outputs.h"
 
 #ifdef USE_ACCESSORIES
-#include "SerialCommand.h"
+#include "TextCommand.h"
 #include "DCCpp_Uno.h"
 #include "EEStore.h"
 #include <EEPROM.h>

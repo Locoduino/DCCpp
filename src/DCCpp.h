@@ -235,9 +235,15 @@ If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you wil
 /**Comment this line to avoid using and compiling Sensors.*/
 #define USE_SENSOR
 /**Comment this line to avoid using and compiling Serial commands.*/
-#define USE_SERIALCOMMAND
+#define USE_TEXTCOMMAND
 /**Comment this line to avoid using and compiling Ethernet shield handling.*/
-#define USE_ETHERNET
+//#define USE_ETHERNET
+/**Comment this line to avoid using Serial object for commands.*/
+#define USE_SERIAL
+
+#if defined(USE_SERIAL) && defined(USE_ETHERNET)
+#error "The two interfaces Serial and Ethernet cannot be used togother !"
+#endif
 
 /////////////////////////////////////
 
@@ -259,8 +265,8 @@ If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you wil
 #ifdef USE_SENSOR
 #include "Sensor.h"
 #endif
-#ifdef USE_SERIALCOMMAND
-#include "SerialCommand.h"
+#ifdef USE_TEXTCOMMAND
+#include "TextCommand.h"
 #endif
 
 #include "DCCpp.hpp"
