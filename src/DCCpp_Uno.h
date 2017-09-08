@@ -11,7 +11,7 @@ Part of DCC++ BASE STATION for the Arduino
 #ifndef DCCpp_Uno_h
 #define DCCpp_Uno_h
 
-#include "Config.h"
+#include "DCCpp.h"
 
 /////////////////////////////////////////////////////////////////////////////////////
 // RELEASE VERSION
@@ -23,14 +23,12 @@ Part of DCC++ BASE STATION for the Arduino
 // SELECT COMMUNICATION INTERACE
 /////////////////////////////////////////////////////////////////////////////////////
 
-#if COMM_INTERFACE == 0
+#ifdef USE_SERIAL
 
-  #define COMM_TYPE 0
   #define INTERFACE Serial
 
-#elif (COMM_INTERFACE==1) || (COMM_INTERFACE==2) || (COMM_INTERFACE==3)
+#elif defined(USE_ETHERNET_CC) || (USE_ETHERNET_ORG) || (USE_ETHERNET_SEEED)
 
-  #define COMM_TYPE 1
   #define INTERFACE eServer
   #define SDCARD_CS 4
   
@@ -57,7 +55,7 @@ Part of DCC++ BASE STATION for the Arduino
 //    CSUM: a checksum byte that is required to be the final byte in any DCC packet
 //    REPEAT: the number of times the DCC packet was re-transmitted to the tracks after its iniital transmission
  
-#define SHOW_PACKETS  0       // set to zero to disable printing of every packet for select main operations track commands
+//#define SHOW_PACKETS  0       // set to zero to disable printing of every packet for select main operations track commands
 
 /////////////////////////////////////////////////////////////////////////////////////
 

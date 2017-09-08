@@ -25,12 +25,10 @@ ARE REQUIRED.  SPACES ANYWHERE ELSE ARE IGNORED.  A SPACE BETWEEN THE SINGLE-CHA
 COMMAND AND THE FIRST PARAMETER IS ALSO NOT REQUIRED.*/
 struct TextCommand{
   static char commandString[MAX_COMMAND_LENGTH+1];
-  static volatile RegisterList *mRegs, *pRegs;
-  static CurrentMonitor *mMonitor;
   static void init(volatile RegisterList *, volatile RegisterList *, CurrentMonitor *);
   static void parse(char *);
   static void process();
-}; // SerialCommand
+}; // TextCommand
   
 #endif
 #endif

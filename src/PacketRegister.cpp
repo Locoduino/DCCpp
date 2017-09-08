@@ -29,12 +29,14 @@ void Register::initPackets(){
 } // Register::initPackets
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+	
 RegisterList::RegisterList(int maxNumRegs){
   this->maxNumRegs=maxNumRegs;
   reg=(Register *)calloc((maxNumRegs+1),sizeof(Register));
-  for(int i=0;i<=maxNumRegs;i++)
-    reg[i].initPackets();
+  for(int i=0;i<=maxNumRegs;i++){
+	reg[i].cab = -1; // undefined cab
+	reg[i].initPackets();
+  }
   regMap=(Register **)calloc((maxNumRegs+1),sizeof(Register *));
   speedTable=(int *)calloc((maxNumRegs+1),sizeof(int *));
   currentReg=reg;
@@ -45,6 +47,14 @@ RegisterList::RegisterList(int maxNumRegs){
   nRepeat=0;
 } // RegisterList::RegisterList
   
+int RegisterList::getReg(int cab) volatile {
+	for (int i = 0; i < this->maxNumRegs; i++)
+		if (reg[i].cab == cab)
+			return i;
+
+	return -1;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 // LOAD DCC PACKET INTO TEMPORARY REGISTER 0, OR PERMANENT REGISTERS 1 THROUGH DCC_PACKET_QUEUE_MAX (INCLUSIVE)
@@ -66,12 +76,12 @@ void RegisterList::loadPacket(int nReg, byte *b, int nBytes, int nRepeat, int pr
   Register *r=regMap[nReg];           // set Register to be updated
   Packet *p=r->updatePacket;          // set Packet in the Register to be updated
   byte *buf=p->buf;                   // set byte buffer in the Packet to be updated
-          
+		  
   b[nBytes]=b[0];                        // copy first byte into what will become the checksum byte  
   for(int i=1;i<nBytes;i++)              // XOR remaining bytes into checksum byte
-    b[nBytes]^=b[i];
+	b[nBytes]^=b[i];
   nBytes++;                              // increment number of bytes in packet to include checksum byte
-      
+	  
   buf[0]=0xFF;                        // first 8 bytes of 22-byte preamble
   buf[1]=0xFF;                        // second 8 bytes of 22-byte preamble
   buf[2]=0xFC + bitRead(b[0],7);      // last 6 bytes of 22-byte preamble + data start bit + b[0], bit 7
@@ -81,23 +91,23 @@ void RegisterList::loadPacket(int nReg, byte *b, int nBytes, int nRepeat, int pr
   buf[6]=b[2]<<7;                     // b[2], bit 0
   
   if(nBytes==3){
-    p->nBits=49;
+	p->nBits=49;
   } else{
-    buf[6]+=b[3]>>2;                  // b[3], bits 7-2
-    buf[7]=b[3]<<6;                   // b[3], bit 1-0
-    if(nBytes==4){
-      p->nBits=58;
-    } else{
-      buf[7]+=b[4]>>3;                // b[4], bits 7-3
-      buf[8]=b[4]<<5;                 // b[4], bits 2-0
-      if(nBytes==5){
-        p->nBits=67;
-      } else{
-        buf[8]+=b[5]>>4;              // b[5], bits 7-4
-        buf[9]=b[5]<<4;               // b[5], bits 3-0
-        p->nBits=76;
-      } // >5 bytes
-    } // >4 bytes
+	buf[6]+=b[3]>>2;                  // b[3], bits 7-2
+	buf[7]=b[3]<<6;                   // b[3], bit 1-0
+	if(nBytes==4){
+	  p->nBits=58;
+	} else{
+	  buf[7]+=b[4]>>3;                // b[4], bits 7-3
+	  buf[8]=b[4]<<5;                 // b[4], bits 2-0
+	  if(nBytes==5){
+		p->nBits=67;
+	  } else{
+		buf[8]+=b[5]>>4;              // b[5], bits 7-4
+		buf[9]=b[5]<<4;               // b[5], bits 3-0
+		p->nBits=76;
+	  } // >5 bytes
+	} // >4 bytes
   } // >3 bytes
   
   nextReg=r;
@@ -105,20 +115,22 @@ void RegisterList::loadPacket(int nReg, byte *b, int nBytes, int nRepeat, int pr
   maxLoadedReg=max(maxLoadedReg,nextReg);
   
 #ifdef DDC_DEBUG_MODE
-  if(printFlag && SHOW_PACKETS)       // for debugging purposes
-    printPacket(nReg,b,nBytes,nRepeat);  
+  if(printFlag)       // for debugging purposes
+		printPacket(nReg,b,nBytes,nRepeat);  
 #endif
 
 } // RegisterList::loadPacket
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RegisterList::setThrottle(int nReg, int cab, int tSpeed, int tDirection) volatile 
+void RegisterList::setThrottle(int cab, int tSpeed, int tDirection) volatile 
 {
 	byte b[5];                      // save space for checksum byte
 	byte nB = 0;
 
-	if (nReg<1 || nReg>maxNumRegs)
+	int nReg = this->getReg(cab);
+
+	if (nReg<0)
 		return;
 
 	if (cab>127)
@@ -154,9 +166,9 @@ void RegisterList::setThrottle(char *s) volatile
   int tDirection;
   
   if(sscanf(s,"%d %d %d %d",&nReg,&cab,&tSpeed,&tDirection)!=4)
-    return;
+	return;
 
-  this->setThrottle(nReg, cab, tSpeed, tDirection);
+  this->setThrottle(cab, tSpeed, tDirection);
 } // RegisterList::setThrottle(string)
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -165,6 +177,11 @@ void RegisterList::setFunction(int cab, int fByte, int eByte) volatile
 {
 	byte b[5];                      // save space for checksum byte
 	byte nB = 0;
+
+	int nReg = this->getReg(cab);
+
+	if (nReg<0)
+		return;
 
 	if (cab>127)
 		b[nB++] = highByte(cab) | 0xC0;      // convert train number into a two-byte address
@@ -179,8 +196,7 @@ void RegisterList::setFunction(int cab, int fByte, int eByte) volatile
 		b[nB++] = eByte;
 	}
 
-	loadPacket(0, b, nB, 4, 1);
-
+	loadPacket(nReg, b, nB, 4, 1);
 } // RegisterList::setFunction(ints)
 
 void RegisterList::setFunction(char *s) volatile 
@@ -510,7 +526,7 @@ void RegisterList::writeCVBit(char *s) volatile
   int bNum, bValue, cv, callBack, callBackSub;
 
   if(sscanf(s,"%d %d %d %d %d",&cv,&bNum,&bValue,&callBack,&callBackSub) != 5)          // cv = 1-1024
-    return;
+	return;
 
   this->writeCVBit(cv, bNum, bValue, callBack, callBackSub);
 } // RegisterList::writeCVBit(string)
@@ -524,6 +540,11 @@ void RegisterList::writeCVByteMain(int cab, int cv, int bValue) volatile
 
 	cv--;
 
+	int nReg = this->getReg(cab);
+
+	if (nReg<0)
+		return;
+
 	if (cab>127)
 		b[nB++] = highByte(cab) | 0xC0;      // convert train number into a two-byte address
 
@@ -532,7 +553,7 @@ void RegisterList::writeCVByteMain(int cab, int cv, int bValue) volatile
 	b[nB++] = lowByte(cv);
 	b[nB++] = bValue;
 
-	loadPacket(0, b, nB, 4);
+	loadPacket(nReg, b, nB, 4);
 
 } // RegisterList::writeCVByteMain(ints)
 
@@ -560,6 +581,11 @@ void RegisterList::writeCVBitMain(int cab, int cv, int bNum, int bValue) volatil
 	bValue = bValue % 2;
 	bNum = bNum % 8;
 
+	int nReg = this->getReg(cab);
+
+	if (nReg<0)
+		return;
+
 	if (cab>127)
 		b[nB++] = highByte(cab) | 0xC0;      // convert train number into a two-byte address
 
@@ -568,7 +594,7 @@ void RegisterList::writeCVBitMain(int cab, int cv, int bNum, int bValue) volatil
 	b[nB++] = lowByte(cv);
 	b[nB++] = 0xF0 + bValue * 8 + bNum;
 
-	loadPacket(0, b, nB, 4);
+	loadPacket(nReg, b, nB, 4);
 
 } // RegisterList::writeCVBitMain(ints)
 
@@ -595,8 +621,8 @@ void RegisterList::printPacket(int nReg, byte *b, int nBytes, int nRepeat) volat
   INTERFACE.print(nReg);
   INTERFACE.print(":");
   for(int i=0;i<nBytes;i++){
-    INTERFACE.print(" ");
-    INTERFACE.print(b[i],HEX);
+	INTERFACE.print(" ");
+	INTERFACE.print(b[i],HEX);
   }
   INTERFACE.print(" / ");
   INTERFACE.print(nRepeat);

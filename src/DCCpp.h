@@ -236,10 +236,18 @@ If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you wil
 #define USE_SENSOR
 /**Comment this line to avoid using and compiling Serial commands.*/
 #define USE_TEXTCOMMAND
-/**Comment this line to avoid using and compiling Ethernet shield handling.*/
-//#define USE_ETHERNET
+/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip handling.*/
+//#define USE_ETHERNET_WIZNET_5100
+/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip handling.*/
+//#define USE_ETHERNET_WIZNET_5500
+/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip handling.*/
+//#define USE_ETHERNET_WIZNET_5200
 /**Comment this line to avoid using Serial object for commands.*/
 #define USE_SERIAL
+
+#if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200)
+#define USE_ETHERNET
+#endif
 
 #if defined(USE_SERIAL) && defined(USE_ETHERNET)
 #error "The two interfaces Serial and Ethernet cannot be used togother !"

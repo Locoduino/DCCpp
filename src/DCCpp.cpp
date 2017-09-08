@@ -9,7 +9,7 @@ description: <DCCpp class>
 
 // SET UP COMMUNICATIONS INTERFACE - FOR STANDARD SERIAL, NOTHING NEEDS TO BE DONE
 
-#if COMM_TYPE == 1
+#ifdef USE_ETHERNET
 byte mac[] = MAC_ADDRESS;                                // Create MAC address (to be used for DHCP when initializing server)
 EthernetServer INTERFACE(ETHERNET_PORT);                  // Create and instance of an EnternetServer
 #endif
@@ -22,8 +22,8 @@ DCCppClass DCCppClass::DCCppInstance;
 volatile RegisterList DCCppClass::mainRegs(MAX_MAIN_REGISTERS);    // create list of registers for MAX_MAIN_REGISTER Main Track Packets
 volatile RegisterList DCCppClass::progRegs(2);                     // create a shorter list of only two registers for Program Track Packets
 
-CurrentMonitor mainMonitor;  // create monitor for current on Main Track
-CurrentMonitor progMonitor;  // create monitor for current on Program Track
+CurrentMonitor DCCppClass::MainMonitor;  // create monitor for current on Main Track
+CurrentMonitor DCCppClass::ProgMonitor;  // create monitor for current on Program Track
 
 // FunctionsState
 
@@ -67,8 +67,8 @@ DCCppClass::DCCppClass()
 	DCCppConfig::DirectionMotorA = 255;
 	DCCppConfig::DirectionMotorB = 255;
 
-	mainMonitor.begin(255, "");
-	progMonitor.begin(255, "");
+	MainMonitor.begin(255, "");
+	ProgMonitor.begin(255, "");
 }
 	
 static bool first = true;
@@ -93,8 +93,8 @@ void DCCppClass::loop()
 
 	if (CurrentMonitor::checkTime())
 	{      // if sufficient time has elapsed since last update, check current draw on Main and Program Tracks 
-		mainMonitor.check();
-		progMonitor.check();
+		MainMonitor.check();
+		ProgMonitor.check();
 	}
 
 #ifdef USE_SENSOR
@@ -135,7 +135,7 @@ void DCCppClass::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSi
 	if (DCCppConfig::SignalEnablePinMain == 255)
 		return;
 
-	mainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
+	MainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
 
 	// CONFIGURE TIMER_1 TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC1B INTERRUPT PINS
 
@@ -190,7 +190,7 @@ void DCCppClass::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_
 	if (DCCppConfig::SignalEnablePinProg == 255)
 		return;
 
-	progMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
+	ProgMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
 
 	// CONFIGURE EITHER TIMER_0 (UNO) OR TIMER_3 (MEGA) TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC0B (UNO) OR OC3B (MEGA) INTERRUPT PINS
 
@@ -289,7 +289,7 @@ void DCCppClass::begin()
 	EEStore::init();                                          // initialize and load Turnout and Sensor definitions stored in EEPROM
 #endif
 
-#if COMM_TYPE == 1
+#ifdef USE_ETHERNET
 #ifdef IP_ADDRESS
 	Ethernet.begin(mac, IP_ADDRESS);           // Start networking using STATIC IP Address
 #else
@@ -387,7 +387,7 @@ ISR(TIMER3_COMPB_vect) {              // set interrupt service for OCR3B of TIME
 
 #endif
 
-#ifdef DDC_DEBUG_MODE
+#ifdef DCCPP_PRINT_DCCPP
 ///////////////////////////////////////////////////////////////////////////////
 // PRINT CONFIGURATION INFO TO SERIAL PORT REGARDLESS OF INTERFACE TYPE
 // - ACTIVATED ON STARTUP IF SHOW_CONFIG_PIN IS TIED HIGH 
@@ -434,7 +434,7 @@ void DCCppClass::showConfiguration()
 		Serial.print(F("\n     CURRENT: "));
 		Serial.print(DCCppConfig::CurrentMonitorProg);
 	}
-#ifdef USE_ACCESSORIES
+#if defined(USE_ACCESSORIES) && defined(USE_EEPROM)
 	Serial.print(F("\n\nNUM TURNOUTS: "));
 	Serial.print(EEStore::eeStore->data.nTurnouts);
 	Serial.print(F("\n     SENSORS: "));
@@ -444,9 +444,9 @@ void DCCppClass::showConfiguration()
 #endif
 	
 	Serial.print(F("\n\nINTERFACE:    "));
-#if COMM_TYPE == 0
+#ifdef USE_SERIAL
 	Serial.print(F("SERIAL"));
-#elif COMM_TYPE == 1
+#elif defined(USE_ETHERNET)
 	Serial.print(COMM_SHIELD_NAME);
 	Serial.print(F("\nMAC ADDRESS:  "));
 	for (int i = 0; i<5; i++) {
@@ -509,7 +509,7 @@ void DCCppClass::EndProgramMode()
 
 /***************************** Driving functions */
 
-bool DCCppClass::SetSpeed(volatile RegisterList *inReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
+bool DCCppClass::SetThrottle(volatile RegisterList *inpRegs, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
 {
 	int val = 0;
 
@@ -529,7 +529,7 @@ bool DCCppClass::SetSpeed(volatile RegisterList *inReg, int inLocoId, int inStep
 	Serial.println(F(" )"));
 #endif
 
-	this->mainRegs.setThrottle(1, inLocoId, val, inToLeft);
+	inpRegs->setThrottle(inLocoId, val, inToLeft);
 
 	return true;
 }

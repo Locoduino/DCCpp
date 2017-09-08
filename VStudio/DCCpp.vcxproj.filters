@@ -61,6 +61,9 @@
       <Filter>Commanders</Filter>
     </ClCompile>
     <ClCompile Include="..\src\TextCommand.cpp" />
+    <ClCompile Include="..\..\Commanders\VStudio\ButtonsCommanderKeyboard.cpp">
+      <Filter>Commanders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Accessories.h" />
@@ -139,6 +142,9 @@
       <Filter>Commanders</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TextCommand.h" />
+    <ClInclude Include="..\..\Commanders\VStudio\ButtonsCommanderKeyboard.hpp">
+      <Filter>Commanders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TestExe.ino" />
