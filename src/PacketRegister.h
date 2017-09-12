@@ -27,7 +27,6 @@ struct Packet{
 }; // Packet
 
 struct Register{
-  int cab;
   Packet packet[2];
   Packet *activePacket;
   Packet *updatePacket;
@@ -56,10 +55,6 @@ struct RegisterList{
   void setAccessory(char *) volatile;
   void writeTextPacket(char *) volatile;
 
-  inline int setCab(int nReg, int cab) volatile { int old = reg[nReg].cab; reg[nReg].cab = cab; return old; }
-  inline int resetCab(int nReg) volatile { return this->setCab(nReg, -1); }
-  int getReg(int cab) volatile;
-
   int readCVraw(int cv, int callBack, int callBackSub, bool FromProg) volatile;
 
   void readCV(char *) volatile;
@@ -70,8 +65,8 @@ struct RegisterList{
   void writeCVByteMain(char *) volatile;
   void writeCVBitMain(char *s) volatile;
 
-  void setThrottle(int cab, int tSpeed, int tDirection) volatile;
-  void setFunction(int cab, int fByte, int eByte) volatile;
+  void setThrottle(int nReg, int cab, int tSpeed, int tDirection) volatile;
+  void setFunction(int nReg, int cab, int fByte, int eByte) volatile;
   void setAccessory(int aAdd, int aNum, int activate) volatile;
   void writeTextPacket(int nReg, byte *b, int nBytes) volatile;
   void readCV(int cv, int callBack, int callBackSub) volatile;

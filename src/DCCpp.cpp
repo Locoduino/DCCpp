@@ -25,9 +25,14 @@ volatile RegisterList DCCppClass::progRegs(2);                     // create a s
 CurrentMonitor DCCppClass::MainMonitor;  // create monitor for current on Main Track
 CurrentMonitor DCCppClass::ProgMonitor;  // create monitor for current on Program Track
 
-// FunctionsState
+// *********************************************************** FunctionsState
 
 FunctionsState::FunctionsState()
+{
+	this->Clear();
+}
+
+void FunctionsState::Clear()
 {
 	// Clear all functions
 	this->activeFlags[0] = 0;
@@ -50,6 +55,22 @@ bool FunctionsState::IsActivated(byte inFunctionNumber)
 {
 	return bitRead(this->activeFlags[inFunctionNumber / 8], inFunctionNumber % 8);
 }
+
+void FunctionsState::printActivated()
+{
+	for (int i = 0; i < 32; i++)
+	{
+		if (this->IsActivated(i))
+		{
+			Serial.print(i);
+			Serial.print(" ");
+		}
+	}
+
+	Serial.println("");
+}
+
+// *********************************************************** end of FunctionsState
 
 /// DCCpp class
 
@@ -396,14 +417,14 @@ void DCCppClass::showConfiguration()
 {
 	int mac_address[] = MAC_ADDRESS;
 
-	Serial.print(F("\n*** DCC++ CONFIGURATION ***\n"));
+	Serial.println(F("\n*** DCC++ CONFIGURATION ***\n"));
 
 	Serial.print(F("\nVERSION:      "));
-	Serial.print(VERSION);
+	Serial.println(VERSION);
 	Serial.print(F("\nCOMPILED:     "));
 	Serial.print(__DATE__);
 	Serial.print(F(" "));
-	Serial.print(__TIME__);
+	Serial.println(__TIME__);
 
 	//Serial.print(F("\nARDUINO:      "));
 	//Serial.print(ARDUINO_TYPE);
@@ -420,7 +441,7 @@ void DCCppClass::showConfiguration()
 		Serial.print(F("\n      ENABLE(PWM): "));
 		Serial.print(DCCppConfig::SignalEnablePinMain);
 		Serial.print(F("\n     CURRENT: "));
-		Serial.print(DCCppConfig::CurrentMonitorMain);
+		Serial.println(DCCppConfig::CurrentMonitorMain);
 	}
 
 	if (DCCppConfig::SignalEnablePinProg!= 255)
@@ -432,7 +453,7 @@ void DCCppClass::showConfiguration()
 		Serial.print(F("\n      ENABLE(PWM): "));
 		Serial.print(DCCppConfig::SignalEnablePinProg);
 		Serial.print(F("\n     CURRENT: "));
-		Serial.print(DCCppConfig::CurrentMonitorProg);
+		Serial.println(DCCppConfig::CurrentMonitorProg);
 	}
 #if defined(USE_ACCESSORIES) && defined(USE_EEPROM)
 	Serial.print(F("\n\nNUM TURNOUTS: "));
@@ -440,12 +461,12 @@ void DCCppClass::showConfiguration()
 	Serial.print(F("\n     SENSORS: "));
 	Serial.print(EEStore::eeStore->data.nSensors);
 	Serial.print(F("\n     OUTPUTS: "));
-	Serial.print(EEStore::eeStore->data.nOutputs);
+	Serial.println(EEStore::eeStore->data.nOutputs);
 #endif
 	
 	Serial.print(F("\n\nINTERFACE:    "));
 #ifdef USE_SERIAL
-	Serial.print(F("SERIAL"));
+	Serial.println(F("SERIAL"));
 #elif defined(USE_ETHERNET)
 	Serial.print(COMM_SHIELD_NAME);
 	Serial.print(F("\nMAC ADDRESS:  "));
@@ -456,7 +477,7 @@ void DCCppClass::showConfiguration()
 	Serial.print(mac_address[5], HEX);
 	Serial.print(F("\nPORT:         "));
 	Serial.print(ETHERNET_PORT);
-	Serial.print(F("\nIP ADDRESS:   "));
+	Serial.println(F("\nIP ADDRESS:   "));
 
 #ifdef IP_ADDRESS
 	Ethernet.begin(mac, IP_ADDRESS);           // Start networking using STATIC IP Address
@@ -467,16 +488,16 @@ void DCCppClass::showConfiguration()
 	Serial.print(Ethernet.localIP());
 
 #ifdef IP_ADDRESS
-	Serial.print(F(" (STATIC)"));
+	Serial.println(F(" (STATIC)"));
 #else
-	Serial.print(F(" (DHCP)"));
+	Serial.println(F(" (DHCP)"));
 #endif
 
 #endif
-	Serial.print(F("\n\nPROGRAM HALTED - PLEASE RESTART ARDUINO"));
+//	Serial.print(F("\n\nPROGRAM HALTED - PLEASE RESTART ARDUINO"));
 
-	while (true);
-		Serial.println("");
+//	while (true);
+//		Serial.println("");
 }
 #endif
 
@@ -509,7 +530,7 @@ void DCCppClass::EndProgramMode()
 
 /***************************** Driving functions */
 
-bool DCCppClass::SetThrottle(volatile RegisterList *inpRegs, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
+bool DCCppClass::SetThrottle(volatile RegisterList *inpRegs, int nReg,  int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
 {
 	int val = 0;
 
@@ -529,18 +550,13 @@ bool DCCppClass::SetThrottle(volatile RegisterList *inpRegs, int inLocoId, int i
 	Serial.println(F(" )"));
 #endif
 
-	inpRegs->setThrottle(inLocoId, val, inToLeft);
+	inpRegs->setThrottle(nReg, inLocoId, val, inToLeft);
 
 	return true;
 }
 
-void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int inLocoId, FunctionsState inStates)
+void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId, FunctionsState inStates)
 {
-#ifdef DCCPP_DEBUG_MODE
-	Serial.print(F("DCCpp SetFunctions for loco"));
-	Serial.println(inLocoId);
-#endif
-
 	byte flags = 0;
 
 	byte oneByte1 = 128;	// Group one functions F0-F4
@@ -624,15 +640,22 @@ void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int inLocoId, Func
 	}
 
 	if (flags & 1)
-		inpRegs->setFunction(inLocoId, oneByte1, -1);
+		inpRegs->setFunction(nReg, inLocoId, oneByte1, -1);
 	if (flags & 2)
-		inpRegs->setFunction(inLocoId, twoByte1, -1);
+		inpRegs->setFunction(nReg, inLocoId, twoByte1, -1);
 	if (flags & 4)
-		inpRegs->setFunction(inLocoId, threeByte1, -1);
+		inpRegs->setFunction(nReg, inLocoId, threeByte1, -1);
 	if (flags & 8)
-		inpRegs->setFunction(inLocoId, 222, fourByte2);
+		inpRegs->setFunction(nReg, inLocoId, 222, fourByte2);
 	if (flags & 16)
-		inpRegs->setFunction(inLocoId, 223, fiveByte2);
+		inpRegs->setFunction(nReg, inLocoId, 223, fiveByte2);
+
+#ifdef DCCPP_DEBUG_MODE
+	Serial.print(F("DCCpp SetFunctions for loco"));
+	Serial.print(inLocoId);
+	Serial.print(" / Activated : ");
+	inStates.printActivated();
+#endif
 }
 
 void DCCppClass::WriteCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
