@@ -56,6 +56,7 @@ bool FunctionsState::IsActivated(byte inFunctionNumber)
 	return bitRead(this->activeFlags[inFunctionNumber / 8], inFunctionNumber % 8);
 }
 
+#ifdef DCCPP_DEBUG_MODE
 void FunctionsState::printActivated()
 {
 	for (int i = 0; i < 32; i++)
@@ -69,6 +70,7 @@ void FunctionsState::printActivated()
 
 	Serial.println("");
 }
+#endif
 
 // *********************************************************** end of FunctionsState
 

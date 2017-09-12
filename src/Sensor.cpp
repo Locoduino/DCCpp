@@ -11,7 +11,9 @@ Part of DCC++ BASE STATION for the Arduino
 #ifdef USE_SENSOR
 #include "DCCpp_Uno.h"
 #include "EEStore.h"
+#ifdef USE_EEPROM
 #include "EEPROM.h"
+#endif
 #include "Comm.h"
 
 ///////////////////////////////////////////////////////////////////////////////

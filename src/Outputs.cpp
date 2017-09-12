@@ -12,7 +12,9 @@ Part of DCC++ BASE STATION for the Arduino
 #include "TextCommand.h"
 #include "DCCpp_Uno.h"
 #include "EEStore.h"
-#include <EEPROM.h>
+#ifdef USE_EEPROM
+#include "EEPROM.h"
+#endif
 #include "Comm.h"
 
 ///////////////////////////////////////////////////////////////////////////////

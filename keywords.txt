@@ -6,33 +6,55 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-EEPROM_ItemList		KEYWORD1
-CircularBuffer		KEYWORD1
-EEPROMextent		KEYWORD1
+DCCpp			KEYWORD1
+Accessories		KEYWORD1
+CurrentMonitor		KEYWORD1
+EEStore			KEYWORD1
+Outputs			KEYWORD1
+Packet			KEYWORD1
+Register		KEYWORD1
+RegisterList		KEYWORD1
+Sensor			KEYWORD1
+TextCommand		KEYWORD1
+FunctionsState		KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-readByte		KEYWORD2
-writeByte		KEYWORD2
-updateByte		KEYWORD2
+Clear		KEYWORD2
+Activate	KEYWORD2
+Inactivate	KEYWORD2
+IsActivated	KEYWORD2
 
-readAnything	KEYWORD2
-writeAnything	KEYWORD2
-updateAnything	KEYWORD2
+begin		KEYWORD2
+beginMain	KEYWORD2
+beginProg	KEYWORD2
 
-readString		KEYWORD2
-writeString		KEYWORD2
-updateString	KEYWORD2
+SetSpeedMain		KEYWORD2
+ReadCvMain		KEYWORD2
+WriteCvMain		KEYWORD2
+SetFunctionsMain	KEYWORD2
 
-clear 			KEYWORD2
-getStartRead	KEYWORD2
-startWrite		KEYWORD2
-printStatus		KEYWORD2
+SetSpeedProg		KEYWORD2
+ReadCvProg		KEYWORD2
+WriteCvProg		KEYWORD2
+SetFunctionsProg	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
 
-EEPROMLIST_EMPTY_OWNER		LITERAL1
+USE_ACCESSORIES			LITERAL1
+USE_EEPROM			LITERAL1
+USE_OUTPUT			LITERAL1
+USE_SENSOR			LITERAL1
+USE_TEXTCOMMAND			LITERAL1
+USE_ETHERNET			LITERAL1
+USE_ETHERNET_WIZNET_5100	LITERAL1
+USE_ETHERNET_WIZNET_5500	LITERAL1
+USE_ETHERNET_WIZNET_5200	LITERAL1
+USE_SERIAL			LITERAL1
+DCCPP_DEBUG_MODE		LITERAL1
+DCCPP_DEBUG_VERBOSE_MODE	LITERAL1
+DCCPP_PRINT_DCCPP		LITERAL1
