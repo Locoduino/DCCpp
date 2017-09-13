@@ -86,9 +86,9 @@ void Turnout::show(int n){
       INTERFACE.print(tt->data.subAddress);
     }
     if(tt->data.tStatus==0)
-       INTERFACE.print(" 0>");
+       INTERFACE.println(" 0>");
      else
-       INTERFACE.print(" 1>"); 
+       INTERFACE.println(" 1>"); 
   }
 }
 

@@ -1,9 +1,10 @@
 #include "Arduino.h"
 
-//#include "C:\Users\Thierry\Desktop\TrafficSignal\TrafficSignal.cpp"
-//#include "C:\Users\Thierry\Desktop\TrafficSignal\TrafficSignal.ino"
+//#include "..\..\libraries\DCCpp\examples\MiniDcc\MiniDcc.ino"
+#include "..\..\libraries\DCCpp\examples\MaxiDcc\MaxiDcc.ino"
+//#include "..\..\libraries\DCCpp\examples\SerialDcc\SerialDcc.ino"
 
-#include "TestExe.ino"
+//#include "TestExe.ino"
 
 using namespace System;
 using namespace System::Windows::Forms;

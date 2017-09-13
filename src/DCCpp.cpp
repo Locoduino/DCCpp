@@ -271,8 +271,11 @@ void DCCppClass::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_
 #define DCC_ONE_BIT_TOTAL_DURATION_TIMER3 1855
 #define DCC_ONE_BIT_PULSE_DURATION_TIMER3 927
 
-	pinMode(DCCppConfig::DirectionMotorB, INPUT);      // ensure this pin is not active! Direction will be controlled by DCC SIGNAL instead (below)
-	digitalWrite(DCCppConfig::DirectionMotorB, LOW);
+	if (DCCppConfig::DirectionMotorB != 255)
+	{
+		pinMode(DCCppConfig::DirectionMotorB, INPUT);      // ensure this pin is not active! Direction will be controlled by DCC SIGNAL instead (below)
+		digitalWrite(DCCppConfig::DirectionMotorB, LOW);
+	}
 
 	pinMode(DCC_SIGNAL_PIN_PROG, OUTPUT);      // THIS ARDUINO OUTPUT PIN MUST BE PHYSICALLY CONNECTED TO THE PIN FOR DIRECTION-B OF MOTOR CHANNEL-B
 

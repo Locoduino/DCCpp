@@ -121,7 +121,7 @@ void Sensor::show(){
     INTERFACE.print(tt->data.pin);
     INTERFACE.print(" ");
     INTERFACE.print(tt->data.pullUp);
-    INTERFACE.print(">");
+    INTERFACE.println(">");
   }
 }
 

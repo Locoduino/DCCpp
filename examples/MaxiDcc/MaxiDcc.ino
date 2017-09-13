@@ -1,7 +1,7 @@
 /*************************************************************
 project: <Dc/Dcc Controller>
 author: <Thierry PARIS>
-description: <Minimalist Dcc Controller sample>
+description: <Dcc++ Controller sample with all options>
 *************************************************************/
 
 #include "Commanders.h"
@@ -21,7 +21,6 @@ description: <Minimalist Dcc Controller sample>
 #define EVENT_FUNCTION1	10
 #define EVENT_ENCODER	11
 
-
 ButtonsCommanderPush buttonSelect;
 ButtonsCommanderEncoder buttonEncoder;
 ButtonsCommanderPush buttonCancel;
@@ -29,13 +28,16 @@ ButtonsCommanderPush buttonEmergency;
 ButtonsCommanderSwitchOnePin buttonF0;
 ButtonsCommanderSwitchOnePin buttonF1;
 
-
 // in this sample, only one loco is driven...
 int locoId;	// DCC id for this loco
 int locoStepsNumber;	// 14, 28 or 128
 int locoSpeed;	// Current speed
 bool locoDirectionToLeft;	// current direction.
 FunctionsState locoFunctions;	// Current functions
+
+Turnout *acc1, *acc2;
+Output *output1, *output2;
+Sensor *sensor1, *sensor2;
 
 void setup()
 {
@@ -50,12 +52,22 @@ void setup()
 
 	DCCpp.begin();
 	DCCpp.beginMain(255, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
+	DCCpp.beginProg(255, DCC_SIGNAL_PIN_PROG, 3, A5);    // Dc: Dir, Pwm, current sensor
 
 	locoId = 3;
 	locoStepsNumber = 128;
 	locoSpeed = 0;
 	locoDirectionToLeft = false;
 	//locoFunctions.Clear();	// Already done by the constructor...
+
+	acc1 = Turnout::create(1, 100, 10);
+	acc2 = Turnout::create(2, 200, 20);
+
+	output1 = Output::create(1, 5, B110);
+	output2 = Output::create(2, 6, B110);
+
+	sensor1 = Sensor::create(1, 7, 8);
+	sensor2 = Sensor::create(2, 9, 10);
 }
 
 void loop()

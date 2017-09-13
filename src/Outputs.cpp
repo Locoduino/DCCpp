@@ -83,9 +83,9 @@ void Output::show(int n){
       INTERFACE.print(tt->data.iFlag);
     }
     if(tt->data.oStatus==0)
-       INTERFACE.print(" 0>");
-     else
-       INTERFACE.print(" 1>"); 
+       INTERFACE.println(" 0>");
+    else
+       INTERFACE.println(" 1>"); 
   }
 }
 
