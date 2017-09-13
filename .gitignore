@@ -9,3 +9,5 @@ VStudio/.vs
 *.db
 
 *.log
+
+\.vs/
