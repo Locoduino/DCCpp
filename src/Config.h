@@ -50,14 +50,14 @@ Part of DCC++ BASE STATION for the Arduino
 // DEFINE PORT TO USE FOR ETHERNET COMMUNICATIONS INTERFACE
 //
 
-#define ETHERNET_PORT 2560
+//#define ETHERNET_PORT 2560
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
 // DEFINE MAC ADDRESS ARRAY FOR ETHERNET COMMUNICATIONS INTERFACE
 //
 
-#define MAC_ADDRESS {  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEF }
+//#define MAC_ADDRESS {  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEF }
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
@@ -100,6 +100,14 @@ Part of DCC++ BASE STATION for the Arduino
 
 struct DCCppConfig
 {
+#ifdef DCCPP_PRINT_DCCPP
+#ifndef USE_ETHERNET
+	static IPAddress EthernetIp;
+	static uint8_t *EthernetMac;
+	static int EthernetPort;
+#endif
+#endif
+
 	static byte SignalEnablePinMain;// PWM : *_SIGNAL_ENABLE_PIN_MAIN
 	static byte CurrentMonitorMain;	// Current sensor : *_CURRENT_MONITOR_PIN_MAIN
 

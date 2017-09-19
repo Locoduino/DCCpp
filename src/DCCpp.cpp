@@ -315,20 +315,28 @@ void DCCppClass::begin()
 	EEStore::init();                                          // initialize and load Turnout and Sensor definitions stored in EEPROM
 #endif
 
-#ifdef USE_ETHERNET
-#ifdef IP_ADDRESS
-	Ethernet.begin(mac, IP_ADDRESS);           // Start networking using STATIC IP Address
-#else
-	Ethernet.begin(mac);                      // Start networking using DHCP to get an IP Address
-#endif
-	INTERFACE.begin();
-#endif
-
 #ifdef DCCPP_DEBUG_MODE
 	pinMode(LED_BUILTIN, OUTPUT);
 #endif
 
 } // begin
+
+#ifdef USE_ETHERNET
+void DCCppClass::beginEthernet(uint8_t *inMac, IPAddress inIpAddress, int inPort)
+{
+	DCCppConfig::EthernetIp = inIpAddress;
+	for (int i = 0; i < 6; i++)
+		DCCppConfig::EthernetMac[i] = inMac[i];
+	DCCppConfig::EthernetPort = inPort;
+
+	if (inIpAddress == NULL)
+		Ethernet.begin(inMac);                      // Start networking using DHCP to get an IP Address
+	else
+		Ethernet.begin(inMac, inIpAddress);           // Start networking using STATIC IP Address
+
+	INTERFACE.begin();
+} // beginEthernet
+#endif
 
   ///////////////////////////////////////////////////////////////////////////////
   // DEFINE THE INTERRUPT LOGIC THAT GENERATES THE DCC SIGNAL
@@ -420,8 +428,6 @@ ISR(TIMER3_COMPB_vect) {              // set interrupt service for OCR3B of TIME
 
 void DCCppClass::showConfiguration()
 {
-	int mac_address[] = MAC_ADDRESS;
-
 	Serial.println(F("\n*** DCC++ CONFIGURATION ***\n"));
 
 	Serial.print(F("\nVERSION:      "));
@@ -473,23 +479,23 @@ void DCCppClass::showConfiguration()
 #ifdef USE_SERIAL
 	Serial.println(F("SERIAL"));
 #elif defined(USE_ETHERNET)
-	Serial.print(COMM_SHIELD_NAME);
+	Serial.print(F("ETHERNET "));
 	Serial.print(F("\nMAC ADDRESS:  "));
 	for (int i = 0; i<5; i++) {
-		Serial.print(mac_address[i], HEX);
+		Serial.print(DCCppConfig::EthernetMac[i], HEX);
 		Serial.print(F(":"));
 	}
-	Serial.print(mac_address[5], HEX);
+	Serial.print(DCCppConfig::EthernetMac[5], HEX);
 	Serial.print(F("\nPORT:         "));
-	Serial.print(ETHERNET_PORT);
+	Serial.print(DCCppConfig::EthernetPort);
 	Serial.println(F("\nIP ADDRESS:   "));
 
-#ifdef IP_ADDRESS
+/*#ifdef IP_ADDRESS
 	Ethernet.begin(mac, IP_ADDRESS);           // Start networking using STATIC IP Address
 #else
 	Ethernet.begin(mac);                      // Start networking using DHCP to get an IP Address
 #endif     
-
+*/
 	Serial.print(Ethernet.localIP());
 
 #ifdef IP_ADDRESS
