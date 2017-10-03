@@ -1,18 +1,18 @@
 /**********************************************************************
 
-Accessories.h
+Turnout.h renamed from Accessories.h
 COPYRIGHT (c) 2013-2016 Gregg E. Berman
 
 Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
-#ifndef Accessories_h
-#define Accessories_h
+#ifndef Turnout_h
+#define Turnout_h
 
 #include "DCCpp.h"
 
-#ifdef USE_ACCESSORIES
+#ifdef USE_TURNOUT
 #include "Arduino.h"
 
 struct TurnoutData {

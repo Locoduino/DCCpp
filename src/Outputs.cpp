@@ -8,7 +8,7 @@ Part of DCC++ BASE STATION for the Arduino
 **********************************************************************/
 #include "Outputs.h"
 
-#ifdef USE_ACCESSORIES
+#ifdef USE_TURNOUT
 #include "TextCommand.h"
 #include "DCCpp_Uno.h"
 #include "EEStore.h"

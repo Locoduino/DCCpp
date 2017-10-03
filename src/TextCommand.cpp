@@ -165,7 +165,7 @@ void TextCommand::parse(char *com){
  *   
  *   returns: <H ID THROW> or <X> if turnout ID does not exist
  *   
- *   *** SEE ACCESSORIES.CPP FOR COMPLETE INFO ON THE DIFFERENT VARIATIONS OF THE "T" COMMAND
+ *   *** SEE TURNOUT.CPP FOR COMPLETE INFO ON THE DIFFERENT VARIATIONS OF THE "T" COMMAND
  *   USED TO CREATE/EDIT/REMOVE/SHOW TURNOUT DEFINITIONS
  */
 	  Turnout::parse(com+1);

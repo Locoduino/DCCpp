@@ -466,7 +466,7 @@ void DCCppClass::showConfiguration()
 		Serial.print(F("\n     CURRENT: "));
 		Serial.println(DCCppConfig::CurrentMonitorProg);
 	}
-#if defined(USE_ACCESSORIES) && defined(USE_EEPROM)
+#if defined(USE_TURNOUT) && defined(USE_EEPROM)
 	Serial.print(F("\n\nNUM TURNOUTS: "));
 	Serial.print(EEStore::eeStore->data.nTurnouts);
 	Serial.print(F("\n     SENSORS: "));

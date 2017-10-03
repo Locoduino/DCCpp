@@ -11,3 +11,5 @@ VStudio/.vs
 *.log
 
 \.vs/
+
+*.filters

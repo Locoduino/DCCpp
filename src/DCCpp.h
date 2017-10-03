@@ -149,9 +149,9 @@ DCC++ BASE STATION in split into multiple modules, each with its own header file
                     and Arduino loop() functions, as well as interrput code for OC0B and OC1B.
                     Also includes declarations of optional array of Turn-Outs and optional array of Sensors 
 
-  SerialCommand:    contains methods to read and interpret text commands from the serial line,
+  TextCommand:      contains methods to read and interpret text commands from the serial line,
                     process those instructions, and, if necessary call appropriate Packet RegisterList methods
-                    to update either the Main Track or Programming Track Packet Registers
+                    to update either the Main Track or Programming Track Packet Registers. (old name SerialCommand)
 
   PacketRegister:   contains methods to load, store, and update Packet Registers with DCC instructions
 
@@ -159,13 +159,13 @@ DCC++ BASE STATION in split into multiple modules, each with its own header file
                     CHANNEL B of the Arduino Motor Shield's, and shut down power if a short-circuit overload
                     is detected
 
-  Accessories:      contains methods to operate and store the status of any optionally-defined turnouts controlled
-                    by a DCC stationary accessory decoder.
+  Turnout:          contains methods to operate and store the status of any optionally-defined turnouts controlled
+                    by a DCC stationary accessory decoder. (old name Accessories)
 
   Sensor:           contains methods to monitor and report on the status of optionally-defined infrared
                     sensors embedded in the Main Track and connected to various pins on the Arudino Uno
 
-  Outputs:          contains methods to configure one or more Arduino pins as an output for your own custom use
+  Output:           contains methods to configure one or more Arduino pins as an output for your own custom use
 
   EEStore:          contains methods to store, update, and load various DCC settings and status
                     (e.g. the states of all defined turnouts) in the EEPROM for recall after power-up
@@ -212,12 +212,12 @@ information messages on console. These messages can take a lot of memory, so be 
 your program if you activate debug mode.*/
 #define DCCPP_DEBUG_MODE
 /** If this is defined, the Verbose mode lets you see all actions done by the  library, but with a real flood of
-text to the console... It has no effect if ACCESSORIES_DEBUG_MODE is not activated.*/
+text to the console... It has no effect if DCCPP_DEBUG_MODE is not activated.*/
 #define DCCPP_DEBUG_VERBOSE_MODE
 /** If this is defined, the function Accessories::printAccessories() will become available. This is useful to try
 to understand why a port, or an accessory is not corretly defined.
 This function uses a lot of memory, so activate it only if necessary, and be careful about your program's memory.
-You can use the define PRINT_DCCPP() in your sketch instead of a call to Accessories::printAccessories().
+You can use the define PRINT_DCCPP() in your sketch instead of a call to DCCpp.showConfiguration().
 If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you will not have a compilation error.*/
 #define DCCPP_PRINT_DCCPP
 /** If this is defined, the state of all the library will not be saved to EEPROM.*/
@@ -226,8 +226,8 @@ If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you wil
 //  Inclusion area
 //
 
-/**Comment this line to avoid using and compiling Accessories.*/
-#define USE_ACCESSORIES
+/**Comment this line to avoid using and compiling Turnout.*/
+#define USE_TURNOUT
 /**Comment this line to avoid using and compiling EEPROM saving.*/
 //#define USE_EEPROM
 /**Comment this line to avoid using and compiling Outputs.*/
@@ -261,8 +261,8 @@ If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you wil
 #include "Config.h"
 #include "Comm.h"
 
-#ifdef USE_ACCESSORIES
-#include "Accessories.h"
+#ifdef USE_TURNOUT
+#include "Turnout.h"
 #endif
 #ifdef USE_EEPROM
 #include "EEStore.h"
