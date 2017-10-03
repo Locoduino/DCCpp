@@ -23,18 +23,15 @@ Part of DCC++ BASE STATION for the Arduino
 // SELECT COMMUNICATION INTERACE
 /////////////////////////////////////////////////////////////////////////////////////
 
-#ifdef USE_SERIAL
-
-  #define INTERFACE Serial
-
-#elif defined(USE_ETHERNET_CC) || (USE_ETHERNET_ORG) || (USE_ETHERNET_SEEED)
+#if defined(USE_ETHERNET_CC) || (USE_ETHERNET_ORG) || (USE_ETHERNET_SEEED)
 
   #define INTERFACE eServer
   #define SDCARD_CS 4
   
 #else
 
-  #error CANNOT COMPILE - Please select a proper value for COMM_INTERFACE in CONFIG.H file
+  // define INTERFACE as serial in all cases to be able at least to print diagnostic messages on console
+  #define INTERFACE Serial
 
 #endif
 

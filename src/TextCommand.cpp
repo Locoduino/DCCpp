@@ -373,7 +373,7 @@ void TextCommand::parse(char *com){
 	  INTERFACE.print(">");
 
 	  INTERFACE.print("<N ");
-	  #ifdef USE_SERIAl
+	  #ifdef USE_SERIAL
 		INTERFACE.print("SERIAL");
 	  #elif defined(USE_ETHERNET)
 		INTERFACE.print("ETHERNET");

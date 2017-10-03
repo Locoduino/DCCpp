@@ -7,15 +7,20 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
+#include "DCCpp.h"
+
 #ifdef USE_TURNOUT
+
 #include "Turnout.h"
-#include "TextCommand.h"
 #include "DCCpp_Uno.h"
-#include "EEStore.h"
+#include "Comm.h"
+#ifdef USE_TEXTCOMMAND
+#include "TextCommand.h"
 #ifdef USE_EEPROM
+#include "EEStore.h"
 #include "EEPROM.h"
 #endif
-#include "Comm.h"
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,12 +33,14 @@ void Turnout::activate(int s){
   if(num>0)
     EEPROM.put(num,data.tStatus);
 #endif
+#ifdef DCCPP_DEBUG_MODE
   INTERFACE.print("<H");
   INTERFACE.print(data.id);
   if(data.tStatus==0)
     INTERFACE.print(" 0>");
   else
     INTERFACE.print(" 1>"); 
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,7 +58,9 @@ void Turnout::remove(int n){
   for(tt=firstTurnout;tt!=NULL && tt->data.id!=n;pp=tt,tt=tt->nextTurnout);
 
   if(tt==NULL){
-    INTERFACE.print("<X>");
+#ifdef DCCPP_DEBUG_MODE
+	  INTERFACE.print("<X>");
+#endif
     return;
   }
   
@@ -62,8 +71,12 @@ void Turnout::remove(int n){
 
   free(tt);
 
+#ifdef DCCPP_DEBUG_MODE
   INTERFACE.print("<O>");
+#endif
 }
+
+#ifdef DCCPP_PRINT_DCCPP
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -90,6 +103,9 @@ void Turnout::show(int n){
        INTERFACE.println(" 1>"); 
   }
 }
+#endif
+
+#ifdef USE_TEXTCOMMAND
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -103,8 +119,10 @@ void Turnout::parse(char *c){
       t=get(n);
       if(t!=NULL)
         t->activate(s);
-      else
+#ifdef DCCPP_DEBUG_MODE
+	  else
         INTERFACE.print("<X>");
+#endif
       break;
 
     case 3:                     // argument is string with id number of turnout followed by an address and subAddress
@@ -154,6 +172,7 @@ void Turnout::store(){
   }
 }
 #endif
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -172,8 +191,10 @@ Turnout *Turnout::create(int id, int add, int subAdd, int v){
   }
 
   if(tt==NULL){       // problem allocating memory
+#ifdef DCCPP_DEBUG_MODE
     if(v==1)
       INTERFACE.print("<X>");
+#endif
     return(tt);
   }
   
@@ -181,8 +202,10 @@ Turnout *Turnout::create(int id, int add, int subAdd, int v){
   tt->data.address=add;
   tt->data.subAddress=subAdd;
   tt->data.tStatus=0;
+#ifdef DCCPP_DEBUG_MODE
   if(v==1)
     INTERFACE.print("<O>");
+#endif
   return(tt);
   
 }
