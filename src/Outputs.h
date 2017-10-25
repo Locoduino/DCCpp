@@ -103,9 +103,9 @@ struct Output{
   int num;
   struct OutputData data;
 
-  void begin(int id, int add, int subAdd, int v = 0);
-  void set(int id, int add, int subAdd, int v = 0);
-  void activate(int id);
+  void begin(int id, int pin, int iFlag);
+  void set(int id, int pin, int iFlag);
+  void activate(int s = 1);
 
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
   static Output *firstOutput;
@@ -127,7 +127,7 @@ struct Output{
 
 #if defined(USE_TEXTCOMMAND)
   static void parse(char *c);
-  static Output *create(int, int, int, int = 0);
+  static Output *create(int, int, int);
 #endif
 
 }; // Output

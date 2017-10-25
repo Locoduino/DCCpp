@@ -19,7 +19,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Output::begin(int id, int pin, int iFlag, int v) {
+void Output::begin(int id, int pin, int iFlag) {
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
 #ifdef DCCPP_DEBUG_MODE
 	if (EEStore::eeStore != NULL)
@@ -38,29 +38,26 @@ void Output::begin(int id, int pin, int iFlag, int v) {
 	}
 #endif
 
-	this->set(id, pin, iFlag, v);
+	this->set(id, pin, iFlag);
 
 #ifdef DCCPP_DEBUG_MODE
-	if (v == 1) {
-		INTERFACE.println("<O>");
-	}
+	INTERFACE.println("<O>");
 #endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Output::set(int id, int pin, int iFlag, int v) {
+void Output::set(int id, int pin, int iFlag) {
 	this->data.id = id;
 	this->data.pin = pin;
 	this->data.iFlag = iFlag;
 	this->data.oStatus = 0;
 
-	if (v == 1) {
-		// sets status to 0 (INACTIVE) is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag  
-		this->data.oStatus = bitRead(this->data.iFlag, 1) ? bitRead(this->data.iFlag, 2) : 0;
-		digitalWrite(this->data.pin, this->data.oStatus ^ bitRead(this->data.iFlag, 0));
-		pinMode(this->data.pin, OUTPUT);
-	}
+	pinMode(this->data.pin, OUTPUT);
+
+	// sets status to 0 (INACTIVE) is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag  
+	this->data.oStatus = bitRead(this->data.iFlag, 1) ? bitRead(this->data.iFlag, 2) : 0;
+	digitalWrite(this->data.pin, this->data.oStatus ^ bitRead(this->data.iFlag, 0));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -139,7 +136,7 @@ void Output::load() {
 
 	for (int i = 0; i<EEStore::eeStore->data.nOutputs; i++) {
 #ifdef VISUALSTUDIO
-		EEPROM.put(EEStore::pointer(), (void *)&data, sizeof(OutputData));	// ArduiEmulator version...
+		EEPROM.get(EEStore::pointer(), (void *)&data, sizeof(OutputData));	// ArduiEmulator version...
 #else
 		EEPROM.get(EEStore::pointer(), data);
 #endif
@@ -214,44 +211,19 @@ void Output::parse(char *c){
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Output *Output::create(int id, int pin, int iFlag, int v){
-  Output *tt;
-  
-  if(firstOutput==NULL){
-    firstOutput=(Output *)calloc(1,sizeof(Output));
-    tt=firstOutput;
-  } else if((tt=get(id))==NULL){
-    tt=firstOutput;
-    while(tt->nextOutput!=NULL)
-      tt=tt->nextOutput;
-    tt->nextOutput=(Output *)calloc(1,sizeof(Output));
-    tt=tt->nextOutput;
-  }
+Output *Output::create(int id, int pin, int iFlag){
+	Output *tt = new Output();
 
-  if(tt==NULL){       // problem allocating memory
+	if (tt == NULL) {       // problem allocating memory
 #ifdef DCCPP_PRINT_DCCPP
-	if(v==1)
-      INTERFACE.println("<X>");
+		INTERFACE.println("<X>");
 #endif
-    return(tt);
-  }
+		return(tt);
+	}
+
+	tt->begin(id, pin, iFlag);
   
-  tt->data.id=id;
-  tt->data.pin=pin;
-  tt->data.iFlag=iFlag;
-  tt->data.oStatus=0;
-  
-  if(v==1){
-    tt->data.oStatus=bitRead(tt->data.iFlag,1)?bitRead(tt->data.iFlag,2):0;      // sets status to 0 (INACTIVE) is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag  
-    digitalWrite(tt->data.pin,tt->data.oStatus ^ bitRead(tt->data.iFlag,0));
-    pinMode(tt->data.pin,OUTPUT);
-#ifdef DCCPP_PRINT_DCCPP
-	INTERFACE.println("<O>");
-#endif
-  }
-  
-  return(tt);
-  
+	return(tt);
 }
 
 #endif USE_TEXTCOMMAND

@@ -26,7 +26,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Turnout::begin(int id, int add, int subAdd, int v) {
+void Turnout::begin(int id, int add, int subAdd) {
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
 #ifdef DCCPP_DEBUG_MODE
 	if (EEStore::eeStore != NULL)
@@ -45,17 +45,16 @@ void Turnout::begin(int id, int add, int subAdd, int v) {
 	}
 #endif
 
-	this->set(id, add, subAdd, v);
+	this->set(id, add, subAdd);
 
 #ifdef DCCPP_DEBUG_MODE
-	if (v == 1)
-		INTERFACE.println("<O>");
+	INTERFACE.println("<O>");
 #endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Turnout::set(int id, int add, int subAdd, int v) {
+void Turnout::set(int id, int add, int subAdd) {
 	this->data.id = id;
 	this->data.address = add;
 	this->data.subAddress = subAdd;
@@ -153,7 +152,7 @@ void Turnout::load() {
 			INTERFACE.println(F("Turnout::begin() must be called BEFORE Turnout::load() !"));
 		else
 #endif
-			tt->set(data.id, data.address, data.subAddress, data.tStatus);
+			tt->set(data.id, data.address, data.subAddress);
 #endif
 		tt->data.tStatus = data.tStatus;
 		tt->eepromPos = EEStore::pointer();
@@ -220,39 +219,19 @@ void Turnout::parse(char *c){
   }
 }
 
-Turnout *Turnout::create(int id, int add, int subAdd, int v) {
-	Turnout *tt;
-
-	if (firstTurnout == NULL) {
-		firstTurnout = (Turnout *)calloc(1, sizeof(Turnout));
-		tt = firstTurnout;
-	}
-	else if ((tt = get(id)) == NULL) {
-		tt = firstTurnout;
-		while (tt->nextTurnout != NULL)
-			tt = tt->nextTurnout;
-		tt->nextTurnout = (Turnout *)calloc(1, sizeof(Turnout));
-		tt = tt->nextTurnout;
-	}
+Turnout *Turnout::create(int id, int add, int subAdd) {
+	Turnout *tt = new Turnout();
 
 	if (tt == NULL) {       // problem allocating memory
 #ifdef DCCPP_DEBUG_MODE
-		if (v == 1)
-			INTERFACE.println("<X>");
+		INTERFACE.println("<X>");
 #endif
 		return(tt);
 	}
 
-	tt->data.id = id;
-	tt->data.address = add;
-	tt->data.subAddress = subAdd;
-	tt->data.tStatus = 0;
-#ifdef DCCPP_DEBUG_MODE
-	if (v == 1)
-		INTERFACE.println("<O>");
-#endif
-	return(tt);
+	tt->begin(id, add, subadd);
 
+	return(tt);
 }
 
 #endif USE_TEXTCOMMAND

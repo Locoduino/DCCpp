@@ -18,7 +18,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Sensor::begin(int snum, int pin, int pullUp, int v) {
+void Sensor::begin(int snum, int pin, int pullUp) {
 #ifdef DCCPP_DEBUG_MODE
 	if (EEStore::eeStore != NULL)
 	{
@@ -36,24 +36,29 @@ void Sensor::begin(int snum, int pin, int pullUp, int v) {
 		tt->nextSensor = this;
 	}
 
-	this->set(snum, pin, pullUp, v);
+	this->set(snum, pin, pullUp);
 
 #ifdef DCCPP_DEBUG_MODE
-	if (v == 1)
-		INTERFACE.println("<O>");
+	INTERFACE.println("<O>");
 #endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Sensor::set(int snum, int pin, int pullUp, int v) {
+void Sensor::set(int snum, int pin, int pullUp) {
 	this->data.snum = snum;
 	this->data.pin = pin;
 	this->data.pullUp = (pullUp == 0 ? LOW : HIGH);
 	this->active = false;
 	this->signal = 1;
-	pinMode(pin, INPUT);         // set mode to input
+#ifdef VISUALSTUDIO
+	ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+#endif
 	digitalWrite(pin, pullUp);   // don't use Arduino's internal pull-up resistors for external infrared sensors --- each sensor must have its own 1K external pull-up resistor
+#ifdef VISUALSTUDIO
+	ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+#endif
+	pinMode(pin, INPUT);         // force mode to input
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -218,7 +223,7 @@ void Sensor::parse(char *c) {
 	switch (sscanf(c, "%d %d %d", &n, &s, &m)) {
 
 	case 3:                     // argument is string with id number of sensor followed by a pin number and pullUp indicator (0=LOW/1=HIGH)
-		create(n, s, m, 1);
+		create(n, s, m);
 		break;
 
 	case 1:                     // argument is a string with id number only
@@ -239,39 +244,19 @@ void Sensor::parse(char *c) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Sensor *Sensor::create(int snum, int pin, int pullUp, int v) {
-	Sensor *tt;
-
-	if (firstSensor == NULL) {
-		firstSensor = (Sensor *)calloc(1, sizeof(Sensor));
-		tt = firstSensor;
-	}
-	else if ((tt = get(snum)) == NULL) {
-		tt = firstSensor;
-		while (tt->nextSensor != NULL)
-			tt = tt->nextSensor;
-		tt->nextSensor = (Sensor *)calloc(1, sizeof(Sensor));
-		tt = tt->nextSensor;
-	}
+Sensor *Sensor::create(int snum, int pin, int pullUp) {
+	Sensor *tt = new Sensor();
 
 	if (tt == NULL) {       // problem allocating memory
-		if (v == 1)
-			INTERFACE.println("<X>");
+#ifdef DCCPP_DEBUG_MODE
+		INTERFACE.println("<X>");
+#endif
 		return(tt);
 	}
 
-	tt->data.snum = snum;
-	tt->data.pin = pin;
-	tt->data.pullUp = (pullUp == 0 ? LOW : HIGH);
-	tt->active = false;
-	tt->signal = 1;
-	pinMode(pin, INPUT);         // set mode to input
-	digitalWrite(pin, pullUp);   // don't use Arduino's internal pull-up resistors for external infrared sensors --- each sensor must have its own 1K external pull-up resistor
+	tt->begin(snum, pin, pullUp);
 
-	if (v == 1)
-		INTERFACE.println("<O>");
 	return(tt);
-
 }
 
 #endif

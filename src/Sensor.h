@@ -88,8 +88,8 @@ struct Sensor{
   float signal;
   Sensor *nextSensor;
 
-  void begin(int, int, int, int = 0);
-  void set(int, int, int, int = 0);
+  void begin(int snum, int pin, int pullUp);
+  void set(int snum, int pin, int pullUp);
   static Sensor* get(int);
   static void remove(int);
   static int count();
@@ -107,7 +107,7 @@ struct Sensor{
 
 #if defined(USE_TEXTCOMMAND)
   static void parse(char *c);
-  static Sensor *create(int, int, int, int = 0);
+  static Sensor *create(int snum, int pin, int pullUp);
 #endif
 }; // Sensor
 

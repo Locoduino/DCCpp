@@ -98,9 +98,9 @@ load() and store() of the class can still be used (if EEPROM is activated).
 struct Turnout{
 	struct TurnoutData data;
 
-	void begin(int id, int add, int subAdd, int v = 0);
-	void set(int id, int add, int subAdd, int v = 0);
-	void activate(int id);
+	void begin(int id, int add, int subAdd);
+	void set(int id, int add, int subAdd);
+	void activate(int s = 1);
 
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
 	static Turnout *firstTurnout;
@@ -124,7 +124,7 @@ struct Turnout{
 
 #if defined(USE_TEXTCOMMAND)
 	static void parse(char *c);
-	static Turnout *create(int id, int add, int subAdd, int v = 0);
+	static Turnout *create(int id, int add, int subAdd);
 #endif
 
 }; // Turnout
