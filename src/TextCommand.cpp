@@ -1,13 +1,13 @@
 /**********************************************************************
 
-SerialCommand.cpp
+TextCommand.cpp
 COPYRIGHT (c) 2013-2016 Gregg E. Berman
 
 Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
-// See SerialCommand::parse() below for defined text commands.
+// See TextCommand::parse() below for defined text commands.
 
 #include "TextCommand.h"
 #ifdef USE_TEXTCOMMAND
@@ -543,7 +543,7 @@ void TextCommand::parse(char *com){
 	  for(Register *p = DCCppClass::mainRegs.reg; p <= DCCppClass::mainRegs.maxLoadedReg;p++){
 		INTERFACE.print("M"); INTERFACE.print((int)(p - DCCppClass::mainRegs.reg)); INTERFACE.print(":\t");
 		INTERFACE.print((int)p); INTERFACE.print("\t");
-		INTERFACE.print((int)p->activePacket); INTERFACE.print("\t");
+		INTERFACE.print((int)(p->activePacket)); INTERFACE.print("\t");
 		INTERFACE.print(p->activePacket->nBits); INTERFACE.print("\t");
 		for(int i=0;i<10;i++){
 		  INTERFACE.print(p->activePacket->buf[i],HEX); INTERFACE.print("\t");

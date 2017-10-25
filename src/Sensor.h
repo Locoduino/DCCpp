@@ -87,17 +87,28 @@ struct Sensor{
   boolean active;
   float signal;
   Sensor *nextSensor;
+
+  void begin(int, int, int, int = 0);
+  void set(int, int, int, int = 0);
+  static Sensor* get(int);
+  static void remove(int);
+  static int count();
+  static void check();
+
+#ifdef DCCPP_PRINT_DCCPP
+  static void show();
+  static void status();
+#endif
+
 #ifdef USE_EEPROM
   static void load();
   static void store();
 #endif
-  static Sensor *create(int, int, int, int=0);
-  static Sensor* get(int);  
-  static void remove(int);  
-  static void show();
-  static void status();
+
+#if defined(USE_TEXTCOMMAND)
   static void parse(char *c);
-  static void check();   
+  static Sensor *create(int, int, int, int = 0);
+#endif
 }; // Sensor
 
 #endif

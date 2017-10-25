@@ -69,7 +69,7 @@ Part of DCC++ BASE STATION for the Arduino
 #define DCC_SIGNAL_PIN_MAIN 10          // Ardunio Uno  - uses OC1B
 #define DCC_SIGNAL_PIN_PROG 5           // Arduino Uno  - uses OC0B
 
-#elif defined  ARDUINO_AVR_MEGA
+#elif defined(ARDUINO_AVR_MEGA2560)
 
 #define DCC_SIGNAL_PIN_MAIN 12          // Arduino Mega - uses OC1B
 #define DCC_SIGNAL_PIN_PROG 2           // Arduino Mega - uses OC3B

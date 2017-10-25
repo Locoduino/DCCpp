@@ -100,20 +100,36 @@ by this sketch whenever the <s> status command is invoked.  This provides an eff
 the state of any outputs being monitored or controlled by a separate interface or GUI program.
 */
 struct Output{
-  static Output *firstOutput;
   int num;
   struct OutputData data;
+
+  void begin(int id, int add, int subAdd, int v = 0);
+  void set(int id, int add, int subAdd, int v = 0);
+  void activate(int id);
+
+#if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
+  static Output *firstOutput;
   Output *nextOutput;
-  void activate(int s);
-  static void parse(char *c);
   static Output* get(int);
-  static void remove(int);
-#ifdef USE_EEPROM
+  static void remove(int id);
+  static int count();
+
+#ifdef DCCPP_PRINT_DCCPP
+  static void show();
+#endif
+
+#if defined(USE_EEPROM)
   static void load();
   static void store();
 #endif
-  static Output *create(int, int, int, int=0);
-  static void show(int=0);
+
+#endif
+
+#if defined(USE_TEXTCOMMAND)
+  static void parse(char *c);
+  static Output *create(int, int, int, int = 0);
+#endif
+
 }; // Output
   
 #endif

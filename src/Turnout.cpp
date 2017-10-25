@@ -14,99 +14,178 @@ Part of DCC++ BASE STATION for the Arduino
 #include "Turnout.h"
 #include "DCCpp_Uno.h"
 #include "Comm.h"
+
 #ifdef USE_TEXTCOMMAND
 #include "TextCommand.h"
+#endif
+
 #ifdef USE_EEPROM
 #include "EEStore.h"
 #include "EEPROM.h"
 #endif
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Turnout::activate(int s){
-  char c[20];
-  data.tStatus=(s>0);                                    // if s>0 set turnout=ON, else if zero or negative set turnout=OFF
-  sprintf(c,"a %d %d %d",data.address,data.subAddress,data.tStatus);
-  TextCommand::parse(c);
+void Turnout::begin(int id, int add, int subAdd, int v) {
+#if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
+#ifdef DCCPP_DEBUG_MODE
+	if (EEStore::eeStore != NULL)
+	{
+		INTERFACE.println(F("Turnout::begin() must be called BEFORE DCCpp.begin() !"));
+	}
+#endif
+	if (firstTurnout == NULL) {
+		firstTurnout = this;
+	}
+	else if (get(id) == NULL) {
+		Turnout *tt = firstTurnout;
+		while (tt->nextTurnout != NULL)
+			tt = tt->nextTurnout;
+		tt->nextTurnout = this;
+	}
+#endif
+
+	this->set(id, add, subAdd, v);
+
+#ifdef DCCPP_DEBUG_MODE
+	if (v == 1)
+		INTERFACE.println("<O>");
+#endif
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Turnout::set(int id, int add, int subAdd, int v) {
+	this->data.id = id;
+	this->data.address = add;
+	this->data.subAddress = subAdd;
+	this->data.tStatus = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Turnout::activate(int s) {
+	data.tStatus = (s>0);                                    // if s>0 set turnout=ON, else if zero or negative set turnout=OFF
+	DCCppClass::mainRegs.setAccessory(this->data.address, this->data.subAddress, this->data.tStatus);
 #ifdef USE_EEPROM
-  if(num>0)
-    EEPROM.put(num,data.tStatus);
+	if (this->eepromPos>0)
+#ifdef VISUALSTUDIO
+		EEPROM.put(this->eepromPos, (void *) &(this->data.tStatus), sizeof(int));	// ArduiEmulator version...
+#else
+		EEPROM.put(this->eepromPos, this->data.tStatus);
+#endif
 #endif
 #ifdef DCCPP_DEBUG_MODE
-  INTERFACE.print("<H");
-  INTERFACE.print(data.id);
-  if(data.tStatus==0)
-    INTERFACE.print(" 0>");
-  else
-    INTERFACE.print(" 1>"); 
+	INTERFACE.print("<H");
+	INTERFACE.print(data.id);
+	if (data.tStatus == 0)
+		INTERFACE.println(" 0>");
+	else
+		INTERFACE.println(" 1>");
+#endif
+}
+
+#if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
+///////////////////////////////////////////////////////////////////////////////
+
+Turnout* Turnout::get(int id) {
+	Turnout *tt;
+	for (tt = firstTurnout; tt != NULL && tt->data.id != id; tt = tt->nextTurnout)
+		;
+	return(tt);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void Turnout::remove(int id) {
+	Turnout *tt, *pp;
+
+	for (tt = firstTurnout; tt != NULL && tt->data.id != id; pp = tt, tt = tt->nextTurnout)
+		;
+
+	if (tt == NULL) {
+#ifdef DCCPP_DEBUG_MODE
+		INTERFACE.println("<X>");
+#endif
+		return;
+	}
+
+	if (tt == firstTurnout)
+		firstTurnout = tt->nextTurnout;
+	else
+		pp->nextTurnout = tt->nextTurnout;
+
+	free(tt);
+
+#ifdef DCCPP_DEBUG_MODE
+	INTERFACE.println("<O>");
 #endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Turnout* Turnout::get(int n){
-  Turnout *tt;
-  for(tt=firstTurnout;tt!=NULL && tt->data.id!=n;tt=tt->nextTurnout);
-  return(tt); 
+int Turnout::count() {
+	int count = 0;
+	Turnout *tt;
+	for (tt = firstTurnout; tt != NULL; tt = tt->nextTurnout)
+		count++;
+	return count;
 }
-///////////////////////////////////////////////////////////////////////////////
-
-void Turnout::remove(int n){
-  Turnout *tt,*pp;
-  
-  for(tt=firstTurnout;tt!=NULL && tt->data.id!=n;pp=tt,tt=tt->nextTurnout);
-
-  if(tt==NULL){
-#ifdef DCCPP_DEBUG_MODE
-	  INTERFACE.print("<X>");
-#endif
-    return;
-  }
-  
-  if(tt==firstTurnout)
-    firstTurnout=tt->nextTurnout;
-  else
-    pp->nextTurnout=tt->nextTurnout;
-
-  free(tt);
-
-#ifdef DCCPP_DEBUG_MODE
-  INTERFACE.print("<O>");
-#endif
-}
-
-#ifdef DCCPP_PRINT_DCCPP
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Turnout::show(int n){
-  Turnout *tt;
+#ifdef USE_EEPROM
+void Turnout::load() {
+	struct TurnoutData data;
+	Turnout *tt;
 
-  if(firstTurnout==NULL){
-    INTERFACE.print("<X>");
-    return;
-  }
-    
-  for(tt=firstTurnout;tt!=NULL;tt=tt->nextTurnout){
-    INTERFACE.print("<H");
-    INTERFACE.print(tt->data.id);
-    if(n==1){
-      INTERFACE.print(" ");
-      INTERFACE.print(tt->data.address);
-      INTERFACE.print(" ");
-      INTERFACE.print(tt->data.subAddress);
-    }
-    if(tt->data.tStatus==0)
-       INTERFACE.println(" 0>");
-     else
-       INTERFACE.println(" 1>"); 
-  }
+	for (int i = 0; i<EEStore::eeStore->data.nTurnouts; i++) {
+#ifdef VISUALSTUDIO
+		EEPROM.get(EEStore::pointer(), (void *)&data, sizeof(TurnoutData));
+#else
+		EEPROM.get(EEStore::pointer(), data);
+#endif
+#if defined(USE_TEXTCOMMAND)
+		tt = create(data.id, data.address, data.subAddress);
+#else
+		tt = get(data.id);
+#ifdef DCCPP_DEBUG_MODE
+		if (tt == NULL)
+			INTERFACE.println(F("Turnout::begin() must be called BEFORE Turnout::load() !"));
+		else
+#endif
+			tt->set(data.id, data.address, data.subAddress, data.tStatus);
+#endif
+		tt->data.tStatus = data.tStatus;
+		tt->eepromPos = EEStore::pointer();
+		EEStore::advance(sizeof(tt->data));
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Turnout::store() {
+	Turnout *tt;
+
+	tt = firstTurnout;
+	EEStore::eeStore->data.nTurnouts = 0;
+
+	while (tt != NULL) {
+		tt->eepromPos = EEStore::pointer();
+#ifdef VISUALSTUDIO
+		EEPROM.put(EEStore::pointer(), (void *) &(tt->data), sizeof(TurnoutData));	// ArduiEmulator version...
+#else
+		EEPROM.put(EEStore::pointer(), tt->data);
+#endif
+		EEStore::advance(sizeof(tt->data));
+		tt = tt->nextTurnout;
+		EEStore::eeStore->data.nTurnouts++;
+	}
 }
 #endif
 
-#ifdef USE_TEXTCOMMAND
+#endif
 
+#if defined(USE_TEXTCOMMAND)
 ///////////////////////////////////////////////////////////////////////////////
 
 void Turnout::parse(char *c){
@@ -121,7 +200,7 @@ void Turnout::parse(char *c){
         t->activate(s);
 #ifdef DCCPP_DEBUG_MODE
 	  else
-        INTERFACE.print("<X>");
+        INTERFACE.println("<X>");
 #endif
       break;
 
@@ -133,86 +212,84 @@ void Turnout::parse(char *c){
       remove(n);
     break;
     
-    case -1:                    // no arguments
-      show(1);                  // verbose show
+#ifdef DCCPP_DEBUG_MODE
+	case -1:                    // no arguments
+      show();
     break;
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-#ifdef USE_EEPROM
-void Turnout::load(){
-  struct TurnoutData data;
-  Turnout *tt;
-
-  for(int i=0;i<EEStore::eeStore->data.nTurnouts;i++){
-    EEPROM.get(EEStore::pointer(),data);  
-    tt=create(data.id,data.address,data.subAddress);
-    tt->data.tStatus=data.tStatus;
-    tt->num=EEStore::pointer();
-    EEStore::advance(sizeof(tt->data));
-  }  
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Turnout::store(){
-  Turnout *tt;
-  
-  tt=firstTurnout;
-  EEStore::eeStore->data.nTurnouts=0;
-  
-  while(tt!=NULL){
-    tt->num=EEStore::pointer();
-    EEPROM.put(EEStore::pointer(),tt->data);
-    EEStore::advance(sizeof(tt->data));
-    tt=tt->nextTurnout;
-    EEStore::eeStore->data.nTurnouts++;
-  }
-}
 #endif
-#endif
-
-///////////////////////////////////////////////////////////////////////////////
-
-Turnout *Turnout::create(int id, int add, int subAdd, int v){
-  Turnout *tt;
-  
-  if(firstTurnout==NULL){
-    firstTurnout=(Turnout *)calloc(1,sizeof(Turnout));
-    tt=firstTurnout;
-  } else if((tt=get(id))==NULL){
-    tt=firstTurnout;
-    while(tt->nextTurnout!=NULL)
-      tt=tt->nextTurnout;
-    tt->nextTurnout=(Turnout *)calloc(1,sizeof(Turnout));
-    tt=tt->nextTurnout;
   }
+}
 
-  if(tt==NULL){       // problem allocating memory
+Turnout *Turnout::create(int id, int add, int subAdd, int v) {
+	Turnout *tt;
+
+	if (firstTurnout == NULL) {
+		firstTurnout = (Turnout *)calloc(1, sizeof(Turnout));
+		tt = firstTurnout;
+	}
+	else if ((tt = get(id)) == NULL) {
+		tt = firstTurnout;
+		while (tt->nextTurnout != NULL)
+			tt = tt->nextTurnout;
+		tt->nextTurnout = (Turnout *)calloc(1, sizeof(Turnout));
+		tt = tt->nextTurnout;
+	}
+
+	if (tt == NULL) {       // problem allocating memory
 #ifdef DCCPP_DEBUG_MODE
-    if(v==1)
-      INTERFACE.print("<X>");
+		if (v == 1)
+			INTERFACE.println("<X>");
 #endif
-    return(tt);
-  }
-  
-  tt->data.id=id;
-  tt->data.address=add;
-  tt->data.subAddress=subAdd;
-  tt->data.tStatus=0;
+		return(tt);
+	}
+
+	tt->data.id = id;
+	tt->data.address = add;
+	tt->data.subAddress = subAdd;
+	tt->data.tStatus = 0;
 #ifdef DCCPP_DEBUG_MODE
-  if(v==1)
-    INTERFACE.print("<O>");
+	if (v == 1)
+		INTERFACE.println("<O>");
 #endif
-  return(tt);
-  
+	return(tt);
+
 }
+
+#endif USE_TEXTCOMMAND
+
+#if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
+#ifdef DCCPP_PRINT_DCCPP
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Turnout *Turnout::firstTurnout=NULL;
+void Turnout::show() {
+	Turnout *tt;
+
+	if (firstTurnout == NULL) {
+		INTERFACE.println("<X>");
+		return;
+	}
+
+	for (tt = firstTurnout; tt != NULL; tt = tt->nextTurnout) {
+		INTERFACE.print("<H");
+		INTERFACE.print(tt->data.id);
+		INTERFACE.print(" ");
+		INTERFACE.print(tt->data.address);
+		INTERFACE.print(" ");
+		INTERFACE.print(tt->data.subAddress);
+		if (tt->data.tStatus == 0)
+			INTERFACE.println(" 0>");
+		else
+			INTERFACE.println(" 1>");
+	}
+}
 #endif
+
+///////////////////////////////////////////////////////////////////////////////
+
+Turnout *Turnout::firstTurnout = NULL;
+#endif
+
+#endif USE_TURNOUT
 
 

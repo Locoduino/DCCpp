@@ -23,7 +23,9 @@ struct TurnoutData {
 };
 
 /** DCC++ BASE STATION can keep track of the direction of any turnout that is controlled
-by a DCC stationary accessory decoder.  All turnouts, as well as any other DCC accessories
+by a DCC stationary accessory decoder.
+
+If the TextCommand is used, all turnouts, as well as any other DCC accessories
 connected in this fashion, can always be operated using the DCC BASE STATION Accessory command:
 
 \verbatim
@@ -88,27 +90,43 @@ When controlled as such, the Arduino updates and stores the direction of each Tu
 that it is retained even without power.  A list of the current directions of each Turnout in the form <H ID THROW> is generated
 by this sketch whenever the <s> status command is invoked.  This provides an efficient way of initializing
 the directions of any Turnouts being monitored or controlled by a separate interface or GUI program.
+
+Without	TextCommand, this is a classic C++ usage. An instance of the structure is created by the user,
+and fonctions like begin() and activate() can be applied on this instance. 
+load() and store() of the class can still be used (if EEPROM is activated).
 */
 struct Turnout{
-  static Turnout *firstTurnout;
-  int num;
-  struct TurnoutData data;
-  Turnout *nextTurnout;
+	struct TurnoutData data;
 
-  void activate(int s);
+	void begin(int id, int add, int subAdd, int v = 0);
+	void set(int id, int add, int subAdd, int v = 0);
+	void activate(int id);
 
-  static Turnout* get(int);
-  static void remove(int);
-  static Turnout *create(int, int, int, int=0);
-  static void show(int=0);
+#if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
+	static Turnout *firstTurnout;
+	Turnout *nextTurnout;
+	static Turnout* get(int id);
+	static void remove(int id);
+	static int count();
+
+#ifdef DCCPP_PRINT_DCCPP
+	static void show();
+#endif
+
+#if defined(USE_EEPROM)
+	int eepromPos;
+
+	static void load();
+	static void store();
+#endif
+
+#endif
 
 #if defined(USE_TEXTCOMMAND)
-  static void parse(char *c);
-#if defined(USE_EEPROM)
-  static void load();
-  static void store();
+	static void parse(char *c);
+	static Turnout *create(int id, int add, int subAdd, int v = 0);
 #endif
-#endif
+
 }; // Turnout
   
 #endif

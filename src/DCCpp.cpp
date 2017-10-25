@@ -313,6 +313,8 @@ void DCCppClass::begin()
 
 #ifdef USE_EEPROM
 	EEStore::init();                                          // initialize and load Turnout and Sensor definitions stored in EEPROM
+	if (EEStore::needsRefreshing())
+		EEStore::store();
 #endif
 
 #ifdef DCCPP_DEBUG_MODE
