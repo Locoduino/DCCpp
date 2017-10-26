@@ -1,3 +1,5 @@
+WARNING: This library is still in development. Do not use it until the first official release !
+
 = DCCpp extension Library for Arduino =
 
 This is a library for Arduino to control railroading DCC devices.
