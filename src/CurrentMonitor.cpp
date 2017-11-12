@@ -9,6 +9,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 #include "DCCpp_Uno.h"
 #include "CurrentMonitor.h"
+#include "Comm.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 

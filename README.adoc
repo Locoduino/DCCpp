@@ -1,9 +1,11 @@
+= WARNING: This library is still in development. Do not use it until the first official release !
+
 = DCCpp extension Library for Arduino =
 
-This is a library for Arduino to control railroading DCC devices.
+This is the library version of a program for Arduino to control railroading DCC devices.
 
 For more information about this library please visit us at
-http://www.locoduino.org/spip.php?article139 in french or
+http://www.locoduino.org/spip.php?article228 in french or
 
 In extras folder, click on Doc/index.html to have a complete documentation in English in your browser.
 

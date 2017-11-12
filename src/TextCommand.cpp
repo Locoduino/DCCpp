@@ -34,34 +34,42 @@ void TextCommand::init(volatile RegisterList *_mRegs, volatile RegisterList *_pR
 void TextCommand::process(){
   char c;
 	
-  #ifdef USE_SERIAL
-
-	while(INTERFACE.available()>0){    // while there is data on the serial line
-	 c=INTERFACE.read();
-	 if(c=='<')                    // start of new command
-	   commandString[0] = 0;
-	 else if(c=='>')               // end of new command
-	   parse(commandString);                    
-	 else if(strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from serial line
-	   sprintf(commandString,"%s%c",commandString,c);     // otherwise, character is ignored (but continue to look for '<' or '>')
-	} // while
-  
-  #elif defined(USE_ETHERNET)
+  #if defined(USE_ETHERNET)
 
 	EthernetClient client=INTERFACE.available();
 
-	if(client){
-	  while(client.connected() && client.available()){        // while there is data on the network
-	  c=client.read();
-	  if(c=='<')                    // start of new command
-		sprintf(commandString,"");
-	  else if(c=='>')               // end of new command
-		parse(commandString);                    
-	  else if(strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from network
-		sprintf(commandString,"%s%c",commandString,c);     // otherwise, character is ignored (but continue to look for '<' or '>')
-	  } // while
+	if (client) {
+		INTERFACE.println("HTTP/1.1 200 OK");
+		INTERFACE.println("Content-Type: text/html");
+		INTERFACE.println("Access-Control-Allow-Origin: *");
+		INTERFACE.println("Connection: close");
+		INTERFACE.println("");
+
+		while (client.connected() && client.available()) {        // while there is data on the network
+			c = client.read();
+			if (c == '<')                    // start of new command
+				sprintf(commandString, "");
+			else if (c == '>')               // end of new command
+				parse(commandString);
+			else if (strlen(commandString) < MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from network
+				sprintf(commandString, "%s%c", commandString, c);     // otherwise, character is ignored (but continue to look for '<' or '>')
+		} // while
+
+		client.stop();
 	}
 
+  #else  // SERIAL case
+
+	while (INTERFACE.available()>0) {    // while there is data on the serial line
+		c = INTERFACE.read();
+		if (c == '<')                    // start of new command
+			commandString[0] = 0;
+		else if (c == '>')               // end of new command
+			parse(commandString);
+		else if (strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from serial line
+			sprintf(commandString, "%s%c", commandString, c);     // otherwise, character is ignored (but continue to look for '<' or '>')
+	} // while
+  
   #endif
 
 } // TextCommand:process
@@ -69,7 +77,12 @@ void TextCommand::process(){
 ///////////////////////////////////////////////////////////////////////////////
 
 void TextCommand::parse(char *com){
-  
+
+#ifdef DCCPP_DEBUG_MODE
+	Serial.print((char) com[0]);
+	Serial.println(F(" command"));
+#endif
+
   switch(com[0]){
 
 /***** SET ENGINE THROTTLES USING 128-STEP SPEED CONTROL ****/    
@@ -86,6 +99,7 @@ void TextCommand::parse(char *com){
  *    returns: <T REGISTER SPEED DIRECTION>
  *    
  */
+
 	  DCCppClass::mainRegs.setThrottle(com+1);
 	  break;
 
@@ -154,7 +168,8 @@ void TextCommand::parse(char *com){
 	  DCCppClass::mainRegs.setAccessory(com+1);
 	  break;
 
-/***** CREATE/EDIT/REMOVE/SHOW & OPERATE A TURN-OUT  ****/    
+#ifdef USE_TURNOUT
+	  /***** CREATE/EDIT/REMOVE/SHOW & OPERATE A TURN-OUT  ****/
 
 	case 'T':       // <T ID THROW>
 /*
@@ -170,7 +185,9 @@ void TextCommand::parse(char *com){
  */
 	  Turnout::parse(com+1);
 	  break;
+#endif
 
+#ifdef USE_OUTPUT
 /***** CREATE/EDIT/REMOVE/SHOW & OPERATE AN OUTPUT PIN  ****/    
 
 	case 'Z':       // <Z ID ACTIVATE>
@@ -187,8 +204,10 @@ void TextCommand::parse(char *com){
  */
 	  Output::parse(com+1);
 	  break;
-	  
-/***** CREATE/EDIT/REMOVE/SHOW A SENSOR  ****/    
+#endif
+
+#ifdef USE_SENSOR
+/***** CREATE/EDIT/REMOVE/SHOW A SENSOR  ****/
 
 	case 'S': 
 /*   
@@ -206,6 +225,7 @@ void TextCommand::parse(char *com){
  */
 	  Sensor::status();
 	  break;
+#endif
 
 /***** WRITE CONFIGURATION VARIABLE BYTE TO ENGINE DECODER ON MAIN OPERATIONS TRACK  ****/    
 
@@ -301,7 +321,7 @@ void TextCommand::parse(char *com){
 		digitalWrite(DCCppConfig::SignalEnablePinProg,HIGH);
 	if (DCCppConfig::SignalEnablePinMain != 255)
 		digitalWrite(DCCppConfig::SignalEnablePinMain,HIGH);
-	 INTERFACE.print("<p1>");
+	 INTERFACE.println("<p1>");
 	 break;
 		  
 /***** TURN OFF POWER FROM MOTOR SHIELD TO TRACKS  ****/    
@@ -316,7 +336,7 @@ void TextCommand::parse(char *com){
 			digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
 		if (DCCppConfig::SignalEnablePinMain != 255)
 			digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
-		INTERFACE.print("<p0>");
+		INTERFACE.println("<p0>");
 	 break;
 
 /***** READ MAIN OPERATIONS TRACK CURRENT  ****/    
@@ -330,7 +350,7 @@ void TextCommand::parse(char *com){
  */
 	  INTERFACE.print("<a");
 	  INTERFACE.print(int(DCCppClass::MainMonitor.current));
-	  INTERFACE.print(">");
+	  INTERFACE.println(">");
 	  break;
 
 /***** READ STATUS OF DCC++ BASE STATION  ****/    
@@ -343,9 +363,9 @@ void TextCommand::parse(char *com){
  *    returns: series of status messages that can be read by an interface to determine status of DCC++ Base Station and important settings
  */
 	  if(digitalRead(DCCppConfig::SignalEnablePinProg)==LOW)      // could check either PROG or MAIN
-		INTERFACE.print("<p0>");
+		INTERFACE.println("<p0>");
 	  else
-		INTERFACE.print("<p1>");
+		INTERFACE.println("<p1>");
 
 	  for(int i=1;i<=MAX_MAIN_REGISTERS;i++){
 		if(DCCppClass::mainRegs.speedTable[i]==0)
@@ -360,7 +380,7 @@ void TextCommand::parse(char *com){
 		  INTERFACE.print(" 0>");
 		}          
 	  }
-	  INTERFACE.print("<iDCC++ BASE STATION FOR ARDUINO ");
+	  INTERFACE.print("<iDCCpp LIBRARY BASE STATION FOR ARDUINO ");
 	  //INTERFACE.print(ARDUINO_TYPE);
 	  //INTERFACE.print(" / ");
 	  //INTERFACE.print(MOTOR_SHIELD_NAME);
@@ -370,25 +390,26 @@ void TextCommand::parse(char *com){
 	  INTERFACE.print(__DATE__);
 	  INTERFACE.print(" ");
 	  INTERFACE.print(__TIME__);
-	  INTERFACE.print(">");
+	  INTERFACE.println(">");
 
 	  INTERFACE.print("<N ");
-	  #ifdef USE_SERIAL
-		INTERFACE.print("SERIAL");
-	  #elif defined(USE_ETHERNET)
-		INTERFACE.print("ETHERNET");
-	  #endif
-	  INTERFACE.print(": ");
+#if defined(USE_ETHERNET)
+	  INTERFACE.print("ETHERNET :");
+	  INTERFACE.print(Ethernet.localIP());
+	  INTERFACE.println(">");
+#else
+	  INTERFACE.println("SERIAL>");
+#endif
 
-	  #ifdef USE_SERIAL
-		INTERFACE.print("SERIAL>");
-	  #elif defined(USE_ETHERNET)
-		INTERFACE.print(Ethernet.localIP());
-		INTERFACE.print(">");
-	  #endif
-
+#ifdef USE_TURNOUT
 	  Turnout::show();
+#endif
+#ifdef USE_OUTPUT
 	  Output::show();
+#endif
+#ifdef USE_SENSOR
+	  Sensor::show();
+#endif
 	  break;
 
 /***** STORE SETTINGS IN EEPROM  ****/
@@ -408,7 +429,7 @@ void TextCommand::parse(char *com){
 	INTERFACE.print(EEStore::eeStore->data.nSensors);
 	INTERFACE.print(" ");
 	INTERFACE.print(EEStore::eeStore->data.nOutputs);
-	INTERFACE.print(">");
+	INTERFACE.println(">");
 	break;
 
 /***** CLEAR SETTINGS IN EEPROM  ****/    
@@ -528,7 +549,7 @@ void TextCommand::parse(char *com){
 	  int v; 
 	  INTERFACE.print("<f");
 	  INTERFACE.print((int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
-	  INTERFACE.print(">");
+	  INTERFACE.println(">");
 	  break;
 #endif
 

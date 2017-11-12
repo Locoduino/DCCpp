@@ -101,6 +101,8 @@ struct Turnout{
 	void begin(int id, int add, int subAdd);
 	void set(int id, int add, int subAdd);
 	void activate(int s = 1);
+	inline void inactivate() { activate(0); }
+	inline bool isActivated() { return this->data.tStatus > 0; }
 
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
 	static Turnout *firstTurnout;

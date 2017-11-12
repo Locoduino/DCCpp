@@ -10,7 +10,7 @@ Part of DCC++ BASE STATION for the Arduino
 #ifndef CurrentMonitor_h
 #define CurrentMonitor_h
 
-#include "Arduino.h"
+//#include "Arduino.h"
 
 #define  CURRENT_SAMPLE_SMOOTHING   0.01
 #define  CURRENT_SAMPLE_MAX         300

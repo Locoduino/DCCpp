@@ -12,6 +12,12 @@ Part of DCC++ BASE STATION for the Arduino
 //#include "PacketRegister.h"
 //#include "Comm.h"
 
+#ifdef USE_ETHERNET
+uint8_t DCCppConfig::EthernetIp[4];
+uint8_t DCCppConfig::EthernetMac[6];
+int DCCppConfig::EthernetPort = 0;
+#endif
+
 byte DCCppConfig::SignalEnablePinMain = 255;
 byte DCCppConfig::CurrentMonitorMain = 255;
 					
@@ -104,7 +110,7 @@ void RegisterList::loadPacket(int nReg, byte *b, int nBytes, int nRepeat, int pr
   this->nRepeat=nRepeat;
   maxLoadedReg=max(maxLoadedReg,nextReg);
   
-#ifdef DDC_DEBUG_MODE
+#ifdef DCCPP_DEBUG_MODE
   if(printFlag)       // for debugging purposes
 		printPacket(nReg,b,nBytes,nRepeat);  
 #endif
@@ -132,12 +138,13 @@ void RegisterList::setThrottle(int nReg, int cab, int tSpeed, int tDirection) vo
 
 	loadPacket(nReg, b, nB, 0, 1);
 
-#ifdef DDC_DEBUG_MODE
+#ifdef DCCPP_DEBUG_MODE
 	INTERFACE.print("<T");
 	INTERFACE.print(nReg); INTERFACE.print(" ");
+	INTERFACE.print(cab); INTERFACE.print(" ");
 	INTERFACE.print(tSpeed); INTERFACE.print(" ");
 	INTERFACE.print(tDirection);
-	INTERFACE.print(">");
+	INTERFACE.println(">");
 #endif
 	speedTable[nReg] = tDirection == 1 ? tSpeed : -tSpeed;
 
@@ -150,8 +157,13 @@ void RegisterList::setThrottle(char *s) volatile
   int tSpeed;
   int tDirection;
   
-  if(sscanf(s,"%d %d %d %d",&nReg,&cab,&tSpeed,&tDirection)!=4)
+  if (sscanf(s, "%d %d %d %d", &nReg, &cab, &tSpeed, &tDirection) != 4)
+  {
+#ifdef DCCPP_DEBUG_MODE
+    Serial.println(F("t Syntax error"));
+#endif
 	return;
+  }
 
   this->setThrottle(nReg, cab, tSpeed, tDirection);
 } // RegisterList::setThrottle(string)
@@ -176,6 +188,14 @@ void RegisterList::setFunction(int nReg, int cab, int fByte, int eByte) volatile
 		b[nB++] = eByte;
 	}
 
+#ifdef DCCPP_DEBUG_MODE
+	INTERFACE.print("<F");
+	INTERFACE.print(nReg); INTERFACE.print(" ");
+	INTERFACE.print(cab); INTERFACE.print(" ");
+	INTERFACE.print(fByte); INTERFACE.print(" ");
+	INTERFACE.print(eByte);
+	INTERFACE.println(">");
+#endif
 	loadPacket(nReg, b, nB, 4, 1);
 } // RegisterList::setFunction(ints)
 
@@ -186,9 +206,13 @@ void RegisterList::setFunction(char *s) volatile
 	int nParams;
 
 	nParams = sscanf(s, "%d %d %d", &cab, &fByte, &eByte);
-
 	if (nParams<2)
+	{
+#ifdef DCCPP_DEBUG_MODE
+		Serial.println(F("f Syntax error"));
+#endif
 		return;
+	}
 
 	if (nParams == 2)                       // this is a request for functions FL,F1-F12  
 		eByte = -1;
@@ -217,7 +241,12 @@ void RegisterList::setAccessory(char *s) volatile
 	int activate;                   // flag indicated whether accessory should be activated (1) or deactivated (0) following NMRA recommended convention
 
 	if (sscanf(s, "%d %d %d", &aAdd, &aNum, &activate) != 3)
+	{
+#ifdef DCCPP_DEBUG_MODE
+		Serial.println(F("a Syntax error"));
+#endif
 		return;
+	}
 
 	this->setAccessory(aAdd, aNum, activate);
 
@@ -229,7 +258,7 @@ void RegisterList::writeTextPacket(int nReg, byte *b, int nBytes) volatile
 {
 
 	if (nBytes<2 || nBytes>5) {    // invalid valid packet
-		INTERFACE.print("<mInvalid Packet>");
+		INTERFACE.println("<mInvalid Packet>");
 		return;
 	}
 
@@ -324,7 +353,7 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg
 	if (d == 0)    // verify unsuccessful
 		bValue = -1;
 
-#ifdef DDC_DEBUG_MODE
+#ifdef DCCPP_DEBUG_MODE
 	INTERFACE.print("<r");
 	INTERFACE.print(callBack);
 	INTERFACE.print("|");
@@ -333,7 +362,7 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg
 	INTERFACE.print(cv + 1);
 	INTERFACE.print(" ");
 	INTERFACE.print(bValue);
-	INTERFACE.print(">");
+	INTERFACE.println(">");
 #endif
 
 	return bValue;
@@ -350,7 +379,12 @@ void RegisterList::readCV(char *s) volatile
 	int cv, callBack, callBackSub;
 
 	if (sscanf(s, "%d %d %d", &cv, &callBack, &callBackSub) != 3)          // cv = 1-1024
+	{
+#ifdef DCCPP_DEBUG_MODE
+		Serial.println(F("R Syntax error"));
+#endif
 		return;
+	}
 
 	this->readCV(cv, callBack, callBackSub);
 } // RegisterList::readCV(string)
@@ -366,7 +400,12 @@ int RegisterList::readCVmain(char *s) volatile
 	int cv, callBack, callBackSub;
 
 	if (sscanf(s, "%d %d %d", &cv, &callBack, &callBackSub) != 3)          // cv = 1-1024
+	{
+#ifdef DCCPP_DEBUG_MODE
+		Serial.println(F("r Syntax error"));
+#endif
 		return -1;
+	}
    
 	return this->readCVmain(cv, callBack, callBackSub);
 } // RegisterList::readCVmain(string)
@@ -415,7 +454,7 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 		if (d == 0)    // verify unsuccessful
 			bValue = -1;
 
-#ifdef DDC_DEBUG_MODE
+#ifdef DCCPP_DEBUG_MODE
 		INTERFACE.print("<r");
 		INTERFACE.print(callBack);
 		INTERFACE.print("|");
@@ -424,7 +463,7 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 		INTERFACE.print(cv + 1);
 		INTERFACE.print(" ");
 		INTERFACE.print(bValue);
-		INTERFACE.print(">");
+		INTERFACE.println(">");
 #endif
 	}
 } // RegisterList::writeCVByte(ints)
@@ -434,7 +473,12 @@ void RegisterList::writeCVByte(char *s) volatile
 	int bValue, cv, callBack, callBackSub;
 
 	if (sscanf(s, "%d %d %d %d", &cv, &bValue, &callBack, &callBackSub) != 4)          // cv = 1-1024
+	{
+#ifdef DCCPP_DEBUG_MODE
+		Serial.println(F("W Syntax error"));
+#endif
 		return;
+	}
 
 	this->writeCVByte(cv, bValue, callBack, callBackSub);
 } // RegisterList::writeCVByte(string)
@@ -485,7 +529,7 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 		if (d == 0)    // verify unsuccessful
 			bValue = -1;
 
-#ifdef DDC_DEBUG_MODE
+#ifdef DCCPP_DEBUG_MODE
 		INTERFACE.print("<r");
 		INTERFACE.print(callBack);
 		INTERFACE.print("|");
@@ -496,7 +540,7 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 		INTERFACE.print(bNum);
 		INTERFACE.print(" ");
 		INTERFACE.print(bValue);
-		INTERFACE.print(">");
+		INTERFACE.println(">");
 #endif
 	}
 } // RegisterList::writeCVBit(ints)
@@ -506,7 +550,12 @@ void RegisterList::writeCVBit(char *s) volatile
   int bNum, bValue, cv, callBack, callBackSub;
 
   if(sscanf(s,"%d %d %d %d %d",&cv,&bNum,&bValue,&callBack,&callBackSub) != 5)          // cv = 1-1024
-	return;
+  {
+#ifdef DCCPP_DEBUG_MODE
+	  Serial.println(F("W Syntax error"));
+#endif
+	  return;
+  }
 
   this->writeCVBit(cv, bNum, bValue, callBack, callBackSub);
 } // RegisterList::writeCVBit(string)
@@ -539,7 +588,12 @@ void RegisterList::writeCVByteMain(char *s) volatile
 	int bValue;
 
 	if (sscanf(s, "%d %d %d", &cab, &cv, &bValue) != 3)
+	{
+#ifdef DCCPP_DEBUG_MODE
+		Serial.println(F("w Syntax error"));
+#endif
 		return;
+	}
 
 	this->writeCVByteMain(cab, cv, bValue);
 } // RegisterList::writeCVByteMain(string)
@@ -576,14 +630,19 @@ void RegisterList::writeCVBitMain(char *s) volatile
 	int bValue;
 
 	if (sscanf(s, "%d %d %d %d", &cab, &cv, &bNum, &bValue) != 4)
+	{
+#ifdef DCCPP_DEBUG_MODE
+		Serial.println(F("w Syntax error"));
+#endif
 		return;
+	}
 
 	this->writeCVBitMain(cab, cv, bNum, bValue);
 } // RegisterList::writeCVBitMain(string)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifdef DDC_DEBUG_MODE
+#ifdef DCCPP_DEBUG_MODE
 void RegisterList::printPacket(int nReg, byte *b, int nBytes, int nRepeat) volatile 
 {
   
@@ -596,7 +655,7 @@ void RegisterList::printPacket(int nReg, byte *b, int nBytes, int nRepeat) volat
   }
   INTERFACE.print(" / ");
   INTERFACE.print(nRepeat);
-  INTERFACE.print(">");
+  INTERFACE.println(">");
 } // RegisterList::printPacket()
 #endif
 

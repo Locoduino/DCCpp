@@ -76,7 +76,7 @@ struct RegisterList{
   void writeCVByteMain(int cab, int cv, int bvalue) volatile;
   void writeCVBitMain(int cab, int cv, int bNum, int bValue) volatile;
 
-#ifdef DDC_DEBUG_MODE
+#ifdef DCCPP_DEBUG_MODE
   void printPacket(int, byte *, int, int) volatile;
 #endif
 };

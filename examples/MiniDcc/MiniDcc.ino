@@ -21,14 +21,12 @@ description: <Minimalist Dcc Controller sample>
 #define EVENT_FUNCTION1	10
 #define EVENT_ENCODER	11
 
-
 ButtonsCommanderPush buttonSelect;
 ButtonsCommanderEncoder buttonEncoder;
 ButtonsCommanderPush buttonCancel;
 ButtonsCommanderPush buttonEmergency;
 ButtonsCommanderSwitchOnePin buttonF0;
 ButtonsCommanderSwitchOnePin buttonF1;
-
 
 // in this sample, only one loco is driven...
 int locoId;	// DCC id for this loco

@@ -10,8 +10,8 @@ description: <DCCpp class>
 // SET UP COMMUNICATIONS INTERFACE - FOR STANDARD SERIAL, NOTHING NEEDS TO BE DONE
 
 #ifdef USE_ETHERNET
-byte mac[] = MAC_ADDRESS;                                // Create MAC address (to be used for DHCP when initializing server)
-EthernetServer INTERFACE(ETHERNET_PORT);                  // Create and instance of an EnternetServer
+//byte mac[] = MAC_ADDRESS;                                // Create MAC address (to be used for DHCP when initializing server)
+//EthernetServer INTERFACE(ETHERNET_PORT);                  // Create and instance of an EnternetServer
 #endif
 
 DCCppClass DCCppClass::DCCppInstance;
@@ -109,7 +109,7 @@ void DCCppClass::loop()
 	if (first)
 	{
 		first = false;
-#ifdef DCCPP_DEBUG_MODE
+#if defined(DCCPP_DEBUG_MODE) && defined(DCCPP_PRINT_DCCPP)
 		showConfiguration();
 #endif
 	}
@@ -134,7 +134,7 @@ void DCCppClass::loop()
 // For H bridge connected directly to the pins, like LMD18200, signalPin and Direction motor should have the same pin number.
 
 // For Arduino Motor Shield
-// beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN);
+// beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN);
 // beginProg(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG, MOTOR_SHIELD_CURRENT_MONITOR_PIN_PROG);
 
 // For Polulu Motor Shield
@@ -148,15 +148,20 @@ void DCCppClass::loop()
 // beginMain(255, DCC_SIGNAL_PIN_MAIN, 3, A0);
 // beginProg(255, DCC_SIGNAL_PIN_PROG, 11, A1);
 
-void DCCppClass::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
+void DCCppClass::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
 {
-	DCCppConfig::DirectionMotorA = inDirectionMotor;
+	DCCppConfig::DirectionMotorA = inOptionalDirectionMotor;
 	DCCppConfig::SignalEnablePinMain = inSignalEnable;	// PWM
 	DCCppConfig::CurrentMonitorMain = inCurrentMonitor;
 
 	// If no main line, exit.
 	if (DCCppConfig::SignalEnablePinMain == 255)
+	{
+#ifdef DCCPP_DEBUG_MODE
+		Serial.println("No main line");
+#endif
 		return;
+	}
 
 	MainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
 
@@ -178,7 +183,7 @@ void DCCppClass::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSi
 		digitalWrite(DCCppConfig::DirectionMotorA, LOW);
 	}
 
-	pinMode(DCC_SIGNAL_PIN_MAIN, OUTPUT);      // THIS ARDUINO OUPUT PIN MUST BE PHYSICALLY CONNECTED TO THE PIN FOR DIRECTION-A OF MOTOR CHANNEL-A
+	pinMode(inSignalPin, OUTPUT);      // THIS ARDUINO OUPUT PIN MUST BE PHYSICALLY CONNECTED TO THE PIN FOR DIRECTION-A OF MOTOR CHANNEL-A
 
 	bitSet(TCCR1A, WGM10);     // set Timer 1 to FAST PWM, with TOP=OCR1A
 	bitSet(TCCR1A, WGM11);
@@ -201,17 +206,26 @@ void DCCppClass::beginMain(uint8_t inDirectionMotor, uint8_t Dummy, uint8_t inSi
 
 	bitSet(TIMSK1, OCIE1B);    // enable interrupt vector for Timer 1 Output Compare B Match (OCR1B)    
 	digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
+
+#ifdef DCCPP_DEBUG_MODE
+	Serial.println(F("beginMain achivied"));
+#endif
 }
 
-void DCCppClass::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
+void DCCppClass::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
 {
-	DCCppConfig::DirectionMotorB = inDirectionMotor;
+	DCCppConfig::DirectionMotorB = inOptionalDirectionMotor;
 	DCCppConfig::SignalEnablePinProg = inSignalEnable;
 	DCCppConfig::CurrentMonitorProg = inCurrentMonitor;
 
 	// If no prog line, exit.
 	if (DCCppConfig::SignalEnablePinProg == 255)
+	{
+#ifdef DCCPP_DEBUG_MODE
+		Serial.println("No prog line");
+#endif
 		return;
+	}
 
 	ProgMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
 
@@ -236,7 +250,7 @@ void DCCppClass::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_
 		digitalWrite(DCCppConfig::DirectionMotorB, LOW);
 	}
 
-	pinMode(DCC_SIGNAL_PIN_PROG, OUTPUT);      // THIS ARDUINO OUTPUT PIN MUST BE PHYSICALLY CONNECTED TO THE PIN FOR DIRECTION-B OF MOTOR CHANNEL-B
+	pinMode(inSignalPin, OUTPUT);      // THIS ARDUINO OUTPUT PIN MUST BE PHYSICALLY CONNECTED TO THE PIN FOR DIRECTION-B OF MOTOR CHANNEL-B
 
 	bitSet(TCCR0A, WGM00);     // set Timer 0 to FAST PWM, with TOP=OCR0A
 	bitSet(TCCR0A, WGM01);
@@ -302,6 +316,10 @@ void DCCppClass::beginProg(uint8_t inDirectionMotor, uint8_t inSignalPin, uint8_
 
 #endif
 	digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
+
+#ifdef DCCPP_DEBUG_MODE
+	Serial.println(F("beginProg achivied"));
+#endif
 }
 
 void DCCppClass::begin()
@@ -318,25 +336,31 @@ void DCCppClass::begin()
 #endif
 
 #ifdef DCCPP_DEBUG_MODE
-	pinMode(LED_BUILTIN, OUTPUT);
+	//pinMode(LED_BUILTIN, OUTPUT);
+	Serial.println(F("begin achivied"));
 #endif
 
 } // begin
 
 #ifdef USE_ETHERNET
-void DCCppClass::beginEthernet(uint8_t *inMac, IPAddress inIpAddress, int inPort)
+void DCCppClass::beginEthernet(uint8_t *inMac, uint8_t *inIp)
 {
-	DCCppConfig::EthernetIp = inIpAddress;
+	for (int i = 0; i < 4; i++)
+		DCCppConfig::EthernetIp[i] = inIp[i];
 	for (int i = 0; i < 6; i++)
 		DCCppConfig::EthernetMac[i] = inMac[i];
-	DCCppConfig::EthernetPort = inPort;
 
-	if (inIpAddress == NULL)
-		Ethernet.begin(inMac);                      // Start networking using DHCP to get an IP Address
+	if (inIp == NULL)
+		Ethernet.begin(inMac);                  // Start networking using DHCP to get an IP Address
 	else
-		Ethernet.begin(inMac, inIpAddress);           // Start networking using STATIC IP Address
+		Ethernet.begin(inMac, inIp);           // Start networking using STATIC IP Address
 
 	INTERFACE.begin();
+#ifdef DCCPP_DEBUG_MODE
+	//pinMode(LED_BUILTIN, OUTPUT);
+	showConfiguration();
+	Serial.println(F("beginEthernet achivied"));
+#endif
 } // beginEthernet
 #endif
 
@@ -430,7 +454,7 @@ ISR(TIMER3_COMPB_vect) {              // set interrupt service for OCR3B of TIME
 
 void DCCppClass::showConfiguration()
 {
-	Serial.println(F("\n*** DCC++ CONFIGURATION ***\n"));
+	Serial.println(F("\n*** DCCpp LIBRARY CONFIGURATION ***\n"));
 
 	Serial.print(F("\nVERSION:      "));
 	Serial.println(VERSION);
@@ -477,33 +501,30 @@ void DCCppClass::showConfiguration()
 	Serial.println(EEStore::eeStore->data.nOutputs);
 #endif
 	
+#ifdef USE_TEXTCOMMAND
 	Serial.print(F("\n\nINTERFACE:    "));
-#ifdef USE_SERIAL
-	Serial.println(F("SERIAL"));
-#elif defined(USE_ETHERNET)
-	Serial.print(F("ETHERNET "));
-	Serial.print(F("\nMAC ADDRESS:  "));
+#ifdef USE_ETHERNET
+	Serial.println(F("ETHERNET "));
+	Serial.print(F("MAC ADDRESS:  "));
 	for (int i = 0; i<5; i++) {
 		Serial.print(DCCppConfig::EthernetMac[i], HEX);
 		Serial.print(F(":"));
 	}
-	Serial.print(DCCppConfig::EthernetMac[5], HEX);
-	Serial.print(F("\nPORT:         "));
-	Serial.print(DCCppConfig::EthernetPort);
-	Serial.println(F("\nIP ADDRESS:   "));
+	Serial.println(DCCppConfig::EthernetMac[5], HEX);
+//	Serial.print(F("PORT:         "));
+//	Serial.println(DCCppConfig::EthernetPort);
+	Serial.print(F("\nIP ADDRESS:   "));
+
+	Serial.println(Ethernet.localIP());
 
 /*#ifdef IP_ADDRESS
-	Ethernet.begin(mac, IP_ADDRESS);           // Start networking using STATIC IP Address
-#else
-	Ethernet.begin(mac);                      // Start networking using DHCP to get an IP Address
-#endif     
-*/
-	Serial.print(Ethernet.localIP());
-
-#ifdef IP_ADDRESS
 	Serial.println(F(" (STATIC)"));
 #else
 	Serial.println(F(" (DHCP)"));
+#endif*/
+
+#else
+	Serial.println(F("SERIAL"));
 #endif
 
 #endif

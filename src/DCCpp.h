@@ -207,6 +207,8 @@ Main include file of the library.*/
 //#define DCCPP_PRINT_DCCPP
 
 #ifdef DOXYGEN_SPECIFIC
+// DO NOT CHANGE THE LINES IN THIS BLOCK 'DOXYGEN_SPECIFIC' : Only here for documentation !
+
 /** If this is defined, the library will do many checks during setup and execution, and print errors, warnings and
 information messages on console. These messages can take a lot of memory, so be careful about the free memory of
 your program if you activate debug mode.*/
@@ -227,30 +229,26 @@ If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you wil
 //
 
 /**Comment this line to avoid using and compiling Turnout.*/
-#define USE_TURNOUT
+//#define USE_TURNOUT
 /**Comment this line to avoid using and compiling EEPROM saving.*/
-#define USE_EEPROM
+//#define USE_EEPROM
 /**Comment this line to avoid using and compiling Outputs.*/
-#define USE_OUTPUT
+//#define USE_OUTPUT
 /**Comment this line to avoid using and compiling Sensors.*/
-#define USE_SENSOR
+//#define USE_SENSOR
 /**Comment this line to avoid using and compiling Serial commands.*/
-//#define USE_TEXTCOMMAND
-/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip handling.*/
+#define USE_TEXTCOMMAND
+/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip.*/
 //#define USE_ETHERNET_WIZNET_5100
-/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip handling.*/
+/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip.*/
 //#define USE_ETHERNET_WIZNET_5500
-/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip handling.*/
+/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip.*/
 //#define USE_ETHERNET_WIZNET_5200
-/**Comment this line to avoid using Serial object for commands.*/
-#define USE_SERIAL
+/**Comment this line to avoid using and compiling Ethernet shield using ENC28J60 chip.*/
+//#define USE_ETHERNET_ENC28J60
 
-#if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200)
+#if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200) || defined(USE_ETHERNET_ENC28J60)
 #define USE_ETHERNET
-#endif
-
-#if defined(USE_SERIAL) && defined(USE_ETHERNET)
-#error "The two interfaces Serial and Ethernet cannot be used togother !"
 #endif
 
 /////////////////////////////////////

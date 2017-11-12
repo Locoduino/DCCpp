@@ -53,11 +53,16 @@ void Output::set(int id, int pin, int iFlag) {
 	this->data.iFlag = iFlag;
 	this->data.oStatus = 0;
 
-	pinMode(this->data.pin, OUTPUT);
-
 	// sets status to 0 (INACTIVE) is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag  
 	this->data.oStatus = bitRead(this->data.iFlag, 1) ? bitRead(this->data.iFlag, 2) : 0;
+#ifdef VISUALSTUDIO
+	ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+#endif
 	digitalWrite(this->data.pin, this->data.oStatus ^ bitRead(this->data.iFlag, 0));
+#ifdef VISUALSTUDIO
+	ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+#endif
+	pinMode(this->data.pin, OUTPUT);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -143,7 +148,13 @@ void Output::load() {
 		tt = get(data.id);
 		tt->set(data.id, data.pin, data.iFlag);
 		tt->data.oStatus = bitRead(tt->data.iFlag, 1) ? bitRead(tt->data.iFlag, 2) : data.oStatus;      // restore status to EEPROM value is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag
+#ifdef VISUALSTUDIO
+		ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+#endif
 		digitalWrite(tt->data.pin, tt->data.oStatus ^ bitRead(tt->data.iFlag, 0));
+#ifdef VISUALSTUDIO
+		ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+#endif
 		pinMode(tt->data.pin, OUTPUT);
 		tt->num = EEStore::pointer();
 		EEStore::advance(sizeof(tt->data));

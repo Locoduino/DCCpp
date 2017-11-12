@@ -218,6 +218,9 @@
       <Project>{cc4048d1-7ac0-4d3d-98a3-2922d996b5ab}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Commanders\WhatsNew.TXT" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

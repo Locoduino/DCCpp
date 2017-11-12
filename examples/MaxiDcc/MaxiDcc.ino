@@ -21,12 +21,17 @@ description: <Dcc++ Controller sample with all options>
 #define EVENT_FUNCTION1	10
 #define EVENT_ENCODER	11
 
+#define EVENT_TURNOUT1	20
+#define EVENT_TURNOUT2	21
+
 ButtonsCommanderPush buttonSelect;
 ButtonsCommanderEncoder buttonEncoder;
 ButtonsCommanderPush buttonCancel;
 ButtonsCommanderPush buttonEmergency;
 ButtonsCommanderSwitchOnePin buttonF0;
 ButtonsCommanderSwitchOnePin buttonF1;
+ButtonsCommanderSwitchOnePin buttonTurnout1;
+ButtonsCommanderSwitchOnePin buttonTurnout2;
 
 // in this sample, only one loco is driven...
 int locoId;	// DCC id for this loco
@@ -35,9 +40,9 @@ int locoSpeed;	// Current speed
 bool locoDirectionToLeft;	// current direction.
 FunctionsState locoFunctions;	// Current functions
 
-Turnout *acc1, *acc2;
-Output *output1, *output2;
-Sensor *sensor1, *sensor2;
+Turnout turn1, turn2;
+Output output1, output2;
+Sensor sensor1, sensor2;
 
 void setup()
 {
@@ -49,6 +54,8 @@ void setup()
 	buttonEmergency.begin(EVENT_EMERGENCY, A4);
 	buttonF0.begin(EVENT_FUNCTION0, A1);
 	buttonF1.begin(EVENT_FUNCTION1, A2);
+	buttonTurnout1.begin(EVENT_TURNOUT1, 30);
+	buttonTurnout2.begin(EVENT_TURNOUT2, 31);
 
 	DCCpp.begin();
 	DCCpp.beginMain(255, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
@@ -60,14 +67,14 @@ void setup()
 	locoDirectionToLeft = false;
 	//locoFunctions.Clear();	// Already done by the constructor...
 
-	acc1 = Turnout::create(1, 100, 10);
-	acc2 = Turnout::create(2, 200, 20);
+	turn1.begin(1, 100, 1);
+	turn2.begin(2, 200, 2);
 
-	output1 = Output::create(1, 5, B110);
-	output2 = Output::create(2, 6, B110);
+	output1.begin(1, 5, B110);
+	output2.begin(2, 6, B110);
 
-	sensor1 = Sensor::create(1, 7, 8);
-	sensor2 = Sensor::create(2, 9, 10);
+	sensor1.begin(1, 7, 0);
+	sensor2.begin(2, 9, 1);
 }
 
 void loop()
@@ -111,6 +118,20 @@ void loop()
 		else
 			locoFunctions.Activate(1);
 		DCCpp.SetFunctionsMain(3, locoId, locoFunctions);
+		break;
+
+	case EVENT_TURNOUT1:
+		if (turn1.isActivated())
+			turn1.inactivate();
+		else
+			turn1.activate();
+		break;
+
+	case EVENT_TURNOUT2:
+		if (turn2.isActivated())
+			turn2.inactivate();
+		else
+			turn2.activate();
 		break;
 	}
 }

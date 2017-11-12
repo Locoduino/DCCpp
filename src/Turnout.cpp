@@ -13,7 +13,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 #include "Turnout.h"
 #include "DCCpp_Uno.h"
-#include "Comm.h"
+//#include "Comm.h"
 
 #ifdef USE_TEXTCOMMAND
 #include "TextCommand.h"

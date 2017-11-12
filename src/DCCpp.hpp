@@ -51,8 +51,8 @@ class DCCppClass
 		void begin();
 		void beginMain(uint8_t OptionalDirectionMotor, uint8_t Dummy, uint8_t SignalEnablePin, uint8_t CurrentMonitor);
 		void beginProg(uint8_t OptionalDirectionMotor, uint8_t Dummy, uint8_t SignalEnablePin, uint8_t CurrentMonitor);
-#ifndef USE_ETHERNET
-		void beginEthernet(uint8_t *inMac, IPAddress inIpAddress, int inPort);
+#ifdef USE_ETHERNET
+		void beginEthernet(uint8_t *inMac, uint8_t *inIp);
 #endif
 
 		// DCCpp global functions

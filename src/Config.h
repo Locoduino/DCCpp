@@ -100,12 +100,10 @@ Part of DCC++ BASE STATION for the Arduino
 
 struct DCCppConfig
 {
-#ifdef DCCPP_PRINT_DCCPP
-#ifndef USE_ETHERNET
-	static IPAddress EthernetIp;
-	static uint8_t *EthernetMac;
+#ifdef USE_ETHERNET
+	static uint8_t EthernetIp[4];
+	static uint8_t EthernetMac[6];
 	static int EthernetPort;
-#endif
 #endif
 
 	static byte SignalEnablePinMain;// PWM : *_SIGNAL_ENABLE_PIN_MAIN

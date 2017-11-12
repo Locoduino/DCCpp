@@ -94,6 +94,7 @@ struct Sensor{
   static void remove(int);
   static int count();
   static void check();
+  boolean isActive() { return this->active; }
 
 #ifdef DCCPP_PRINT_DCCPP
   static void show();
