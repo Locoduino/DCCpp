@@ -80,6 +80,19 @@ void setup()
 void loop()
 {
 	DCCpp.loop();
+
+	// activate first output from first sensor state.
+	int active = sensor1.isActive();
+
+	if (active != output1.data.oStatus)
+		output1.activate(active);
+
+	// activate second output from second sensor state.
+	active = sensor2.isActive();
+
+	if (active != output2.data.oStatus)
+		output2.activate(active);
+		
 	unsigned long event = Commanders::loop();
 
 	switch (event)

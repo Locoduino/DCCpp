@@ -10,11 +10,12 @@ DCCpp			KEYWORD1
 Accessories		KEYWORD1
 CurrentMonitor	KEYWORD1
 EEStore			KEYWORD1
-Outputs			KEYWORD1
+Output			KEYWORD1
 Packet			KEYWORD1
 Register		KEYWORD1
 RegisterList	KEYWORD1
 Sensor			KEYWORD1
+Turnout			KEYWORD1
 TextCommand		KEYWORD1
 FunctionsState	KEYWORD1
 

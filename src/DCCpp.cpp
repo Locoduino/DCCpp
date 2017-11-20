@@ -458,7 +458,7 @@ void DCCppClass::showConfiguration()
 
 	Serial.print(F("VERSION DCC++:      "));
 	Serial.println(VERSION);
-	Serial.println(F("VERSION DCCpp library: 0.4.0"));
+	Serial.println(F("VERSION DCCpp library: 0.4.1"));
 	Serial.print(F("COMPILED:     "));
 	Serial.print(__DATE__);
 	Serial.print(F(" "));
