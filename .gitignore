@@ -13,3 +13,5 @@ VStudio/.vs
 \.vs/
 
 *.filters
+
+*.user

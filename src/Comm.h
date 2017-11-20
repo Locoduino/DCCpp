@@ -24,7 +24,7 @@ Part of DCC++ BASE STATION for the Arduino
     #include <EthernetV2_0.h>     // https://github.com/Seeed-Studio/Ethernet_Shield_W5200
 
   #elif defined(USE_ETHERNET_ENC28J60)
-    #define COMM_SHIELD_NAME      "BASIC ETHERNET SHIELD (ENC25J60)"
+    #define COMM_SHIELD_NAME      "BASIC ETHERNET SHIELD (ENC28J60)"
 	#include <UIPEthernet.h>     // https://github.com/ntruchsess/arduino_uip/tree/Arduino_1.5.x
 
 #endif

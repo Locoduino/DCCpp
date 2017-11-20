@@ -14,7 +14,6 @@ var NAVTREE =
         [ "DCCppClass", "classDCCppClass.html", [
           [ "DCCppClass", "classDCCppClass.html#a03861da5c716447c004ea575d20bee0d", null ],
           [ "begin", "classDCCppClass.html#a81f0b7f8b46858227ecfb22aa9a1719c", null ],
-          [ "beginEthernet", "classDCCppClass.html#a14245500ddb3ec7d49b260c686e27b72", null ],
           [ "beginMain", "classDCCppClass.html#a6d2443c6cc3203f21f59ad8b550cda70", null ],
           [ "beginProg", "classDCCppClass.html#a6092bff715256fa93da8d3fd59fc6282", null ],
           [ "EndProgramMode", "classDCCppClass.html#a374f2aa14be043aff592743f753e4cb1", null ],
@@ -36,8 +35,7 @@ var NAVTREE =
           [ "Activate", "classFunctionsState.html#aaab29f229e2ed4775d8724dcdd8b5c29", null ],
           [ "Clear", "classFunctionsState.html#a76b77c7e2337b260f111d815a09af00f", null ],
           [ "Inactivate", "classFunctionsState.html#a940e776b612f7bd9c0ca31494de43ffa", null ],
-          [ "IsActivated", "classFunctionsState.html#ad423c06ba36c9e75e13e7c384d524e09", null ],
-          [ "printActivated", "classFunctionsState.html#a2193eef0b5ab4aef48423b910131836b", null ]
+          [ "IsActivated", "classFunctionsState.html#ad423c06ba36c9e75e13e7c384d524e09", null ]
         ] ],
         [ "Packet", "structPacket.html", [
           [ "buf", "structPacket.html#a6cfcc974d95f0a6bee530517a5c9ad51", null ],
@@ -96,10 +94,6 @@ var NAVTREE =
       [ "File List", "files.html", [
         [ "src", "dir_d41d8cd98f00b204e9800998ecf8427e.html", [
           [ "DCCpp.h", "DCCpp_8h.html", [
-            [ "DCCPP_DEBUG_MODE", "DCCpp_8h.html#a51f0718b05d5d1f9e04917713f4c6ff0", null ],
-            [ "DCCPP_PRINT_DCCPP", "DCCpp_8h.html#a974da9ef1ab28fef455505016a3caa57", null ],
-            [ "USE_ETHERNET", "DCCpp_8h.html#afdde4edc4a1dd814fb31b14166214e6d", null ],
-            [ "USE_ETHERNET_ENC28J60", "DCCpp_8h.html#a70605414b539dc47fdaaa65bded21008", null ],
             [ "USE_TEXTCOMMAND", "DCCpp_8h.html#ad7034344270036501578d215e708bc82", null ]
           ] ]
         ] ]
@@ -117,6 +111,7 @@ var NAVTREE =
         [ "CurrentMonitor.h", "CurrentMonitor_8h_source.html", null ],
         [ "DCCpp.cpp", "DCCpp_8cpp_source.html", null ],
         [ "DCCpp.h", "DCCpp_8h_source.html", null ],
+        [ "DCCpp.hdoc", "DCCpp_8hdoc_source.html", null ],
         [ "DCCpp.hpp", "DCCpp_8hpp_source.html", null ],
         [ "DCCpp_Uno.h", "DCCpp__Uno_8h_source.html", null ],
         [ "EEStore.cpp", "EEStore_8cpp_source.html", null ],

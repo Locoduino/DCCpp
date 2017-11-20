@@ -206,25 +206,6 @@ Main include file of the library.*/
 // you can make this function available by uncomment the next line.
 //#define DCCPP_PRINT_DCCPP
 
-#ifdef DOXYGEN_SPECIFIC
-// DO NOT CHANGE THE LINES IN THIS BLOCK 'DOXYGEN_SPECIFIC' : Only here for documentation !
-
-/** If this is defined, the library will do many checks during setup and execution, and print errors, warnings and
-information messages on console. These messages can take a lot of memory, so be careful about the free memory of
-your program if you activate debug mode.*/
-#define DCCPP_DEBUG_MODE
-/** If this is defined, the Verbose mode lets you see all actions done by the  library, but with a real flood of
-text to the console... It has no effect if DCCPP_DEBUG_MODE is not activated.*/
-#define DCCPP_DEBUG_VERBOSE_MODE
-/** If this is defined, the function Accessories::printAccessories() will become available. This is useful to try
-to understand why a port, or an accessory is not corretly defined.
-This function uses a lot of memory, so activate it only if necessary, and be careful about your program's memory.
-You can use the define PRINT_DCCPP() in your sketch instead of a call to DCCpp.showConfiguration().
-If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you will not have a compilation error.*/
-#define DCCPP_PRINT_DCCPP
-/** If this is defined, the state of all the library will not be saved to EEPROM.*/
-#endif
-
 //  Inclusion area
 //
 
@@ -237,7 +218,7 @@ If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you wil
 /**Comment this line to avoid using and compiling Sensors.*/
 //#define USE_SENSOR
 /**Comment this line to avoid using and compiling Serial commands.*/
-#define USE_TEXTCOMMAND
+//#define USE_TEXTCOMMAND
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip.*/
 //#define USE_ETHERNET_WIZNET_5100
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip.*/
@@ -276,5 +257,24 @@ If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you wil
 #endif
 
 #include "DCCpp.hpp"
+
+#ifdef DOXYGEN_SPECIFIC
+// DO NOT CHANGE THE LINES IN THIS BLOCK 'DOXYGEN_SPECIFIC' : Only here for documentation !
+
+/** If this is defined, the library will do many checks during setup and execution, and print errors, warnings and
+information messages on console. These messages can take a lot of memory, so be careful about the free memory of
+your program if you activate debug mode.*/
+#define DCCPP_DEBUG_MODE
+/** If this is defined, the Verbose mode lets you see all actions done by the  library, but with a real flood of
+text to the console... It has no effect if DCCPP_DEBUG_MODE is not activated.*/
+#define DCCPP_DEBUG_VERBOSE_MODE
+/** If this is defined, the function Accessories::printAccessories() will become available. This is useful to try
+to understand why a port, or an accessory is not corretly defined.
+This function uses a lot of memory, so activate it only if necessary, and be careful about your program's memory.
+You can use the define PRINT_DCCPP() in your sketch instead of a call to DCCpp.showConfiguration().
+If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you will not have a compilation error.*/
+#define DCCPP_PRINT_DCCPP
+/** If this is defined, the state of all the library will not be saved to EEPROM.*/
+#endif
 
 #endif

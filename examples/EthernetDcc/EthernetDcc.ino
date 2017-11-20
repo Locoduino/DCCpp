@@ -1,7 +1,7 @@
 /*************************************************************
 project: <Dc/Dcc Controller>
 author: <Thierry PARIS>
-description: <Dcc Serial Controller sample>
+description: <Dcc Ethernet Controller sample>
 *************************************************************/
 
 #include "DCCpp.h"
@@ -9,8 +9,6 @@ description: <Dcc Serial Controller sample>
 #if !defined(USE_TEXTCOMMAND) || !defined(USE_ETHERNET)
 #error To be able to compile this sample,the lines #define USE_TEXTCOMMAND and #define USE_ETHERNET must be uncommented in DCCpp.h
 #endif
-
-#include <UIPEthernet.h>
 
 // the media access control (ethernet hardware) address for the shield:
 uint8_t mac[] = { 0xBE, 0xEF, 0xBE, 0xEF, 0xBE, 0xEF };
@@ -24,7 +22,7 @@ void setup()
 	Serial.begin(115200);
 
 	DCCpp.begin();
-	DCCpp.beginMain(255, 12, 50, A5);
+	DCCpp.beginMain(255, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, A5);
 	DCCpp.beginEthernet(mac, ip);
 }
 

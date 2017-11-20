@@ -57,7 +57,7 @@ bool FunctionsState::IsActivated(byte inFunctionNumber)
 }
 
 #ifdef DCCPP_DEBUG_MODE
-void FunctionsState::printActivated()
+void FunctionsState::b()
 {
 	for (int i = 0; i < 32; i++)
 	{
@@ -129,7 +129,7 @@ void DCCppClass::loop()
 // INITIAL SETUP
 ///////////////////////////////////////////////////////////////////////////////
 
-// For Arduino or Polulu shields, signalPinMain must be connected to Direction motor A, and signalPinProg to Direction motor B
+// For Arduino or Pololu shields, signalPinMain must be connected to Direction motor A, and signalPinProg to Direction motor B
 // If a track is not connected,  main or prog, the signalPin should stay to default at 255.
 // For H bridge connected directly to the pins, like LMD18200, signalPin and Direction motor should have the same pin number.
 
@@ -137,9 +137,9 @@ void DCCppClass::loop()
 // beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN);
 // beginProg(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG, MOTOR_SHIELD_CURRENT_MONITOR_PIN_PROG);
 
-// For Polulu Motor Shield
-// beginMain(POLULU_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, POLULU_SIGNAL_ENABLE_PIN_MAIN, POLULU_CURRENT_MONITOR_PIN_MAIN);
-// beginProg(POLULU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLULU_SIGNAL_ENABLE_PIN_PROG, POLULU_CURRENT_MONITOR_PIN_PROG);
+// For Pololu Motor Shield
+// beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, POLOLU_SIGNAL_ENABLE_PIN_MAIN, POLOLU_CURRENT_MONITOR_PIN_MAIN);
+// beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG);
 
 // For single LMD18200
 // beginMain(255, DCC_SIGNAL_PIN_MAIN, 3, A0);
@@ -454,11 +454,12 @@ ISR(TIMER3_COMPB_vect) {              // set interrupt service for OCR3B of TIME
 
 void DCCppClass::showConfiguration()
 {
-	Serial.println(F("\n*** DCCpp LIBRARY CONFIGURATION ***\n"));
+	Serial.println(F("*** DCCpp LIBRARY ***"));
 
-	Serial.print(F("\nVERSION:      "));
+	Serial.print(F("VERSION DCC++:      "));
 	Serial.println(VERSION);
-	Serial.print(F("\nCOMPILED:     "));
+	Serial.println(F("VERSION DCCpp library: 0.4.0"));
+	Serial.print(F("COMPILED:     "));
 	Serial.print(__DATE__);
 	Serial.print(F(" "));
 	Serial.println(__TIME__);
@@ -472,32 +473,32 @@ void DCCppClass::showConfiguration()
 	if (DCCppConfig::SignalEnablePinMain!= 255)
 	{
 		Serial.print(F("\n\nDCC SIG MAIN(DIR): "));
-		Serial.print(DCC_SIGNAL_PIN_MAIN);
-		Serial.print(F("\n   DIRECTION: "));
-		Serial.print(DCCppConfig::DirectionMotorA);
-		Serial.print(F("\n      ENABLE(PWM): "));
-		Serial.print(DCCppConfig::SignalEnablePinMain);
-		Serial.print(F("\n     CURRENT: "));
+		Serial.println(DCC_SIGNAL_PIN_MAIN);
+		Serial.print(F("   DIRECTION: "));
+		Serial.println(DCCppConfig::DirectionMotorA);
+		Serial.print(F("   ENABLE(PWM): "));
+		Serial.println(DCCppConfig::SignalEnablePinMain);
+		Serial.print(F("   CURRENT: "));
 		Serial.println(DCCppConfig::CurrentMonitorMain);
 	}
 
 	if (DCCppConfig::SignalEnablePinProg!= 255)
 	{
 		Serial.print(F("\n\nDCC SIG PROG(DIR): "));
-		Serial.print(DCC_SIGNAL_PIN_PROG);
-		Serial.print(F("\n   DIRECTION: "));
-		Serial.print(DCCppConfig::DirectionMotorB);
-		Serial.print(F("\n      ENABLE(PWM): "));
-		Serial.print(DCCppConfig::SignalEnablePinProg);
-		Serial.print(F("\n     CURRENT: "));
+		Serial.println(DCC_SIGNAL_PIN_PROG);
+		Serial.print(F("   DIRECTION: "));
+		Serial.println(DCCppConfig::DirectionMotorB);
+		Serial.print(F("   ENABLE(PWM): "));
+		Serial.println(DCCppConfig::SignalEnablePinProg);
+		Serial.print(F("   CURRENT: "));
 		Serial.println(DCCppConfig::CurrentMonitorProg);
 	}
 #if defined(USE_TURNOUT) && defined(USE_EEPROM)
 	Serial.print(F("\n\nNUM TURNOUTS: "));
-	Serial.print(EEStore::eeStore->data.nTurnouts);
-	Serial.print(F("\n     SENSORS: "));
-	Serial.print(EEStore::eeStore->data.nSensors);
-	Serial.print(F("\n     OUTPUTS: "));
+	Serial.println(EEStore::eeStore->data.nTurnouts);
+	Serial.print(F("     SENSORS: "));
+	Serial.println(EEStore::eeStore->data.nSensors);
+	Serial.print(F("     OUTPUTS: "));
 	Serial.println(EEStore::eeStore->data.nOutputs);
 #endif
 	
@@ -513,8 +514,7 @@ void DCCppClass::showConfiguration()
 	Serial.println(DCCppConfig::EthernetMac[5], HEX);
 //	Serial.print(F("PORT:         "));
 //	Serial.println(DCCppConfig::EthernetPort);
-	Serial.print(F("\nIP ADDRESS:   "));
-
+	Serial.print(F("IP ADDRESS:   "));
 	Serial.println(Ethernet.localIP());
 
 /*#ifdef IP_ADDRESS
