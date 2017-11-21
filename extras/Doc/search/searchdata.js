@@ -1,11 +1,10 @@
 var indexSectionsWithContent =
 {
-  0: "cdfhprtu",
-  1: "cdfprt",
+  0: "cdfhpr",
+  1: "cdfpr",
   2: "d",
-  3: "dp",
-  4: "u",
-  5: "h"
+  3: "d",
+  4: "h"
 };
 
 var indexSectionNames =
@@ -14,8 +13,7 @@ var indexSectionNames =
   1: "classes",
   2: "files",
   3: "functions",
-  4: "defines",
-  5: "pages"
+  4: "pages"
 };
 
 var indexSectionLabels =
@@ -24,7 +22,6 @@ var indexSectionLabels =
   1: "Classes",
   2: "Files",
   3: "Functions",
-  4: "Macros",
-  5: "Pages"
+  4: "Pages"
 };
 

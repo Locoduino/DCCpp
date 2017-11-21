@@ -84,13 +84,13 @@ void loop()
 	// activate first output from first sensor state.
 	int active = sensor1.isActive();
 
-	if (active != output1.data.oStatus)
+	if (active != output1.isActivated())
 		output1.activate(active);
 
 	// activate second output from second sensor state.
 	active = sensor2.isActive();
 
-	if (active != output2.data.oStatus)
+	if (active != output2.isActivated())
 		output2.activate(active);
 		
 	unsigned long event = Commanders::loop();

@@ -25,8 +25,12 @@ FunctionsState	KEYWORD1
 
 Clear		KEYWORD2
 Activate	KEYWORD2
+activate	KEYWORD2
 Inactivate	KEYWORD2
+inactivate	KEYWORD2
 IsActivated	KEYWORD2
+isActivated	KEYWORD2
+isActive	KEYWORD2
 
 begin			KEYWORD2
 beginMain		KEYWORD2

@@ -57,7 +57,7 @@ bool FunctionsState::IsActivated(byte inFunctionNumber)
 }
 
 #ifdef DCCPP_DEBUG_MODE
-void FunctionsState::b()
+void FunctionsState::printActivated()
 {
 	for (int i = 0; i < 32; i++)
 	{
@@ -458,7 +458,7 @@ void DCCppClass::showConfiguration()
 
 	Serial.print(F("VERSION DCC++:      "));
 	Serial.println(VERSION);
-	Serial.println(F("VERSION DCCpp library: 0.4.1"));
+	Serial.println(F("VERSION DCCpp library: 0.4.2"));
 	Serial.print(F("COMPILED:     "));
 	Serial.print(__DATE__);
 	Serial.print(F(" "));

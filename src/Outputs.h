@@ -106,6 +106,7 @@ struct Output{
   void begin(int id, int pin, int iFlag);
   void set(int id, int pin, int iFlag);
   void activate(int s = 1);
+  bool isActivated() { return this->data.oStatus > 0; }
 
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
   static Output *firstOutput;

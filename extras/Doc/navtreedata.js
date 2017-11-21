@@ -81,8 +81,7 @@ var NAVTREE =
           [ "regMap", "structRegisterList.html#a34fb7f658b4b1f4c11f05e2bea0adb42", null ],
           [ "speedTable", "structRegisterList.html#a62f3bcf15062a981e6dc9fea9890f4d3", null ],
           [ "tempPacket", "structRegisterList.html#a6a87974dadffdd85e3bd21a4fb9c77df", null ]
-        ] ],
-        [ "TextCommand", "structTextCommand.html", null ]
+        ] ]
       ] ],
       [ "Class Index", "classes.html", null ],
       [ "Class Members", "functions_all.html", [
@@ -93,14 +92,8 @@ var NAVTREE =
     [ "Files", null, [
       [ "File List", "files.html", [
         [ "src", "dir_d41d8cd98f00b204e9800998ecf8427e.html", [
-          [ "DCCpp.h", "DCCpp_8h.html", [
-            [ "USE_TEXTCOMMAND", "DCCpp_8h.html#ad7034344270036501578d215e708bc82", null ]
-          ] ]
+          [ "DCCpp.h", "DCCpp_8h.html", null ]
         ] ]
-      ] ],
-      [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
-        [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ],
     [ "File Source", "filesource.html", [
@@ -111,7 +104,6 @@ var NAVTREE =
         [ "CurrentMonitor.h", "CurrentMonitor_8h_source.html", null ],
         [ "DCCpp.cpp", "DCCpp_8cpp_source.html", null ],
         [ "DCCpp.h", "DCCpp_8h_source.html", null ],
-        [ "DCCpp.hdoc", "DCCpp_8hdoc_source.html", null ],
         [ "DCCpp.hpp", "DCCpp_8hpp_source.html", null ],
         [ "DCCpp_Uno.h", "DCCpp__Uno_8h_source.html", null ],
         [ "EEStore.cpp", "EEStore_8cpp_source.html", null ],
