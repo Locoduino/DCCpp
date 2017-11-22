@@ -70,7 +70,7 @@ void loop()
 			locoSpeed++;
 		if (locoSpeed > locoStepsNumber)
 			locoSpeed = locoStepsNumber;
-		DCCpp.SetSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
+		DCCpp.setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
 		break;
 
 	case EVENT_LESS:
@@ -80,23 +80,23 @@ void loop()
 			locoSpeed--;
 		if (locoSpeed < 0)
 			locoSpeed = 0;
-		DCCpp.SetSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
+		DCCpp.setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
 		break;
 
 	case EVENT_FUNCTION0:
-		if (locoFunctions.IsActivated(0))
-			locoFunctions.Inactivate(0);
+		if (locoFunctions.isActivated(0))
+			locoFunctions.inactivate(0);
 		else
-			locoFunctions.Activate(0);
-		DCCpp.SetFunctionsMain(2, locoId, locoFunctions);
+			locoFunctions.activate(0);
+		DCCpp.setFunctionsMain(2, locoId, locoFunctions);
 		break;
 
 	case EVENT_FUNCTION1:
-		if (locoFunctions.IsActivated(1))
-			locoFunctions.Inactivate(1);
+		if (locoFunctions.isActivated(1))
+			locoFunctions.inactivate(1);
 		else
-			locoFunctions.Activate(1);
-		DCCpp.SetFunctionsMain(3, locoId, locoFunctions);
+			locoFunctions.activate(1);
+		DCCpp.setFunctionsMain(3, locoId, locoFunctions);
 		break;
 	}
 }

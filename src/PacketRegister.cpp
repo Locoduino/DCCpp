@@ -150,6 +150,7 @@ void RegisterList::setThrottle(int nReg, int cab, int tSpeed, int tDirection) vo
 
 } // RegisterList::setThrottle(ints)
 
+#ifdef USE_TEXTCOMMAND
 void RegisterList::setThrottle(char *s) volatile
 {
   int nReg;
@@ -167,6 +168,7 @@ void RegisterList::setThrottle(char *s) volatile
 
   this->setThrottle(nReg, cab, tSpeed, tDirection);
 } // RegisterList::setThrottle(string)
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -199,7 +201,8 @@ void RegisterList::setFunction(int nReg, int cab, int fByte, int eByte) volatile
 	loadPacket(nReg, b, nB, 4, 1);
 } // RegisterList::setFunction(ints)
 
-void RegisterList::setFunction(char *s) volatile 
+#ifdef USE_TEXTCOMMAND
+void RegisterList::setFunction(char *s) volatile
 {
 	int cab;
 	int fByte, eByte;
@@ -220,6 +223,7 @@ void RegisterList::setFunction(char *s) volatile
 	this->setFunction(0, cab, fByte, eByte);	// TODO : nReg 0 is not valid !
 
 } // RegisterList::setFunction(string)
+#endif
 
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -234,7 +238,8 @@ void RegisterList::setAccessory(int aAdd, int aNum, int activate) volatile
 
 } // RegisterList::setAccessory(ints)
 
-void RegisterList::setAccessory(char *s) volatile 
+#ifdef USE_TEXTCOMMAND
+void RegisterList::setAccessory(char *s) volatile
 {
 	int aAdd;                       // the accessory address (0-511 = 9 bits) 
 	int aNum;                       // the accessory number within that address (0-3)
@@ -251,6 +256,7 @@ void RegisterList::setAccessory(char *s) volatile
 	this->setAccessory(aAdd, aNum, activate);
 
 } // RegisterList::setAccessory(string)
+#endif
 
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -266,7 +272,8 @@ void RegisterList::writeTextPacket(int nReg, byte *b, int nBytes) volatile
 
 } // RegisterList::writeTextPacket(bytes)
 
-void RegisterList::writeTextPacket(char *s) volatile 
+#ifdef USE_TEXTCOMMAND
+void RegisterList::writeTextPacket(char *s) volatile
 {
 	int nReg;
 	byte b[6];
@@ -277,6 +284,7 @@ void RegisterList::writeTextPacket(char *s) volatile
 	this->writeTextPacket(nReg, b, nBytes);
 
 } // RegisterList::writeTextPacket(string)
+#endif
 
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -374,7 +382,8 @@ void RegisterList::readCV(int cv, int callBack, int callBackSub) volatile
 
 } // RegisterList::readCV(ints)
 
-void RegisterList::readCV(char *s) volatile 
+#ifdef USE_TEXTCOMMAND
+void RegisterList::readCV(char *s) volatile
 {
 	int cv, callBack, callBackSub;
 
@@ -388,6 +397,7 @@ void RegisterList::readCV(char *s) volatile
 
 	this->readCV(cv, callBack, callBackSub);
 } // RegisterList::readCV(string)
+#endif
 
 int RegisterList::readCVmain(int cv, int callBack, int callBackSub) volatile
 {
@@ -395,6 +405,7 @@ int RegisterList::readCVmain(int cv, int callBack, int callBackSub) volatile
 
 } // RegisterList::readCV_Main()
 
+#ifdef USE_TEXTCOMMAND
 int RegisterList::readCVmain(char *s) volatile
 {
 	int cv, callBack, callBackSub;
@@ -409,6 +420,7 @@ int RegisterList::readCVmain(char *s) volatile
    
 	return this->readCVmain(cv, callBack, callBackSub);
 } // RegisterList::readCVmain(string)
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -468,7 +480,8 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 	}
 } // RegisterList::writeCVByte(ints)
 
-void RegisterList::writeCVByte(char *s) volatile 
+#ifdef USE_TEXTCOMMAND
+void RegisterList::writeCVByte(char *s) volatile
 {
 	int bValue, cv, callBack, callBackSub;
 
@@ -482,6 +495,7 @@ void RegisterList::writeCVByte(char *s) volatile
 
 	this->writeCVByte(cv, bValue, callBack, callBackSub);
 } // RegisterList::writeCVByte(string)
+#endif
 
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -545,6 +559,7 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 	}
 } // RegisterList::writeCVBit(ints)
 
+#ifdef USE_TEXTCOMMAND
 void RegisterList::writeCVBit(char *s) volatile
 {
   int bNum, bValue, cv, callBack, callBackSub;
@@ -559,7 +574,8 @@ void RegisterList::writeCVBit(char *s) volatile
 
   this->writeCVBit(cv, bNum, bValue, callBack, callBackSub);
 } // RegisterList::writeCVBit(string)
-  
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void RegisterList::writeCVByteMain(int cab, int cv, int bValue) volatile 
@@ -581,7 +597,8 @@ void RegisterList::writeCVByteMain(int cab, int cv, int bValue) volatile
 
 } // RegisterList::writeCVByteMain(ints)
 
-void RegisterList::writeCVByteMain(char *s) volatile 
+#ifdef USE_TEXTCOMMAND
+void RegisterList::writeCVByteMain(char *s) volatile
 {
 	int cab;
 	int cv;
@@ -597,6 +614,7 @@ void RegisterList::writeCVByteMain(char *s) volatile
 
 	this->writeCVByteMain(cab, cv, bValue);
 } // RegisterList::writeCVByteMain(string)
+#endif
 
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -622,7 +640,8 @@ void RegisterList::writeCVBitMain(int cab, int cv, int bNum, int bValue) volatil
 
 } // RegisterList::writeCVBitMain(ints)
 
-void RegisterList::writeCVBitMain(char *s) volatile 
+#ifdef USE_TEXTCOMMAND
+void RegisterList::writeCVBitMain(char *s) volatile
 {
 	int cab;
 	int cv;
@@ -639,6 +658,7 @@ void RegisterList::writeCVBitMain(char *s) volatile
 
 	this->writeCVBitMain(cab, cv, bNum, bValue);
 } // RegisterList::writeCVBitMain(string)
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 

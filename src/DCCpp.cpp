@@ -22,17 +22,17 @@ DCCppClass DCCppClass::DCCppInstance;
 volatile RegisterList DCCppClass::mainRegs(MAX_MAIN_REGISTERS);    // create list of registers for MAX_MAIN_REGISTER Main Track Packets
 volatile RegisterList DCCppClass::progRegs(2);                     // create a shorter list of only two registers for Program Track Packets
 
-CurrentMonitor DCCppClass::MainMonitor;  // create monitor for current on Main Track
-CurrentMonitor DCCppClass::ProgMonitor;  // create monitor for current on Program Track
+CurrentMonitor DCCppClass::mainMonitor;  // create monitor for current on Main Track
+CurrentMonitor DCCppClass::progMonitor;  // create monitor for current on Program Track
 
 // *********************************************************** FunctionsState
 
 FunctionsState::FunctionsState()
 {
-	this->Clear();
+	this->clear();
 }
 
-void FunctionsState::Clear()
+void FunctionsState::clear()
 {
 	// Clear all functions
 	this->activeFlags[0] = 0;
@@ -41,17 +41,17 @@ void FunctionsState::Clear()
 	this->activeFlags[3] = 0;
 }
 
-void FunctionsState::Activate(byte inFunctionNumber)
+void FunctionsState::activate(byte inFunctionNumber)
 {
 	bitSet(this->activeFlags[inFunctionNumber / 8], inFunctionNumber % 8);
 }
 
-void FunctionsState::Inactivate(byte inFunctionNumber)
+void FunctionsState::inactivate(byte inFunctionNumber)
 {
 	bitClear(this->activeFlags[inFunctionNumber / 8], inFunctionNumber % 8);
 }
 
-bool FunctionsState::IsActivated(byte inFunctionNumber)
+bool FunctionsState::isActivated(byte inFunctionNumber)
 {
 	return bitRead(this->activeFlags[inFunctionNumber / 8], inFunctionNumber % 8);
 }
@@ -61,7 +61,7 @@ void FunctionsState::printActivated()
 {
 	for (int i = 0; i < 32; i++)
 	{
-		if (this->IsActivated(i))
+		if (this->isActivated(i))
 		{
 			Serial.print(i);
 			Serial.print(" ");
@@ -90,8 +90,8 @@ DCCppClass::DCCppClass()
 	DCCppConfig::DirectionMotorA = 255;
 	DCCppConfig::DirectionMotorB = 255;
 
-	MainMonitor.begin(255, "");
-	ProgMonitor.begin(255, "");
+	mainMonitor.begin(255, "");
+	progMonitor.begin(255, "");
 }
 	
 static bool first = true;
@@ -116,8 +116,8 @@ void DCCppClass::loop()
 
 	if (CurrentMonitor::checkTime())
 	{      // if sufficient time has elapsed since last update, check current draw on Main and Program Tracks 
-		MainMonitor.check();
-		ProgMonitor.check();
+		this->mainMonitor.check();
+		this->progMonitor.check();
 	}
 
 #ifdef USE_SENSOR
@@ -163,7 +163,7 @@ void DCCppClass::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 		return;
 	}
 
-	MainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
+	this->mainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
 
 	// CONFIGURE TIMER_1 TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC1B INTERRUPT PINS
 
@@ -227,7 +227,7 @@ void DCCppClass::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 		return;
 	}
 
-	ProgMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
+	this->progMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
 
 	// CONFIGURE EITHER TIMER_0 (UNO) OR TIMER_3 (MEGA) TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC0B (UNO) OR OC3B (MEGA) INTERRUPT PINS
 
@@ -458,7 +458,7 @@ void DCCppClass::showConfiguration()
 
 	Serial.print(F("VERSION DCC++:      "));
 	Serial.println(VERSION);
-	Serial.println(F("VERSION DCCpp library: 0.4.2"));
+	Serial.println(F("VERSION DCCpp library: 0.5.0"));
 	Serial.print(F("COMPILED:     "));
 	Serial.print(__DATE__);
 	Serial.print(F(" "));
@@ -535,7 +535,7 @@ void DCCppClass::showConfiguration()
 }
 #endif
 
-void DCCppClass::PanicStop(bool inStop)
+void DCCppClass::panicStop(bool inStop)
 {
 	this->panicStopped = inStop;
 
@@ -552,19 +552,27 @@ void DCCppClass::PanicStop(bool inStop)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, inStop ? LOW : HIGH);
 }
 
-void DCCppClass::StartProgramMode()
+void DCCppClass::powerOn()
 {
-	this->programMode = true;
+	if (DCCppConfig::SignalEnablePinProg != 255)
+		digitalWrite(DCCppConfig::SignalEnablePinProg, HIGH);
+	if (DCCppConfig::SignalEnablePinMain != 255)
+		digitalWrite(DCCppConfig::SignalEnablePinMain, HIGH);
+	INTERFACE.println("<p1>");
 }
 
-void DCCppClass::EndProgramMode()
+void DCCppClass::powerOff()
 {
-	this->programMode = false;
+	if (DCCppConfig::SignalEnablePinProg != 255)
+		digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
+	if (DCCppConfig::SignalEnablePinMain != 255)
+		digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
+	INTERFACE.println("<p0>");
 }
 
 /***************************** Driving functions */
 
-bool DCCppClass::SetThrottle(volatile RegisterList *inpRegs, int nReg,  int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
+bool DCCppClass::setThrottle(volatile RegisterList *inpRegs, int nReg,  int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
 {
 	int val = 0;
 
@@ -589,7 +597,7 @@ bool DCCppClass::SetThrottle(volatile RegisterList *inpRegs, int nReg,  int inLo
 	return true;
 }
 
-void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId, FunctionsState inStates)
+void DCCppClass::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId, FunctionsState inStates)
 {
 	byte flags = 0;
 
@@ -611,7 +619,7 @@ void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int nReg, int inLo
 			*/
 
 			flags |= 1;
-			if (inStates.IsActivated(func))
+			if (inStates.isActivated(func))
 			{
 				if (func == 0)
 					oneByte1 += 16;
@@ -629,7 +637,7 @@ void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int nReg, int inLo
 			*/
 
 			flags |= 2;
-			if (inStates.IsActivated(func))
+			if (inStates.isActivated(func))
 				twoByte1 += (1 << (func - 5));
 		}
 		else if (func <= 12)
@@ -642,7 +650,7 @@ void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int nReg, int inLo
 			*/
 
 			flags |= 4;
-			if (inStates.IsActivated(func))
+			if (inStates.isActivated(func))
 				threeByte1 += (1 << (func - 9));
 		}
 		else if (func <= 20)
@@ -655,7 +663,7 @@ void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int nReg, int inLo
 			*/
 
 			flags |= 8;
-			if (inStates.IsActivated(func))
+			if (inStates.isActivated(func))
 				fourByte2 += (1 << (func - 13));
 		}
 		else if (func <= 28)
@@ -668,7 +676,7 @@ void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int nReg, int inLo
 			*/
 
 			flags |= 16;
-			if (inStates.IsActivated(func))
+			if (inStates.isActivated(func))
 				fiveByte2 += (1 << (func - 21));
 		}
 	}
@@ -692,7 +700,7 @@ void DCCppClass::SetFunctions(volatile RegisterList *inpRegs, int nReg, int inLo
 #endif
 }
 
-void DCCppClass::WriteCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
+void DCCppClass::writeCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
 {
 	inReg->writeCVByte(inCv, inValue, 100, 101);
 
@@ -704,8 +712,22 @@ void DCCppClass::WriteCv(volatile RegisterList *inReg, int inLocoId, int inCv, b
 #endif
 }
 
-int DCCppClass::ReadCv(volatile RegisterList *inReg, int inLocoId, byte inCv)
+int DCCppClass::readCv(volatile RegisterList *inReg, int inLocoId, byte inCv)
 {
 	return inReg->readCVmain(1, 100+inCv, 100+inCv);
+}
+
+void DCCppClass::setAccessory(int inAddress, byte inSubAddress, byte inActivate)
+{
+	this->mainRegs.setAccessory(inAddress, inSubAddress, inActivate);
+
+#ifdef DCCPP_DEBUG_MODE
+	Serial.print(F("DCCpp AccessoryOperation "));
+	Serial.print(inAddress);
+	Serial.print(F(" / "));
+	Serial.print(inSubAddress);
+	Serial.print(F(" : "));
+	Serial.println(inActivate);
+#endif
 }
 

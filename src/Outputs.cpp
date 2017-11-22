@@ -205,7 +205,7 @@ void Output::parse(char *c){
       break;
 
     case 3:                     // argument is string with id number of output followed by a pin number and invert flag
-      create(n,s,m,1);
+      create(n,s,m);
     break;
 
     case 1:                     // argument is a string with id number only
@@ -214,7 +214,7 @@ void Output::parse(char *c){
     
 #ifdef DCCPP_PRINT_DCCPP
 	case -1:                    // no arguments
-      show(1);                  // verbose show
+      show();                  // verbose show
 #endif
     break;
   }

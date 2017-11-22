@@ -1,9 +1,9 @@
 #include "Arduino.h"
 
-//#include "..\..\libraries\DCCpp\examples\MiniDcc\MiniDcc.ino"
+#include "..\..\libraries\DCCpp\examples\MiniDcc\MiniDcc.ino"
 //#include "..\..\libraries\DCCpp\examples\MaxiDcc\MaxiDcc.ino"
 //#include "..\..\libraries\DCCpp\examples\SerialDcc\SerialDcc.ino"
-#include "..\..\libraries\DCCpp\examples\EthernetDcc\EthernetDcc.ino"
+//#include "..\..\libraries\DCCpp\examples\EthernetDcc\EthernetDcc.ino"
 
 //#include "TestExe.ino"
 

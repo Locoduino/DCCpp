@@ -204,7 +204,7 @@ void Turnout::parse(char *c){
       break;
 
     case 3:                     // argument is string with id number of turnout followed by an address and subAddress
-      create(n,s,m,1);
+      create(n,s,m);
     break;
 
     case 1:                     // argument is a string with id number only
@@ -229,7 +229,7 @@ Turnout *Turnout::create(int id, int add, int subAdd) {
 		return(tt);
 	}
 
-	tt->begin(id, add, subadd);
+	tt->begin(id, add, subAdd);
 
 	return(tt);
 }

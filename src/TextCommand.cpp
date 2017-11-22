@@ -219,12 +219,14 @@ void TextCommand::parse(char *com){
 
 /***** SHOW STATUS OF ALL SENSORS ****/
 
+#ifdef DCCPP_PRINT_DCCPP
 	case 'Q':         // <Q>
 /*
  *    returns: the status of each sensor ID in the form <Q ID> (active) or <q ID> (not active)
  */
 	  Sensor::status();
 	  break;
+#endif
 #endif
 
 /***** WRITE CONFIGURATION VARIABLE BYTE TO ENGINE DECODER ON MAIN OPERATIONS TRACK  ****/    
@@ -317,12 +319,8 @@ void TextCommand::parse(char *com){
  *    
  *    returns: <p1>
  */    
-	if (DCCppConfig::SignalEnablePinProg != 255)
-		digitalWrite(DCCppConfig::SignalEnablePinProg,HIGH);
-	if (DCCppConfig::SignalEnablePinMain != 255)
-		digitalWrite(DCCppConfig::SignalEnablePinMain,HIGH);
-	 INTERFACE.println("<p1>");
-	 break;
+	  DCCpp.powerOn();
+	  break;
 		  
 /***** TURN OFF POWER FROM MOTOR SHIELD TO TRACKS  ****/    
 
@@ -332,12 +330,8 @@ void TextCommand::parse(char *com){
  *    
  *    returns: <p0>
  */
-		if (DCCppConfig::SignalEnablePinProg != 255)
-			digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
-		if (DCCppConfig::SignalEnablePinMain != 255)
-			digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
-		INTERFACE.println("<p0>");
-	 break;
+		DCCpp.powerOff();
+		break;
 
 /***** READ MAIN OPERATIONS TRACK CURRENT  ****/    
 
@@ -349,7 +343,7 @@ void TextCommand::parse(char *com){
  *    where CURRENT = 0-1024, based on exponentially-smoothed weighting scheme
  */
 	  INTERFACE.print("<a");
-	  INTERFACE.print(int(DCCppClass::MainMonitor.current));
+	  INTERFACE.print(int(DCCpp.getCurrentMain()));
 	  INTERFACE.println(">");
 	  break;
 
@@ -401,6 +395,7 @@ void TextCommand::parse(char *com){
 	  INTERFACE.println("SERIAL>");
 #endif
 
+#ifdef DCCPP_PRINT_DCCPP
 #ifdef USE_TURNOUT
 	  Turnout::show();
 #endif
@@ -409,6 +404,7 @@ void TextCommand::parse(char *com){
 #endif
 #ifdef USE_SENSOR
 	  Sensor::show();
+#endif
 #endif
 	  break;
 

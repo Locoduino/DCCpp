@@ -50,13 +50,16 @@ struct RegisterList{
   RegisterList(int);
   void loadPacket(int, byte *, int, int, int=0) volatile;
 
+#ifdef USE_TEXTCOMMAND
   void setThrottle(char *) volatile;
   void setFunction(char *) volatile;
   void setAccessory(char *) volatile;
   void writeTextPacket(char *) volatile;
+#endif
 
   int readCVraw(int cv, int callBack, int callBackSub, bool FromProg) volatile;
 
+#ifdef USE_TEXTCOMMAND
   void readCV(char *) volatile;
   void writeCVByte(char *) volatile;
   void writeCVBit(char *) volatile;
@@ -64,6 +67,7 @@ struct RegisterList{
   int readCVmain(char *) volatile;
   void writeCVByteMain(char *) volatile;
   void writeCVBitMain(char *s) volatile;
+#endif
 
   void setThrottle(int nReg, int cab, int tSpeed, int tDirection) volatile;
   void setFunction(int nReg, int cab, int fByte, int eByte) volatile;

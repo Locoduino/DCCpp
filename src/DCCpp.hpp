@@ -12,16 +12,16 @@ class FunctionsState
 		// A bit at true is an activated function.
 		byte activeFlags[4];
 
-		inline byte ByteNumber(byte inFunctionNumber) { return inFunctionNumber / 8; }
-		inline byte BitNumber(byte inFunctionNumber) { return inFunctionNumber % 8; }
+		inline byte byteNumber(byte inFunctionNumber) { return inFunctionNumber / 8; }
+		inline byte bitNumber(byte inFunctionNumber) { return inFunctionNumber % 8; }
 
 	public:
 		FunctionsState();
 
-		void Clear();
-		void Activate(byte inFunctionNumber);
-		void Inactivate(byte inFunctionNumber);
-		bool IsActivated(byte inFunctionNumber);
+		void clear();
+		void activate(byte inFunctionNumber);
+		void inactivate(byte inFunctionNumber);
+		bool isActivated(byte inFunctionNumber);
 
 #ifdef DCCPP_DEBUG_MODE
 		void printActivated();
@@ -34,15 +34,15 @@ class DCCppClass
 		bool programMode;
 		bool panicStopped;
 
-		bool SetThrottle(volatile RegisterList *inReg, int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft);
-		int ReadCv(volatile RegisterList *inReg, int inLocoId, byte inCvId);
-		void WriteCv(volatile RegisterList *inReg, int inLocoId, int inCvId, byte inCvValue);
-		void SetFunctions(volatile RegisterList *inReg, int nReg, int inLocoId, FunctionsState inStates);
+		bool setThrottle(volatile RegisterList *inReg, int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft);
+		int readCv(volatile RegisterList *inReg, int inLocoId, byte inCvId);
+		void writeCv(volatile RegisterList *inReg, int inLocoId, int inCvId, byte inCvValue);
+		void setFunctions(volatile RegisterList *inReg, int nReg, int inLocoId, FunctionsState inStates);
 
 	public:
 		static volatile RegisterList mainRegs, progRegs;
-		static CurrentMonitor MainMonitor;
-		static CurrentMonitor ProgMonitor;
+		static CurrentMonitor mainMonitor;
+		static CurrentMonitor progMonitor;
 	
 		DCCppClass();
 		
@@ -57,21 +57,26 @@ class DCCppClass
 
 		// DCCpp global functions
 		void loop();
-		void PanicStop(bool inStop);
-		void StartProgramMode();
-		void EndProgramMode();
+		void panicStop(bool inStop);
+		void powerOn();
+		void powerOff();
+		inline float getCurrentMain() { return this->mainMonitor.pin == 255 ? 0 : mainMonitor.current; }
+		inline float getCurrentProg() { return this->progMonitor.pin == 255 ? 0 : progMonitor.current; }
 
 		// Main driving functions
-		inline bool SetSpeedMain(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft) { return this->SetThrottle(&(this->mainRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inToLeft); }
-		inline int ReadCvMain(int inLocoId, byte inCvId) { return this->ReadCv(&(this->mainRegs), inLocoId, inCvId); }
-		inline void WriteCvMain(int inLocoId, int inCvId, byte inValue) { this->WriteCv(&(this->mainRegs), inLocoId, inCvId, inValue); }
-		inline void SetFunctionsMain(int nReg, int inLocoId, FunctionsState inStates) { this->SetFunctions(&(this->mainRegs), nReg, inLocoId, inStates); }
+		inline bool setSpeedMain(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft) { return this->setThrottle(&(this->mainRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inToLeft); }
+		inline int readCvMain(int inLocoId, byte inCvId) { return this->readCv(&(this->mainRegs), inLocoId, inCvId); }
+		inline void writeCvMain(int inLocoId, int inCvId, byte inValue) { this->writeCv(&(this->mainRegs), inLocoId, inCvId, inValue); }
+		inline void setFunctionsMain(int nReg, int inLocoId, FunctionsState inStates) { this->setFunctions(&(this->mainRegs), nReg, inLocoId, inStates); }
 
 		// Prog driving functions
-		inline bool SetSpeedProg(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft) { return this->SetThrottle(&(this->progRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inToLeft); }
-		inline int ReadCvProg(int inLocoId, byte inCvId) { return this->ReadCv(&(this->progRegs), inLocoId, inCvId); }
-		inline void WriteCvProg(int inLocoId, int inCvId, byte inValue) { this->WriteCv(&(this->progRegs), inLocoId, inCvId, inValue); }
-		inline void SetFunctionsProg(int nReg, int inLocoId, FunctionsState inStates) { this->SetFunctions(&(this->progRegs), nReg, inLocoId, inStates); }
+		inline bool setSpeedProg(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft) { return this->setThrottle(&(this->progRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inToLeft); }
+		inline int readCvProg(int inLocoId, byte inCvId) { return this->readCv(&(this->progRegs), inLocoId, inCvId); }
+		inline void writeCvProg(int inLocoId, int inCvId, byte inValue) { this->writeCv(&(this->progRegs), inLocoId, inCvId, inValue); }
+		inline void setFunctionsProg(int nReg, int inLocoId, FunctionsState inStates) { this->setFunctions(&(this->progRegs), nReg, inLocoId, inStates); }
+
+		// Accessories
+		void setAccessory(int inAddress, byte inSubAddress, byte inActivate);
 
 #ifdef DCCPP_PRINT_DCCPP
 		static void showConfiguration();
