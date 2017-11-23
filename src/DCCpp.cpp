@@ -7,13 +7,6 @@ description: <DCCpp class>
 #include "DCCpp.h"
 #include "arduino.h"
 
-// SET UP COMMUNICATIONS INTERFACE - FOR STANDARD SERIAL, NOTHING NEEDS TO BE DONE
-
-#ifdef USE_ETHERNET
-//byte mac[] = MAC_ADDRESS;                                // Create MAC address (to be used for DHCP when initializing server)
-//EthernetServer INTERFACE(ETHERNET_PORT);                  // Create and instance of an EnternetServer
-#endif
-
 DCCppClass DCCppClass::DCCppInstance;
 
 // NEXT DECLARE GLOBAL OBJECTS TO PROCESS AND STORE DCC PACKETS AND MONITOR TRACK CURRENTS.
@@ -74,24 +67,24 @@ void FunctionsState::printActivated()
 
 // *********************************************************** end of FunctionsState
 
-/// DCCpp class
+// *********************************************************** DCCpp class
 
 DCCppClass::DCCppClass()
 { 
 	this->programMode = false; 
 	this->panicStopped = false;
 
-	DCCppConfig::SignalEnablePinMain = 255;
-	DCCppConfig::CurrentMonitorMain = 255;
+	DCCppConfig::SignalEnablePinMain = UNDEFINED_PIN;
+	DCCppConfig::CurrentMonitorMain = UNDEFINED_PIN;
 
-	DCCppConfig::SignalEnablePinProg = 255;
-	DCCppConfig::CurrentMonitorProg = 255;
+	DCCppConfig::SignalEnablePinProg = UNDEFINED_PIN;
+	DCCppConfig::CurrentMonitorProg = UNDEFINED_PIN;
 
-	DCCppConfig::DirectionMotorA = 255;
-	DCCppConfig::DirectionMotorB = 255;
+	DCCppConfig::DirectionMotorA = UNDEFINED_PIN;
+	DCCppConfig::DirectionMotorB = UNDEFINED_PIN;
 
-	mainMonitor.begin(255, "");
-	progMonitor.begin(255, "");
+	mainMonitor.begin(UNDEFINED_PIN, "");
+	progMonitor.begin(UNDEFINED_PIN, "");
 }
 	
 static bool first = true;
@@ -130,7 +123,7 @@ void DCCppClass::loop()
 ///////////////////////////////////////////////////////////////////////////////
 
 // For Arduino or Pololu shields, signalPinMain must be connected to Direction motor A, and signalPinProg to Direction motor B
-// If a track is not connected,  main or prog, the signalPin should stay to default at 255.
+// If a track is not connected,  main or prog, the signalPin should stay to default at 255 (UNDEFINED_PIN).
 // For H bridge connected directly to the pins, like LMD18200, signalPin and Direction motor should have the same pin number.
 
 // For Arduino Motor Shield
@@ -142,11 +135,11 @@ void DCCppClass::loop()
 // beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG);
 
 // For single LMD18200
-// beginMain(255, DCC_SIGNAL_PIN_MAIN, 3, A0);
+// beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
 
 // For double LMD18200
-// beginMain(255, DCC_SIGNAL_PIN_MAIN, 3, A0);
-// beginProg(255, DCC_SIGNAL_PIN_PROG, 11, A1);
+// beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
+// beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 11, A1);
 
 void DCCppClass::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
 {
@@ -155,7 +148,7 @@ void DCCppClass::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 	DCCppConfig::CurrentMonitorMain = inCurrentMonitor;
 
 	// If no main line, exit.
-	if (DCCppConfig::SignalEnablePinMain == 255)
+	if (DCCppConfig::SignalEnablePinMain == UNDEFINED_PIN)
 	{
 #ifdef DCCPP_DEBUG_MODE
 		Serial.println("No main line");
@@ -177,7 +170,7 @@ void DCCppClass::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 
 #define DCC_ONE_BIT_TOTAL_DURATION_TIMER1 1855
 #define DCC_ONE_BIT_PULSE_DURATION_TIMER1 927
-	if (DCCppConfig::DirectionMotorA != 255)
+	if (DCCppConfig::DirectionMotorA != UNDEFINED_PIN)
 	{
 		pinMode(DCCppConfig::DirectionMotorA, INPUT);      // ensure this pin is not active! Direction will be controlled by DCC SIGNAL instead (below)
 		digitalWrite(DCCppConfig::DirectionMotorA, LOW);
@@ -219,7 +212,7 @@ void DCCppClass::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 	DCCppConfig::CurrentMonitorProg = inCurrentMonitor;
 
 	// If no prog line, exit.
-	if (DCCppConfig::SignalEnablePinProg == 255)
+	if (DCCppConfig::SignalEnablePinProg == UNDEFINED_PIN)
 	{
 #ifdef DCCPP_DEBUG_MODE
 		Serial.println("No prog line");
@@ -244,7 +237,7 @@ void DCCppClass::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 #define DCC_ONE_BIT_TOTAL_DURATION_TIMER0 28
 #define DCC_ONE_BIT_PULSE_DURATION_TIMER0 14
 
-	if (DCCppConfig::DirectionMotorB != 255)
+	if (DCCppConfig::DirectionMotorB != UNDEFINED_PIN)
 	{
 		pinMode(DCCppConfig::DirectionMotorB, INPUT);      // ensure this pin is not active! Direction will be controlled by DCC SIGNAL instead (below)
 		digitalWrite(DCCppConfig::DirectionMotorB, LOW);
@@ -285,7 +278,7 @@ void DCCppClass::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 #define DCC_ONE_BIT_TOTAL_DURATION_TIMER3 1855
 #define DCC_ONE_BIT_PULSE_DURATION_TIMER3 927
 
-	if (DCCppConfig::DirectionMotorB != 255)
+	if (DCCppConfig::DirectionMotorB != UNDEFINED_PIN)
 	{
 		pinMode(DCCppConfig::DirectionMotorB, INPUT);      // ensure this pin is not active! Direction will be controlled by DCC SIGNAL instead (below)
 		digitalWrite(DCCppConfig::DirectionMotorB, LOW);
@@ -343,12 +336,14 @@ void DCCppClass::begin()
 } // begin
 
 #ifdef USE_ETHERNET
-void DCCppClass::beginEthernet(uint8_t *inMac, uint8_t *inIp)
+void DCCppClass::beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol inProtocol)
 {
 	for (int i = 0; i < 4; i++)
 		DCCppConfig::EthernetIp[i] = inIp[i];
 	for (int i = 0; i < 6; i++)
 		DCCppConfig::EthernetMac[i] = inMac[i];
+
+	DCCppConfig::Protocol = inProtocol;
 
 	if (inIp == NULL)
 		Ethernet.begin(inMac);                  // Start networking using DHCP to get an IP Address
@@ -458,7 +453,7 @@ void DCCppClass::showConfiguration()
 
 	Serial.print(F("VERSION DCC++:      "));
 	Serial.println(VERSION);
-	Serial.println(F("VERSION DCCpp library: 0.5.0"));
+	Serial.println(F("VERSION DCCpp library: 0.5.1"));
 	Serial.print(F("COMPILED:     "));
 	Serial.print(__DATE__);
 	Serial.print(F(" "));
@@ -470,7 +465,7 @@ void DCCppClass::showConfiguration()
 	//Serial.print(F("\n\nMOTOR SHIELD: "));
 	//Serial.print(MOTOR_SHIELD_NAME);
 
-	if (DCCppConfig::SignalEnablePinMain!= 255)
+	if (DCCppConfig::SignalEnablePinMain!= UNDEFINED_PIN)
 	{
 		Serial.print(F("\n\nDCC SIG MAIN(DIR): "));
 		Serial.println(DCC_SIGNAL_PIN_MAIN);
@@ -482,7 +477,7 @@ void DCCppClass::showConfiguration()
 		Serial.println(DCCppConfig::CurrentMonitorMain);
 	}
 
-	if (DCCppConfig::SignalEnablePinProg!= 255)
+	if (DCCppConfig::SignalEnablePinProg!= UNDEFINED_PIN)
 	{
 		Serial.print(F("\n\nDCC SIG PROG(DIR): "));
 		Serial.println(DCC_SIGNAL_PIN_PROG);
@@ -546,26 +541,26 @@ void DCCppClass::panicStop(bool inStop)
 
 	/* activate or not the current output on rails */
 
-	if (DCCppConfig::SignalEnablePinMain != 255)
+	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinMain, inStop ? LOW : HIGH);
-	if (DCCppConfig::SignalEnablePinProg != 255)
+	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, inStop ? LOW : HIGH);
 }
 
 void DCCppClass::powerOn()
 {
-	if (DCCppConfig::SignalEnablePinProg != 255)
+	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, HIGH);
-	if (DCCppConfig::SignalEnablePinMain != 255)
+	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinMain, HIGH);
 	INTERFACE.println("<p1>");
 }
 
 void DCCppClass::powerOff()
 {
-	if (DCCppConfig::SignalEnablePinProg != 255)
+	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
-	if (DCCppConfig::SignalEnablePinMain != 255)
+	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
 	INTERFACE.println("<p0>");
 }

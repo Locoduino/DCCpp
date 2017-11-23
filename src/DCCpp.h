@@ -226,7 +226,7 @@ Main include file of the library.*/
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip.*/
 //#define USE_ETHERNET_WIZNET_5200
 /**Comment this line to avoid using and compiling Ethernet shield using ENC28J60 chip.*/
-//#define USE_ETHERNET_ENC28J60
+#define USE_ETHERNET_ENC28J60
 
 #if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200) || defined(USE_ETHERNET_ENC28J60)
 #define USE_ETHERNET

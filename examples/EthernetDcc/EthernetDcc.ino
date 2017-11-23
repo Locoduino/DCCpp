@@ -22,8 +22,8 @@ void setup()
 	Serial.begin(115200);
 
 	DCCpp.begin();
-	DCCpp.beginMain(255, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, A5);
-	DCCpp.beginEthernet(mac, ip);
+	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, A5);
+	DCCpp.beginEthernet(mac, ip, EthernetProtocol::HTTP);
 }
 
 void loop()

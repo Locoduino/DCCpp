@@ -16,16 +16,18 @@ Part of DCC++ BASE STATION for the Arduino
 uint8_t DCCppConfig::EthernetIp[4];
 uint8_t DCCppConfig::EthernetMac[6];
 int DCCppConfig::EthernetPort = 0;
+
+EthernetProtocol DCCppConfig::Protocol = EthernetProtocol::None;
 #endif
 
-byte DCCppConfig::SignalEnablePinMain = 255;
-byte DCCppConfig::CurrentMonitorMain = 255;
+byte DCCppConfig::SignalEnablePinMain = UNDEFINED_PIN;
+byte DCCppConfig::CurrentMonitorMain = UNDEFINED_PIN;
 					
-byte DCCppConfig::SignalEnablePinProg = 255;
-byte DCCppConfig::CurrentMonitorProg = 255;
+byte DCCppConfig::SignalEnablePinProg = UNDEFINED_PIN;
+byte DCCppConfig::CurrentMonitorProg = UNDEFINED_PIN;
 					
-byte DCCppConfig::DirectionMotorA = 255;
-byte DCCppConfig::DirectionMotorB = 255;
+byte DCCppConfig::DirectionMotorA = UNDEFINED_PIN;
+byte DCCppConfig::DirectionMotorB = UNDEFINED_PIN;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -299,7 +301,7 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg
 	if (!FromProg)
 		MonitorPin = DCCppConfig::CurrentMonitorMain;
 
-	if (MonitorPin == 255)
+	if (MonitorPin == UNDEFINED_PIN)
 		return -1;
 
 	bRead[0] = 0x78 + (highByte(cv) & 0x03);   // any CV>1023 will become modulus(1024) due to bit-mask of 0x03
@@ -441,7 +443,7 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 	loadPacket(0, idlePacket, 2, 10);
 
 	// If monitor pin undefined, write cv without any confirmation...
-	if (DCCppConfig::CurrentMonitorProg != 255)
+	if (DCCppConfig::CurrentMonitorProg != UNDEFINED_PIN)
 	{
 		c = 0;
 		d = 0;
@@ -518,7 +520,7 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 	loadPacket(0, idlePacket, 2, 10);
 
 	// If monitor pin undefined, write cv without any confirmation...
-	if (DCCppConfig::CurrentMonitorProg != 255)
+	if (DCCppConfig::CurrentMonitorProg != UNDEFINED_PIN)
 	{
 		c = 0;
 		d = 0;

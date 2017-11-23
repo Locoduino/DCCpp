@@ -130,7 +130,7 @@ void setup()
 	Sensor::show();
 
 	DCCpp.begin();
-	DCCpp.beginMain(255, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
+	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
 
 	Turnout::show();
 	Output::show();

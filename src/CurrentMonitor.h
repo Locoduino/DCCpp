@@ -13,7 +13,6 @@ Part of DCC++ BASE STATION for the Arduino
 //#include "Arduino.h"
 
 #define  CURRENT_SAMPLE_SMOOTHING   0.01
-#define  CURRENT_SAMPLE_MAX         300
 
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)      // Configuration for UNO
 	#define  CURRENT_SAMPLE_TIME        10
@@ -24,9 +23,10 @@ Part of DCC++ BASE STATION for the Arduino
 struct CurrentMonitor{
   static long int sampleTime;
   int pin;
+  float currentSampleMax;
   float current;
   const char *msg;
-  void begin(int, const char *);
+  void begin(int, const char *, float = 300);
   static boolean checkTime();
   void check();
 };

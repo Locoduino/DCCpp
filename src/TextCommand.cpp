@@ -39,11 +39,14 @@ void TextCommand::process(){
 	EthernetClient client=INTERFACE.available();
 
 	if (client) {
-		INTERFACE.println("HTTP/1.1 200 OK");
-		INTERFACE.println("Content-Type: text/html");
-		INTERFACE.println("Access-Control-Allow-Origin: *");
-		INTERFACE.println("Connection: close");
-		INTERFACE.println("");
+
+		if (DCCppConfig::Protocol == EthernetProtocol::HTTP) {
+			INTERFACE.println("HTTP/1.1 200 OK");
+			INTERFACE.println("Content-Type: text/html");
+			INTERFACE.println("Access-Control-Allow-Origin: *");
+			INTERFACE.println("Connection: close");
+			INTERFACE.println("");
+		}
 
 		while (client.connected() && client.available()) {        // while there is data on the network
 			c = client.read();
@@ -55,7 +58,8 @@ void TextCommand::process(){
 				sprintf(commandString, "%s%c", commandString, c);     // otherwise, character is ignored (but continue to look for '<' or '>')
 		} // while
 
-		client.stop();
+		if (DCCppConfig::Protocol == EthernetProtocol::HTTP)
+			client.stop();
 	}
 
   #else  // SERIAL case

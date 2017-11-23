@@ -12,52 +12,13 @@ Part of DCC++ BASE STATION for the Arduino
 
 #include "arduino.h"
 
-/////////////////////////////////////////////////////////////////////////////////////
-//
-// DEFINE MOTOR_SHIELD_TYPE ACCORDING TO THE FOLLOWING TABLE:
-//
-//  0 = ARDUINO MOTOR SHIELD          (MAX 18V/2A PER CHANNEL)
-//  1 = POLOLU MC33926 MOTOR SHIELD   (MAX 28V/3A PER CHANNEL)
-
-//#define MOTOR_SHIELD_TYPE   0
+#define UNDEFINED_PIN	255
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
 // DEFINE NUMBER OF MAIN TRACK REGISTER
 
 #define MAX_MAIN_REGISTERS 12
-
-/////////////////////////////////////////////////////////////////////////////////////
-//
-// DEFINE COMMUNICATIONS INTERFACE
-//
-//  0 = Built-in Serial Port
-//  1 = Arduino.cc Ethernet/SD-Card Shield
-//  2 = Arduino.org Ethernet/SD-Card Shield
-//  3 = Seeed Studio Ethernet/SD-Card Shield W5200
-
-//#define COMM_INTERFACE   0
-
-/////////////////////////////////////////////////////////////////////////////////////
-//
-// DEFINE STATIC IP ADDRESS *OR* COMMENT OUT TO USE DHCP
-//
-
-//#define IP_ADDRESS { 192, 168, 1, 200 }
-
-/////////////////////////////////////////////////////////////////////////////////////
-//
-// DEFINE PORT TO USE FOR ETHERNET COMMUNICATIONS INTERFACE
-//
-
-//#define ETHERNET_PORT 2560
-
-/////////////////////////////////////////////////////////////////////////////////////
-//
-// DEFINE MAC ADDRESS ARRAY FOR ETHERNET COMMUNICATIONS INTERFACE
-//
-
-//#define MAC_ADDRESS {  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEF }
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
@@ -98,12 +59,22 @@ Part of DCC++ BASE STATION for the Arduino
 #define POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A 7
 #define POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B 8
 
+#ifdef USE_ETHERNET
+enum EthernetProtocol
+{
+	None,
+	HTTP,
+	TCP
+};
+#endif
+
 struct DCCppConfig
 {
 #ifdef USE_ETHERNET
 	static uint8_t EthernetIp[4];
 	static uint8_t EthernetMac[6];
 	static int EthernetPort;
+	static EthernetProtocol Protocol;
 #endif
 
 	static byte SignalEnablePinMain;// PWM : *_SIGNAL_ENABLE_PIN_MAIN

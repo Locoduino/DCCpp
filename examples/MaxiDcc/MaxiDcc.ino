@@ -58,8 +58,8 @@ void setup()
 	buttonTurnout2.begin(EVENT_TURNOUT2, 31);
 
 	DCCpp.begin();
-	DCCpp.beginMain(255, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
-	DCCpp.beginProg(255, DCC_SIGNAL_PIN_PROG, 3, A5);    // Dc: Dir, Pwm, current sensor
+	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
+	DCCpp.beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 3, A5);    // Dc: Dir, Pwm, current sensor
 
 	locoId = 3;
 	locoStepsNumber = 128;

@@ -13,11 +13,12 @@ Part of DCC++ BASE STATION for the Arduino
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CurrentMonitor::begin(int pin, const char *msg)
+void CurrentMonitor::begin(int pin, const char *msg, float inSampleMax)
 {
 	this->pin = pin;
 	this->msg = msg;
 	this->current = 0;
+	this->currentSampleMax = inSampleMax;
 } // CurrentMonitor::begin
   
 boolean CurrentMonitor::checkTime()
@@ -30,19 +31,19 @@ boolean CurrentMonitor::checkTime()
   
 void CurrentMonitor::check()
 {
-	if (this->pin == 255)
+	if (this->pin == UNDEFINED_PIN)
 		return;
 	this->current = (float) (analogRead(this->pin) * CURRENT_SAMPLE_SMOOTHING + this->current * (1.0-CURRENT_SAMPLE_SMOOTHING));      // compute new exponentially-smoothed current
 	int signalPin = DCCppConfig::SignalEnablePinProg;
-	if (signalPin == 255)
+	if (signalPin == UNDEFINED_PIN)
 		signalPin = DCCppConfig::SignalEnablePinMain;
 
 	// current overload and Prog Signal is on (or could have checked Main Signal, since both are always on or off together)
-	if (this->current > CURRENT_SAMPLE_MAX && digitalRead(signalPin) == HIGH)
+	if (this->current > this->currentSampleMax && digitalRead(signalPin) == HIGH)
 	{
-		if (DCCppConfig::SignalEnablePinProg != 255)
+		if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
 			digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);		// disable both Motor Shield Channels
-		if (DCCppConfig::SignalEnablePinMain != 255)
+		if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 			digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);        // regardless of which caused current overload
 		INTERFACE.print(this->msg);                                     // print corresponding error message
 	}

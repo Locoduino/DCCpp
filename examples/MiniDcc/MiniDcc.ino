@@ -47,7 +47,7 @@ void setup()
 	buttonF1.begin(EVENT_FUNCTION1, A2);
 
 	DCCpp.begin();
-	DCCpp.beginMain(255, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
+	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
 
 	locoId = 3;
 	locoStepsNumber = 128;

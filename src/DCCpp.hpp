@@ -52,7 +52,7 @@ class DCCppClass
 		void beginMain(uint8_t OptionalDirectionMotor, uint8_t Dummy, uint8_t SignalEnablePin, uint8_t CurrentMonitor);
 		void beginProg(uint8_t OptionalDirectionMotor, uint8_t Dummy, uint8_t SignalEnablePin, uint8_t CurrentMonitor);
 #ifdef USE_ETHERNET
-		void beginEthernet(uint8_t *inMac, uint8_t *inIp);
+		void beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol inProtocol = EthernetProtocol::None);
 #endif
 
 		// DCCpp global functions
@@ -60,8 +60,10 @@ class DCCppClass
 		void panicStop(bool inStop);
 		void powerOn();
 		void powerOff();
-		inline float getCurrentMain() { return this->mainMonitor.pin == 255 ? 0 : mainMonitor.current; }
-		inline float getCurrentProg() { return this->progMonitor.pin == 255 ? 0 : progMonitor.current; }
+		inline void setCurrentSampleMaxMain(float inMax) { this->mainMonitor.currentSampleMax = inMax; }
+		inline void setCurrentSampleMaxProg(float inMax) { this->progMonitor.currentSampleMax = inMax; }
+		inline float getCurrentMain() { return this->mainMonitor.pin == UNDEFINED_PIN ? 0 : mainMonitor.current; }
+		inline float getCurrentProg() { return this->progMonitor.pin == UNDEFINED_PIN ? 0 : progMonitor.current; }
 
 		// Main driving functions
 		inline bool setSpeedMain(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft) { return this->setThrottle(&(this->mainRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inToLeft); }
