@@ -140,13 +140,16 @@ void RegisterList::setThrottle(int nReg, int cab, int tSpeed, int tDirection) vo
 
 	loadPacket(nReg, b, nB, 0, 1);
 
-#ifdef DCCPP_DEBUG_MODE
+#if defined(USE_TEXTCOMMAND)
 	INTERFACE.print("<T");
 	INTERFACE.print(nReg); INTERFACE.print(" ");
 	INTERFACE.print(cab); INTERFACE.print(" ");
 	INTERFACE.print(tSpeed); INTERFACE.print(" ");
 	INTERFACE.print(tDirection);
-	INTERFACE.println(">");
+	INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 #endif
 	speedTable[nReg] = tDirection == 1 ? tSpeed : -tSpeed;
 
@@ -192,13 +195,16 @@ void RegisterList::setFunction(int nReg, int cab, int fByte, int eByte) volatile
 		b[nB++] = eByte;
 	}
 
-#ifdef DCCPP_DEBUG_MODE
+#if defined(USE_TEXTCOMMAND)
 	INTERFACE.print("<F");
 	INTERFACE.print(nReg); INTERFACE.print(" ");
 	INTERFACE.print(cab); INTERFACE.print(" ");
 	INTERFACE.print(fByte); INTERFACE.print(" ");
 	INTERFACE.print(eByte);
-	INTERFACE.println(">");
+	INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 #endif
 	loadPacket(nReg, b, nB, 4, 1);
 } // RegisterList::setFunction(ints)
@@ -363,7 +369,7 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg
 	if (d == 0)    // verify unsuccessful
 		bValue = -1;
 
-#ifdef DCCPP_DEBUG_MODE
+#if defined(USE_TEXTCOMMAND)
 	INTERFACE.print("<r");
 	INTERFACE.print(callBack);
 	INTERFACE.print("|");
@@ -372,7 +378,10 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg
 	INTERFACE.print(cv + 1);
 	INTERFACE.print(" ");
 	INTERFACE.print(bValue);
-	INTERFACE.println(">");
+	INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 #endif
 
 	return bValue;
@@ -468,7 +477,7 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 		if (d == 0)    // verify unsuccessful
 			bValue = -1;
 
-#ifdef DCCPP_DEBUG_MODE
+#if defined(USE_TEXTCOMMAND)
 		INTERFACE.print("<r");
 		INTERFACE.print(callBack);
 		INTERFACE.print("|");
@@ -477,7 +486,10 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 		INTERFACE.print(cv + 1);
 		INTERFACE.print(" ");
 		INTERFACE.print(bValue);
-		INTERFACE.println(">");
+		INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 #endif
 	}
 } // RegisterList::writeCVByte(ints)
@@ -545,7 +557,7 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 		if (d == 0)    // verify unsuccessful
 			bValue = -1;
 
-#ifdef DCCPP_DEBUG_MODE
+#if defined(USE_TEXTCOMMAND)
 		INTERFACE.print("<r");
 		INTERFACE.print(callBack);
 		INTERFACE.print("|");
@@ -556,7 +568,10 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 		INTERFACE.print(bNum);
 		INTERFACE.print(" ");
 		INTERFACE.print(bValue);
-		INTERFACE.println(">");
+		INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 #endif
 	}
 } // RegisterList::writeCVBit(ints)
@@ -666,8 +681,7 @@ void RegisterList::writeCVBitMain(char *s) volatile
 
 #ifdef DCCPP_DEBUG_MODE
 void RegisterList::printPacket(int nReg, byte *b, int nBytes, int nRepeat) volatile 
-{
-  
+{  
   INTERFACE.print("<*");
   INTERFACE.print(nReg);
   INTERFACE.print(":");

@@ -181,6 +181,13 @@ the needs to modify the library sources to use it.
 
 \page Revision History
 
+\par 25/11/2017 V0.6.0
+- Retour des chaines de validation de commande renvoyées à l'interface...
+- Corrections de Turnout et Output quand EEPROM utilisée.
+_______________
+- Ack strings are back.
+- Fixes for Turnout and Output when EEPROM is used.
+
 \par 25/08/2017 V0 Initial Release
 - DCCpp est le portage du programme DCC++ en bibliothèque.
 _______________
@@ -210,15 +217,15 @@ Main include file of the library.*/
 //
 
 /**Comment this line to avoid using and compiling Turnout.*/
-#define USE_TURNOUT
+//#define USE_TURNOUT
 /**Comment this line to avoid using and compiling EEPROM saving.*/
-#define USE_EEPROM
+//#define USE_EEPROM
 /**Comment this line to avoid using and compiling Outputs.*/
-#define USE_OUTPUT
+//#define USE_OUTPUT
 /**Comment this line to avoid using and compiling Sensors.*/
-#define USE_SENSOR
+//#define USE_SENSOR
 /**Comment this line to avoid using and compiling Serial commands.*/
-#define USE_TEXTCOMMAND
+//#define USE_TEXTCOMMAND
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip.*/
 //#define USE_ETHERNET_WIZNET_5100
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip.*/
@@ -226,7 +233,7 @@ Main include file of the library.*/
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip.*/
 //#define USE_ETHERNET_WIZNET_5200
 /**Comment this line to avoid using and compiling Ethernet shield using ENC28J60 chip.*/
-#define USE_ETHERNET_ENC28J60
+//#define USE_ETHERNET_ENC28J60
 
 #if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200) || defined(USE_ETHERNET_ENC28J60)
 #define USE_ETHERNET

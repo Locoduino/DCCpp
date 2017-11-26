@@ -51,7 +51,7 @@ void TextCommand::process(){
 		while (client.connected() && client.available()) {        // while there is data on the network
 			c = client.read();
 			if (c == '<')                    // start of new command
-				sprintf(commandString, "");
+				commandString[0] = 0;
 			else if (c == '>')               // end of new command
 				parse(commandString);
 			else if (strlen(commandString) < MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from network
@@ -70,8 +70,8 @@ void TextCommand::process(){
 			commandString[0] = 0;
 		else if (c == '>')               // end of new command
 			parse(commandString);
-		else if (strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from serial line
-			sprintf(commandString, "%s%c", commandString, c);     // otherwise, character is ignored (but continue to look for '<' or '>')
+		else if (strlen(commandString) < MAX_COMMAND_LENGTH)	// if commandString still has space, append character just read from serial line
+			sprintf(commandString, "%s%c", commandString, c);	// otherwise, character is ignored (but continue to look for '<' or '>')
 	} // while
   
   #endif
@@ -83,7 +83,7 @@ void TextCommand::process(){
 void TextCommand::parse(char *com){
 
 #ifdef DCCPP_DEBUG_MODE
-	Serial.print((char) com[0]);
+	Serial.print(com[0]);
 	Serial.println(F(" command"));
 #endif
 

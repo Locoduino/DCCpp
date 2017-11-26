@@ -211,7 +211,7 @@ void Turnout::parse(char *c){
       remove(n);
     break;
     
-#ifdef DCCPP_DEBUG_MODE
+#ifdef DCCPP_PRINT_DCCPP
 	case -1:                    // no arguments
       show();
     break;

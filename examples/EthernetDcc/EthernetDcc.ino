@@ -15,7 +15,7 @@ uint8_t mac[] = { 0xBE, 0xEF, 0xBE, 0xEF, 0xBE, 0xEF };
 //the IP address for the shield:
 uint8_t ip[] = { 192, 168, 1, 200 };
 
-EthernetServer INTERFACE(2560);                  // Create and instance of an EnternetServer
+EthernetServer INTERFACE(2560);                  // Create and instance of an EthernetServer
 
 void setup()
 {

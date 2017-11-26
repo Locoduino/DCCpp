@@ -145,8 +145,18 @@ void Output::load() {
 #else
 		EEPROM.get(EEStore::pointer(), data);
 #endif
+#if defined(USE_TEXTCOMMAND)
+		tt = create(data.id, data.pin, data.iFlag);
+#else
 		tt = get(data.id);
-		tt->set(data.id, data.pin, data.iFlag);
+#ifdef DCCPP_DEBUG_MODE
+		if (tt == NULL)
+			INTERFACE.println(F("Output::begin() must be called BEFORE Output::load() !"));
+		else
+#endif
+			tt->set(data.id, data.pin, data.iFlag);
+#endif
+
 		tt->data.oStatus = bitRead(tt->data.iFlag, 1) ? bitRead(tt->data.iFlag, 2) : data.oStatus;      // restore status to EEPROM value is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag
 #ifdef VISUALSTUDIO
 		ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
