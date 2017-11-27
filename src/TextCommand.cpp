@@ -348,7 +348,10 @@ void TextCommand::parse(char *com){
  */
 	  INTERFACE.print("<a");
 	  INTERFACE.print(int(DCCpp.getCurrentMain()));
-	  INTERFACE.println(">");
+	  INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	  INTERFACE.println("");
+#endif
 	  break;
 
 /***** READ STATUS OF DCC++ BASE STATION  ****/    
@@ -361,9 +364,12 @@ void TextCommand::parse(char *com){
  *    returns: series of status messages that can be read by an interface to determine status of DCC++ Base Station and important settings
  */
 	  if(digitalRead(DCCppConfig::SignalEnablePinProg)==LOW)      // could check either PROG or MAIN
-		INTERFACE.println("<p0>");
+		INTERFACE.print("<p0>");
 	  else
-		INTERFACE.println("<p1>");
+		INTERFACE.print("<p1>");
+#if !defined(USE_ETHERNET)
+	  INTERFACE.println("");
+#endif
 
 	  for(int i=1;i<=MAX_MAIN_REGISTERS;i++){
 		if(DCCppClass::mainRegs.speedTable[i]==0)
@@ -388,13 +394,19 @@ void TextCommand::parse(char *com){
 	  INTERFACE.print(__DATE__);
 	  INTERFACE.print(" ");
 	  INTERFACE.print(__TIME__);
-	  INTERFACE.println(">");
+	  INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	  INTERFACE.println("");
+#endif
 
 	  INTERFACE.print("<N ");
 #if defined(USE_ETHERNET)
 	  INTERFACE.print("ETHERNET :");
 	  INTERFACE.print(Ethernet.localIP());
-	  INTERFACE.println(">");
+	  INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	  INTERFACE.println("");
+#endif
 #else
 	  INTERFACE.println("SERIAL>");
 #endif
@@ -429,7 +441,10 @@ void TextCommand::parse(char *com){
 	INTERFACE.print(EEStore::eeStore->data.nSensors);
 	INTERFACE.print(" ");
 	INTERFACE.print(EEStore::eeStore->data.nOutputs);
-	INTERFACE.println(">");
+	INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 	break;
 
 /***** CLEAR SETTINGS IN EEPROM  ****/    
@@ -443,6 +458,9 @@ void TextCommand::parse(char *com){
 	 
 	EEStore::clear();
 	INTERFACE.print("<O>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 	break;
 #endif
 
@@ -549,7 +567,10 @@ void TextCommand::parse(char *com){
 	  int v; 
 	  INTERFACE.print("<f");
 	  INTERFACE.print((int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
-	  INTERFACE.println(">");
+	  INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	  INTERFACE.println("");
+#endif
 	  break;
 #endif
 

@@ -51,8 +51,14 @@ class DCCppClass
 		void begin();
 		void beginMain(uint8_t OptionalDirectionMotor, uint8_t Dummy, uint8_t SignalEnablePin, uint8_t CurrentMonitor);
 		void beginProg(uint8_t OptionalDirectionMotor, uint8_t Dummy, uint8_t SignalEnablePin, uint8_t CurrentMonitor);
+
+		inline void beginMainMotorShield() { this->beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN); }
+		inline void beginProgMotorShield() { this->beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG, MOTOR_SHIELD_CURRENT_MONITOR_PIN_PROG); }
+
+		inline void beginMainPololu() { this->beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, POLOLU_SIGNAL_ENABLE_PIN_MAIN, POLOLU_CURRENT_MONITOR_PIN_MAIN); }
+		inline void beginProgPololu() { this->beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG); }
 #ifdef USE_ETHERNET
-		void beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol inProtocol = EthernetProtocol::None);
+		void beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol inProtocol = EthernetProtocol::TCP);
 #endif
 
 		// DCCpp global functions

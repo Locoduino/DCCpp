@@ -40,8 +40,11 @@ void Output::begin(int id, int pin, int iFlag) {
 
 	this->set(id, pin, iFlag);
 
-#ifdef DCCPP_DEBUG_MODE
-	INTERFACE.println("<O>");
+#ifdef USE_TEXTCOMMAND
+	INTERFACE.print("<O>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 #endif
 }
 
@@ -78,13 +81,16 @@ void Output::activate(int s){
 	  EEPROM.put(num, data.oStatus);
 #endif
 #endif
-#ifdef DCCPP_DEBUG_MODE
+#ifdef USE_TEXTCOMMAND
   INTERFACE.print("<Y");
   INTERFACE.print(data.id);
   if(data.oStatus==0)
-    INTERFACE.println(" 0>");
+    INTERFACE.print(" 0>");
   else
-    INTERFACE.println(" 1>"); 
+    INTERFACE.print(" 1>"); 
+#if !defined(USE_ETHERNET)
+  INTERFACE.println("");
+#endif
 #endif
 }
 
@@ -104,8 +110,11 @@ void Output::remove(int n){
   for(tt=firstOutput;tt!=NULL && tt->data.id!=n;pp=tt,tt=tt->nextOutput);
 
   if(tt==NULL){
-#ifdef DCCPP_DEBUG_MODE
-	INTERFACE.println("<X>");
+#ifdef USE_TEXTCOMMAND
+	INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 #endif
     return;
   }
@@ -117,8 +126,11 @@ void Output::remove(int n){
 
   free(tt);
 
-#ifdef DCCPP_DEBUG_MODE
-  INTERFACE.println("<O>");
+#ifdef USE_TEXTCOMMAND
+  INTERFACE.print("<O>");
+#if !defined(USE_ETHERNET)
+  INTERFACE.println("");
+#endif
 #endif
 }
 
@@ -208,9 +220,14 @@ void Output::parse(char *c){
       t=get(n);
       if(t!=NULL)
         t->activate(s);
-#ifdef DCCPP_PRINT_DCCPP
+#ifdef USE_TEXTCOMMAND
 	  else
-		  INTERFACE.println("<X>");
+	  {
+		  INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		  INTERFACE.println("");
+#endif
+	  }
 #endif
       break;
 
@@ -236,8 +253,11 @@ Output *Output::create(int id, int pin, int iFlag){
 	Output *tt = new Output();
 
 	if (tt == NULL) {       // problem allocating memory
-#ifdef DCCPP_PRINT_DCCPP
-		INTERFACE.println("<X>");
+#ifdef USE_TEXTCOMMAND
+		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 #endif
 		return(tt);
 	}
@@ -259,6 +279,9 @@ void Output::show() {
 
 	if (firstOutput == NULL) {
 		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 		return;
 	}
 
@@ -271,9 +294,12 @@ void Output::show() {
 		INTERFACE.print(tt->data.iFlag);
 
 		if (tt->data.oStatus == 0)
-			INTERFACE.println(" 0>");
+			INTERFACE.print(" 0>");
 		else
-			INTERFACE.println(" 1>");
+			INTERFACE.print(" 1>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 	}
 }
 #endif

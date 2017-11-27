@@ -58,8 +58,9 @@ void setup()
 	buttonTurnout2.begin(EVENT_TURNOUT2, 31);
 
 	DCCpp.begin();
-	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
-	DCCpp.beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 3, A5);    // Dc: Dir, Pwm, current sensor
+	// Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
+	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
+	DCCpp.beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 3, A1);
 
 	locoId = 3;
 	locoStepsNumber = 128;
@@ -130,7 +131,7 @@ void loop()
 			locoFunctions.inactivate(1);
 		else
 			locoFunctions.activate(1);
-		DCCpp.setFunctionsMain(3, locoId, locoFunctions);
+		DCCpp.setFunctionsMain(2, locoId, locoFunctions);
 		break;
 
 	case EVENT_TURNOUT1:

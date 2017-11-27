@@ -46,6 +46,9 @@ void CurrentMonitor::check()
 		if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 			digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);        // regardless of which caused current overload
 		INTERFACE.print(this->msg);                                     // print corresponding error message
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 	}
 } // CurrentMonitor::check  
 

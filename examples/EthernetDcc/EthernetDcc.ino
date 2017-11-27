@@ -22,8 +22,9 @@ void setup()
 	Serial.begin(115200);
 
 	DCCpp.begin();
-	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, A5);
-	DCCpp.beginEthernet(mac, ip, EthernetProtocol::HTTP);
+	// Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
+	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
+	DCCpp.beginEthernet(mac, ip, EthernetProtocol::TCP);
 }
 
 void loop()

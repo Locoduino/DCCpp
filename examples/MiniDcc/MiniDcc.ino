@@ -47,7 +47,8 @@ void setup()
 	buttonF1.begin(EVENT_FUNCTION1, A2);
 
 	DCCpp.begin();
-	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
+	// Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
+	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
 
 	locoId = 3;
 	locoStepsNumber = 128;
@@ -96,7 +97,7 @@ void loop()
 			locoFunctions.inactivate(1);
 		else
 			locoFunctions.activate(1);
-		DCCpp.setFunctionsMain(3, locoId, locoFunctions);
+		DCCpp.setFunctionsMain(2, locoId, locoFunctions);
 		break;
 	}
 }

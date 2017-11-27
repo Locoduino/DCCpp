@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dccppclass',['DCCppClass',['../classDCCppClass.html#a03861da5c716447c004ea575d20bee0d',1,'DCCppClass']]]
+  ['parse',['parse',['../structTextCommand.html#acfb114282141343d9db71bd84726d813',1,'TextCommand']]]
 ];

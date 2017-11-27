@@ -453,7 +453,7 @@ void DCCppClass::showConfiguration()
 
 	Serial.print(F("VERSION DCC++:      "));
 	Serial.println(VERSION);
-	Serial.println(F("VERSION DCCpp library: 0.5.1"));
+	Serial.println(F("VERSION DCCpp library: 0.7.0"));
 	Serial.print(F("COMPILED:     "));
 	Serial.print(__DATE__);
 	Serial.print(F(" "));
@@ -488,15 +488,21 @@ void DCCppClass::showConfiguration()
 		Serial.print(F("   CURRENT: "));
 		Serial.println(DCCppConfig::CurrentMonitorProg);
 	}
-#if defined(USE_TURNOUT) && defined(USE_EEPROM)
+#if defined(USE_EEPROM)
+#if defined(USE_TURNOUT)
 	Serial.print(F("\n\nNUM TURNOUTS: "));
 	Serial.println(EEStore::eeStore->data.nTurnouts);
+#endif
+#if defined(USE_SENSOR)
 	Serial.print(F("     SENSORS: "));
 	Serial.println(EEStore::eeStore->data.nSensors);
+#endif
+#if defined(USE_OUTPUT)
 	Serial.print(F("     OUTPUTS: "));
 	Serial.println(EEStore::eeStore->data.nOutputs);
 #endif
-	
+#endif
+
 #ifdef USE_TEXTCOMMAND
 	Serial.print(F("\n\nINTERFACE:    "));
 #ifdef USE_ETHERNET
@@ -553,7 +559,10 @@ void DCCppClass::powerOn()
 		digitalWrite(DCCppConfig::SignalEnablePinProg, HIGH);
 	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinMain, HIGH);
-	INTERFACE.println("<p1>");
+	INTERFACE.print("<p1>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 }
 
 void DCCppClass::powerOff()
@@ -562,7 +571,10 @@ void DCCppClass::powerOff()
 		digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
 	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
-	INTERFACE.println("<p0>");
+	INTERFACE.print("<p0>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 }
 
 /***************************** Driving functions */

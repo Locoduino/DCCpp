@@ -38,8 +38,11 @@ void Sensor::begin(int snum, int pin, int pullUp) {
 
 	this->set(snum, pin, pullUp);
 
-#ifdef DCCPP_DEBUG_MODE
-	INTERFACE.println("<O>");
+#ifdef USE_TEXTCOMMAND
+	INTERFACE.print("<O>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 #endif
 }
 
@@ -76,7 +79,12 @@ void Sensor::remove(int n) {
 	for (tt = firstSensor; tt != NULL && tt->data.snum != n; pp = tt, tt = tt->nextSensor);
 
 	if (tt == NULL) {
-		INTERFACE.println("<X>");
+#ifdef USE_TEXTCOMMAND
+		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
+#endif
 		return;
 	}
 
@@ -87,7 +95,12 @@ void Sensor::remove(int n) {
 
 	free(tt);
 
-	INTERFACE.println("<O>");
+#ifdef USE_TEXTCOMMAND
+	INTERFACE.print("<O>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -112,13 +125,16 @@ void Sensor::check(){
       tt->active=true;
       INTERFACE.print("<Q");
       INTERFACE.print(tt->data.snum);
-      INTERFACE.println(">");
+      INTERFACE.print(">");
     } else if(tt->active && tt->signal>0.9){
       tt->active=false;
       INTERFACE.print("<q");
       INTERFACE.print(tt->data.snum);
-      INTERFACE.println(">");
-    }
+      INTERFACE.print(">");
+	}
+#if !defined(USE_ETHERNET)
+	  INTERFACE.println("");
+#endif
   } // loop over all sensors
     
 } // Sensor::check
@@ -130,7 +146,10 @@ void Sensor::show() {
 	Sensor *tt;
 
 	if (firstSensor == NULL) {
-		INTERFACE.println("<X>");
+		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 		return;
 	}
 
@@ -141,7 +160,10 @@ void Sensor::show() {
 		INTERFACE.print(tt->data.pin);
 		INTERFACE.print(" ");
 		INTERFACE.print(tt->data.pullUp);
-		INTERFACE.println(">");
+		INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 	}
 }
 
@@ -151,14 +173,20 @@ void Sensor::status() {
 	Sensor *tt;
 
 	if (firstSensor == NULL) {
-		INTERFACE.println("<X>");
+		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 		return;
 	}
 
 	for (tt = firstSensor; tt != NULL; tt = tt->nextSensor) {
 		INTERFACE.print(tt->active ? "<Q" : "<q");
 		INTERFACE.print(tt->data.snum);
-		INTERFACE.println(">");
+		INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 	}
 }
 
@@ -234,9 +262,13 @@ void Sensor::parse(char *c) {
 	case -1:                    // no arguments
 		show();
 		break;
-
+#endif
+#ifdef USE_TEXTCOMMAND
 	case 2:                     // invalid number of arguments
 		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 		break;
 #endif
 	}
@@ -248,8 +280,11 @@ Sensor *Sensor::create(int snum, int pin, int pullUp) {
 	Sensor *tt = new Sensor();
 
 	if (tt == NULL) {       // problem allocating memory
-#ifdef DCCPP_DEBUG_MODE
-		INTERFACE.println("<X>");
+#ifdef USE_TEXTCOMMAND
+		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 #endif
 		return(tt);
 	}

@@ -47,8 +47,11 @@ void Turnout::begin(int id, int add, int subAdd) {
 
 	this->set(id, add, subAdd);
 
-#ifdef DCCPP_DEBUG_MODE
-	INTERFACE.println("<O>");
+#ifdef USE_TEXTCOMMAND
+	INTERFACE.print("<O>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 #endif
 }
 
@@ -74,13 +77,16 @@ void Turnout::activate(int s) {
 		EEPROM.put(this->eepromPos, this->data.tStatus);
 #endif
 #endif
-#ifdef DCCPP_DEBUG_MODE
+#ifdef USE_TEXTCOMMAND
 	INTERFACE.print("<H");
 	INTERFACE.print(data.id);
 	if (data.tStatus == 0)
-		INTERFACE.println(" 0>");
+		INTERFACE.print(" 0>");
 	else
-		INTERFACE.println(" 1>");
+		INTERFACE.print(" 1>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 #endif
 }
 
@@ -102,8 +108,11 @@ void Turnout::remove(int id) {
 		;
 
 	if (tt == NULL) {
-#ifdef DCCPP_DEBUG_MODE
-		INTERFACE.println("<X>");
+#ifdef USE_TEXTCOMMAND
+		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 #endif
 		return;
 	}
@@ -115,8 +124,11 @@ void Turnout::remove(int id) {
 
 	free(tt);
 
-#ifdef DCCPP_DEBUG_MODE
-	INTERFACE.println("<O>");
+#ifdef USE_TEXTCOMMAND
+	INTERFACE.print("<O>");
+#if !defined(USE_ETHERNET)
+	INTERFACE.println("");
+#endif
 #endif
 }
 
@@ -197,9 +209,14 @@ void Turnout::parse(char *c){
       t=get(n);
       if(t!=NULL)
         t->activate(s);
-#ifdef DCCPP_DEBUG_MODE
+#ifdef USE_TEXTCOMMAND
 	  else
-        INTERFACE.println("<X>");
+	  {
+		  INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		  INTERFACE.println("");
+#endif
+	  }
 #endif
       break;
 
@@ -224,7 +241,10 @@ Turnout *Turnout::create(int id, int add, int subAdd) {
 
 	if (tt == NULL) {       // problem allocating memory
 #ifdef DCCPP_DEBUG_MODE
-		INTERFACE.println("<X>");
+		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 #endif
 		return(tt);
 	}
@@ -245,7 +265,10 @@ void Turnout::show() {
 	Turnout *tt;
 
 	if (firstTurnout == NULL) {
-		INTERFACE.println("<X>");
+		INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 		return;
 	}
 
@@ -257,9 +280,12 @@ void Turnout::show() {
 		INTERFACE.print(" ");
 		INTERFACE.print(tt->data.subAddress);
 		if (tt->data.tStatus == 0)
-			INTERFACE.println(" 0>");
+			INTERFACE.print(" 0>");
 		else
-			INTERFACE.println(" 1>");
+			INTERFACE.print(" 1>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 	}
 }
 #endif

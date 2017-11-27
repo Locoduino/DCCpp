@@ -17,7 +17,7 @@ uint8_t DCCppConfig::EthernetIp[4];
 uint8_t DCCppConfig::EthernetMac[6];
 int DCCppConfig::EthernetPort = 0;
 
-EthernetProtocol DCCppConfig::Protocol = EthernetProtocol::None;
+EthernetProtocol DCCppConfig::Protocol = EthernetProtocol::TCP;
 #endif
 
 byte DCCppConfig::SignalEnablePinMain = UNDEFINED_PIN;
@@ -272,7 +272,10 @@ void RegisterList::writeTextPacket(int nReg, byte *b, int nBytes) volatile
 {
 
 	if (nBytes<2 || nBytes>5) {    // invalid valid packet
-		INTERFACE.println("<mInvalid Packet>");
+		INTERFACE.print("<mInvalid Packet>");
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 		return;
 	}
 
@@ -476,22 +479,22 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 
 		if (d == 0)    // verify unsuccessful
 			bValue = -1;
+	}
 
 #if defined(USE_TEXTCOMMAND)
-		INTERFACE.print("<r");
-		INTERFACE.print(callBack);
-		INTERFACE.print("|");
-		INTERFACE.print(callBackSub);
-		INTERFACE.print("|");
-		INTERFACE.print(cv + 1);
-		INTERFACE.print(" ");
-		INTERFACE.print(bValue);
-		INTERFACE.print(">");
+	INTERFACE.print("<r");
+	INTERFACE.print(callBack);
+	INTERFACE.print("|");
+	INTERFACE.print(callBackSub);
+	INTERFACE.print("|");
+	INTERFACE.print(cv + 1);
+	INTERFACE.print(" ");
+	INTERFACE.print(bValue);
+	INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+	INTERFACE.println("");
 #endif
 #endif
-	}
 } // RegisterList::writeCVByte(ints)
 
 #ifdef USE_TEXTCOMMAND
@@ -556,24 +559,24 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 
 		if (d == 0)    // verify unsuccessful
 			bValue = -1;
+	}
 
 #if defined(USE_TEXTCOMMAND)
-		INTERFACE.print("<r");
-		INTERFACE.print(callBack);
-		INTERFACE.print("|");
-		INTERFACE.print(callBackSub);
-		INTERFACE.print("|");
-		INTERFACE.print(cv + 1);
-		INTERFACE.print(" ");
-		INTERFACE.print(bNum);
-		INTERFACE.print(" ");
-		INTERFACE.print(bValue);
-		INTERFACE.print(">");
+	INTERFACE.print("<r");
+	INTERFACE.print(callBack);
+	INTERFACE.print("|");
+	INTERFACE.print(callBackSub);
+	INTERFACE.print("|");
+	INTERFACE.print(cv + 1);
+	INTERFACE.print(" ");
+	INTERFACE.print(bNum);
+	INTERFACE.print(" ");
+	INTERFACE.print(bValue);
+	INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+	INTERFACE.println("");
 #endif
 #endif
-	}
 } // RegisterList::writeCVBit(ints)
 
 #ifdef USE_TEXTCOMMAND
@@ -691,7 +694,10 @@ void RegisterList::printPacket(int nReg, byte *b, int nBytes, int nRepeat) volat
   }
   INTERFACE.print(" / ");
   INTERFACE.print(nRepeat);
-  INTERFACE.println(">");
+  INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+  INTERFACE.println("");
+#endif
 } // RegisterList::printPacket()
 #endif
 
