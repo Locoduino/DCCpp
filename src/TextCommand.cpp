@@ -383,6 +383,9 @@ void TextCommand::parse(char *com){
 		  INTERFACE.print(- DCCppClass::mainRegs.speedTable[i]);
 		  INTERFACE.print(" 0>");
 		}          
+#if !defined(USE_ETHERNET)
+		INTERFACE.println("");
+#endif
 	  }
 	  INTERFACE.print("<iDCCpp LIBRARY BASE STATION FOR ARDUINO ");
 	  //INTERFACE.print(ARDUINO_TYPE);

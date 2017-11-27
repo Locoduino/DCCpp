@@ -240,7 +240,7 @@ Turnout *Turnout::create(int id, int add, int subAdd) {
 	Turnout *tt = new Turnout();
 
 	if (tt == NULL) {       // problem allocating memory
-#ifdef DCCPP_DEBUG_MODE
+#ifdef USE_TEXTCOMMAND
 		INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
 		INTERFACE.println("");
