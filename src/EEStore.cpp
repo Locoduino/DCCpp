@@ -101,7 +101,7 @@ void EEStore::store() {
 #ifdef VISUALSTUDIO
 	EEPROM.put(0, (void *)&data, sizeof(EEStoreData));
 #else
-	EEPROM.put(0, eeStore->data);
+	EEPROM.put(0, data);
 #endif
 }
 

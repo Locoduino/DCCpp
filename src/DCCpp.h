@@ -239,6 +239,18 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 11/12/2017 V0.8.0
+- fin de la documentation
+- DCCpp classe passée en statique
+- Ajout d'un test de numéro de registre sur setFunctions()
+- les variables 'ToLeft' ont été changées pour 'Forward', pour mieux coller à la norme DCC.
+- Correction de EEStore.store()
+_______________
+- End of documentation
+- DCCpp class goes to static.
+- setFunctions() now checks for register number in debug mode.
+- 'ToLeft' variables have been changed to 'Forward', closer from DCC norm.
+- Fix EEStore.store()
 
 \par 27/11/2017 V0.7.0
 - Retour des chaines de validation de commande renvoyées à l'interface...
@@ -287,15 +299,15 @@ Main include file of the library.*/
 //
 
 /**Comment this line to avoid using and compiling Turnout.*/
-#define USE_TURNOUT
+//#define USE_TURNOUT
 /**Comment this line to avoid using and compiling EEPROM saving.*/
-#define USE_EEPROM
+//#define USE_EEPROM
 /**Comment this line to avoid using and compiling Outputs.*/
-#define USE_OUTPUT
+//#define USE_OUTPUT
 /**Comment this line to avoid using and compiling Sensors.*/
-#define USE_SENSOR
+//#define USE_SENSOR
 /**Comment this line to avoid using and compiling Serial commands.*/
-#define USE_TEXTCOMMAND
+//#define USE_TEXTCOMMAND
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip (Arduino Shield v1).*/
 //#define USE_ETHERNET_WIZNET_5100
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip (Arduino Shield v2).*/
@@ -303,7 +315,7 @@ Main include file of the library.*/
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip (Seeed Studio).*/
 //#define USE_ETHERNET_WIZNET_5200
 /**Comment this line to avoid using and compiling Ethernet shield using ENC28J60 chip.*/
-#define USE_ETHERNET_ENC28J60
+//#define USE_ETHERNET_ENC28J60
 
 #if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200) || defined(USE_ETHERNET_ENC28J60)
 #define USE_ETHERNET
