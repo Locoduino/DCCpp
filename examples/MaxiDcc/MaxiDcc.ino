@@ -37,7 +37,7 @@ ButtonsCommanderSwitchOnePin buttonTurnout2;
 int locoId;	// DCC id for this loco
 int locoStepsNumber;	// 14, 28 or 128
 int locoSpeed;	// Current speed
-bool locoDirectionToLeft;	// current direction.
+bool locoDirectionForward;	// current direction.
 FunctionsState locoFunctions;	// Current functions
 
 Turnout turn1, turn2;
@@ -57,15 +57,15 @@ void setup()
 	buttonTurnout1.begin(EVENT_TURNOUT1, 30);
 	buttonTurnout2.begin(EVENT_TURNOUT2, 31);
 
-	DCCpp.begin();
+	DCCpp::begin();
 	// Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
-	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
-	DCCpp.beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 3, A1);
+	DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
+	DCCpp::beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 3, A1);
 
 	locoId = 3;
 	locoStepsNumber = 128;
 	locoSpeed = 0;
-	locoDirectionToLeft = false;
+	locoDirectionForward = true;
 	//locoFunctions.Clear();	// Already done by the constructor...
 
 	turn1.begin(1, 100, 1);
@@ -80,7 +80,7 @@ void setup()
 
 void loop()
 {
-	DCCpp.loop();
+	DCCpp::loop();
 
 	// activate first output from first sensor state.
 	bool active = sensor1.isActive();
@@ -105,7 +105,7 @@ void loop()
 			locoSpeed++;
 		if (locoSpeed > locoStepsNumber)
 			locoSpeed = locoStepsNumber;
-		DCCpp.setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
+		DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
 		break;
 
 	case EVENT_LESS:
@@ -115,7 +115,7 @@ void loop()
 			locoSpeed--;
 		if (locoSpeed < 0)
 			locoSpeed = 0;
-		DCCpp.setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
+		DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
 		break;
 
 	case EVENT_FUNCTION0:
@@ -123,7 +123,7 @@ void loop()
 			locoFunctions.inactivate(0);
 		else
 			locoFunctions.activate(0);
-		DCCpp.setFunctionsMain(2, locoId, locoFunctions);
+		DCCpp::setFunctionsMain(2, locoId, locoFunctions);
 		break;
 
 	case EVENT_FUNCTION1:
@@ -131,7 +131,7 @@ void loop()
 			locoFunctions.inactivate(1);
 		else
 			locoFunctions.activate(1);
-		DCCpp.setFunctionsMain(2, locoId, locoFunctions);
+		DCCpp::setFunctionsMain(2, locoId, locoFunctions);
 		break;
 
 	case EVENT_TURNOUT1:

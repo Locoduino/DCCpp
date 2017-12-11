@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['dccppclass',['DCCppClass',['../classDCCppClass.html',1,'']]],
+  ['dccpp',['DCCpp',['../classDCCpp.html',1,'']]],
   ['dccppconfig',['DCCppConfig',['../structDCCppConfig.html',1,'']]]
 ];

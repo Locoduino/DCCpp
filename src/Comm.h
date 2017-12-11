@@ -31,7 +31,3 @@ Part of DCC++ BASE STATION for the Arduino
 
   extern EthernetServer INTERFACE;
 #endif  
-
-
-
-

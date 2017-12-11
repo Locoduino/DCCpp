@@ -33,6 +33,10 @@ begin			KEYWORD2
 beginMain		KEYWORD2
 beginProg		KEYWORD2
 beginEthernet	KEYWORD2
+beginMainMotorShield	KEYWORD2
+beginProgMotorShield	KEYWORD2
+beginMainPololu	KEYWORD2
+beginProgPololu	KEYWORD2
 
 setSpeedMain		KEYWORD2
 readCvMain			KEYWORD2

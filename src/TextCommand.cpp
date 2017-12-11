@@ -82,6 +82,7 @@ void TextCommand::process(){
 
 void TextCommand::parse(char *com){
 
+
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(com[0]);
 	Serial.println(F(" command"));
@@ -89,129 +90,140 @@ void TextCommand::parse(char *com){
 
   switch(com[0]){
 
-/***** SET ENGINE THROTTLES USING 128-STEP SPEED CONTROL ****/    
+	case 't':       
+		/**	\addtogroup commandsGroup
+		SET ENGINE THROTTLES USING 128-STEP SPEED CONTROL
+		-------------------------------------------------
 
-	case 't':       // <t REGISTER CAB SPEED DIRECTION>
-/*
- *    sets the throttle for a given register/cab combination 
- *    
- *    REGISTER: an internal register number, from 1 through MAX_MAIN_REGISTERS (inclusive), to store the DCC packet used to control this throttle setting
- *    CAB:  the short (1-127) or long (128-10293) address of the engine decoder
- *    SPEED: throttle speed from 0-126, or -1 for emergency stop (resets SPEED to 0)
- *    DIRECTION: 1=forward, 0=reverse.  Setting direction when speed=0 or speed=-1 only effects directionality of cab lighting for a stopped train
- *    
- *    returns: <T REGISTER SPEED DIRECTION>
- *    
- */
+		<b>
+		\verbatim
+		<t REGISTER CAB SPEED DIRECTION>
+		\endverbatim
+		</b>
+	
+	   sets the throttle for a given register/cab combination 
+	   
+	   - <b>REGISTE%R</b>: an internal register number, from 1 through MAX_MAIN_REGISTERS (inclusive), to store the DCC packet used to control this throttle setting
+	   - <b>CAB</b>:  the short (1-127) or long (128-10293) address of the engine decoder
+	   - <b>SPEED</b>: throttle speed from 0-126, or -1 for emergency stop (resets SPEED to 0)
+	   - <b>DIRECTION</b>: 1=forward, 0=reverse.  Setting direction when speed=0 or speed=-1 only effects directionality of cab lighting for a stopped train
+	   
+	   returns: <b>\<T REGISTE%R SPEED DIRECTION\></b>
+	   */
 
-	  DCCppClass::mainRegs.setThrottle(com+1);
+	  DCCpp::mainRegs.setThrottle(com+1);
 	  break;
 
-/***** OPERATE ENGINE DECODER FUNCTIONS F0-F28 ****/    
+	case 'f':       
+		/**	\addtogroup commandsGroup
+		OPERATE ENGINE DECODER FUNCTIONS F0-F28
+		---------------------------------------
+		
+		<b>
+		\verbatim
+		<f CAB BYTE1 [BYTE2]>
+		\endverbatim
+		</b>
 
-	case 'f':       // <f CAB BYTE1 [BYTE2]>
-/*
- *    turns on and off engine decoder functions F0-F28 (F0 is sometimes called FL)  
- *    NOTE: setting requests transmitted directly to mobile engine decoder --- current state of engine functions is not stored by this program
- *    
- *    CAB:  the short (1-127) or long (128-10293) address of the engine decoder
- *    
- *    To set functions F0-F4 on (=1) or off (=0):
- *      
- *    BYTE1:  128 + F1*1 + F2*2 + F3*4 + F4*8 + F0*16
- *    BYTE2:  omitted
- *   
- *    To set functions F5-F8 on (=1) or off (=0):
- *   
- *    BYTE1:  176 + F5*1 + F6*2 + F7*4 + F8*8
- *    BYTE2:  omitted
- *   
- *    To set functions F9-F12 on (=1) or off (=0):
- *   
- *    BYTE1:  160 + F9*1 +F10*2 + F11*4 + F12*8
- *    BYTE2:  omitted
- *   
- *    To set functions F13-F20 on (=1) or off (=0):
- *   
- *    BYTE1: 222 
- *    BYTE2: F13*1 + F14*2 + F15*4 + F16*8 + F17*16 + F18*32 + F19*64 + F20*128
- *   
- *    To set functions F21-F28 on (=1) of off (=0):
- *   
- *    BYTE1: 223
- *    BYTE2: F21*1 + F22*2 + F23*4 + F24*8 + F25*16 + F26*32 + F27*64 + F28*128
- *   
- *    returns: NONE
- * 
- */
-	  DCCppClass::mainRegs.setFunction(com+1);
+		turns on and off engine decoder functions F0-F28 (F0 is sometimes called FL)  
+		NOTE: setting requests transmitted directly to mobile engine decoder --- current state of engine functions is not stored by this program
+   
+		- <b>CAB</b>:  the short (1-127) or long (128-10293) address of the engine decoder
+   
+		To set functions F0-F4 on (=1) or off (=0):
+     
+		- <b>BYTE1</b>:  128 + F1*1 + F2*2 + F3*4 + F4*8 + F0*16
+		- <b>BYTE2</b>:  omitted
+  
+		To set functions F5-F8 on (=1) or off (=0):
+  
+		- <b>BYTE1</b>:  176 + F5*1 + F6*2 + F7*4 + F8*8
+		- <b>BYTE2</b>:  omitted
+  
+		To set functions F9-F12 on (=1) or off (=0):
+  
+		- <b>BYTE1</b>:  160 + F9*1 +F10*2 + F11*4 + F12*8
+		- <b>BYTE2</b>:  omitted
+  
+		To set functions F13-F20 on (=1) or off (=0):
+  
+		- <b>BYTE1</b>: 222 
+		- <b>BYTE2</b>: F13*1 + F14*2 + F15*4 + F16*8 + F17*16 + F18*32 + F19*64 + F20*128
+  
+		To set functions F21-F28 on (=1) of off (=0):
+  
+		- <b>BYTE1</b>: 223
+		- <b>BYTE2</b>: F21*1 + F22*2 + F23*4 + F24*8 + F25*16 + F26*32 + F27*64 + F28*128
+  
+		returns: NONE
+		*/
+
+
+	  DCCpp::mainRegs.setFunction(com+1);
 	  break;
 
-/***** OPERATE STATIONARY ACCESSORY DECODERS  ****/    
+	case 'a':       
+		/**	\addtogroup commandsGroup
+		OPERATE STATIONARY ACCESSORY DECODERS 
+		-------------------------------------
+		
+		<b>
+		\verbatim
+		<a ADDRESS SUBADDRESS ACTIVATE>
+		\endverbatim
+		</b>
 
-	case 'a':       // <a ADDRESS SUBADDRESS ACTIVATE>
-/*
- *    turns an accessory (stationary) decoder on or off
- *    
- *    ADDRESS:  the primary address of the decoder (0-511)
- *    SUBADDRESS: the subaddress of the decoder (0-3)
- *    ACTIVATE: 1=on (set), 0=off (clear)
- *    
- *    Note that many decoders and controllers combine the ADDRESS and SUBADDRESS into a single number, N,
- *    from  1 through a max of 2044, where
- *    
- *    N = (ADDRESS - 1) * 4 + SUBADDRESS + 1, for all ADDRESS>0
- *    
- *    OR
- *    
- *    ADDRESS = INT((N - 1) / 4) + 1
- *    SUBADDRESS = (N - 1) % 4
- *    
- *    returns: NONE
- */
-	  DCCppClass::mainRegs.setAccessory(com+1);
+		turns an accessory (stationary) decoder on or off
+   
+		- <b>ADDRESS</b>:  the primary address of the decoder (0-511)
+		- <b>SUBADDRESS</b>: the sub-address of the decoder (0-3)
+		- <b>ACTIVATE</b>: 1=on (set), 0=off (clear)
+   
+		Note that many decoders and controllers combine the ADDRESS and SUBADDRESS into a single number, N,
+		from  1 through a max of 2044, where
+   
+		N = (ADDRESS - 1) * 4 + SUBADDRESS + 1, for all ADDRESS>0
+   
+		OR
+   
+		- <b>ADDRESS</b> = INT((N - 1) / 4) + 1
+		- <b>SUBADDRESS</b> = (N - 1) % 4
+   
+		However, this general command simply sends the appropriate DCC instruction packet to the main tracks
+		to operate connected accessories.  It does not store or retain any information regarding the current
+		status of that accessory. To have this sketch store and retain the direction of DCC-connected turnouts, as 
+		well as automatically invoke the required <b>\<a\></b> command as needed, first define/edit/delete turnouts 
+		using the following variations of the "T" command.
+
+		returns: NONE
+		*/
+
+	  DCCpp::mainRegs.setAccessory(com+1);
 	  break;
 
 #ifdef USE_TURNOUT
-	  /***** CREATE/EDIT/REMOVE/SHOW & OPERATE A TURN-OUT  ****/
-
-	case 'T':       // <T ID THROW>
+	case 'T':
 /*
- *   <T ID THROW>:                sets turnout ID to either the "thrown" or "unthrown" position
- *   
- *   ID: the numeric ID (0-32767) of the turnout to control
- *   THROW: 0 (unthrown) or 1 (thrown)
- *   
- *   returns: <H ID THROW> or <X> if turnout ID does not exist
- *   
- *   *** SEE TURNOUT.CPP FOR COMPLETE INFO ON THE DIFFERENT VARIATIONS OF THE "T" COMMAND
- *   USED TO CREATE/EDIT/REMOVE/SHOW TURNOUT DEFINITIONS
- */
+* *** SEE TURNOUT.CPP FOR COMPLETE INFO ON THE DIFFERENT VARIATIONS OF THE "T" COMMAND
+* USED TO CREATE/EDIT/REMOVE/SHOW TURNOUT DEFINITIONS
+*/
+
 	  Turnout::parse(com+1);
 	  break;
 #endif
 
 #ifdef USE_OUTPUT
-/***** CREATE/EDIT/REMOVE/SHOW & OPERATE AN OUTPUT PIN  ****/    
 
-	case 'Z':       // <Z ID ACTIVATE>
-/*
- *   <Z ID ACTIVATE>:          sets output ID to either the "active" or "inactive" state
- *   
- *   ID: the numeric ID (0-32767) of the output to control
- *   ACTIVATE: 0 (active) or 1 (inactive)
- *   
- *   returns: <Y ID ACTIVATE> or <X> if output ID does not exist
- *   
- *   *** SEE OUTPUTS.CPP FOR COMPLETE INFO ON THE DIFFERENT VARIATIONS OF THE "O" COMMAND
- *   USED TO CREATE/EDIT/REMOVE/SHOW TURNOUT DEFINITIONS
- */
+	case 'Z':
+/**** SEE OUTPUT.CPP FOR COMPLETE INFO ON THE DIFFERENT VARIATIONS OF THE "Z" COMMAND
+*   USED TO CREATE / EDIT / REMOVE / SHOW OUTPUT DEFINITIONS
+*/
+
 	  Output::parse(com+1);
 	  break;
 #endif
 
 #ifdef USE_SENSOR
-/***** CREATE/EDIT/REMOVE/SHOW A SENSOR  ****/
 
 	case 'S': 
 /*   
@@ -221,148 +233,230 @@ void TextCommand::parse(char *com){
 	  Sensor::parse(com+1);
 	  break;
 
-/***** SHOW STATUS OF ALL SENSORS ****/
-
 #ifdef DCCPP_PRINT_DCCPP
-	case 'Q':         // <Q>
-/*
- *    returns: the status of each sensor ID in the form <Q ID> (active) or <q ID> (not active)
- */
+	case 'Q':
+		/**	\addtogroup commandsGroup
+		SHOW STATUS OF ALL SENSORS
+		--------------------------
+
+		<b>
+		\verbatim
+		<Q>
+		\endverbatim
+		</b>
+
+		returns: the status of each sensor ID in the form <b>\<Q ID\></b> (active) or <b>\<q ID\></b> (not active)
+		*/
+
 	  Sensor::status();
 	  break;
 #endif
 #endif
 
-/***** WRITE CONFIGURATION VARIABLE BYTE TO ENGINE DECODER ON MAIN OPERATIONS TRACK  ****/    
+	case 'w':      
+		
+		/**	\addtogroup commandsGroup
+		WRITE CONFIGURATION VARIABLE BYTE TO ENGINE DECODER ON MAIN OPERATIONS TRACK
+		----------------------------------------------------------------------------
 
-	case 'w':      // <w CAB CV VALUE>
-/*
- *    writes, without any verification, a Configuration Variable to the decoder of an engine on the main operations track
- *    
- *    CAB:  the short (1-127) or long (128-10293) address of the engine decoder 
- *    CV: the number of the Configuration Variable memory location in the decoder to write to (1-1024)
- *    VALUE: the value to be written to the Configuration Variable memory location (0-255)
- *    
- *    returns: NONE
-*/    
-	  DCCppClass::mainRegs.writeCVByteMain(com+1);
+		<b>
+		\verbatim
+		<w CAB CV VALUE>
+		\endverbatim
+		</b>
+
+		writes, without any verification, a Configuration Variable to the decoder of an engine on the main operations track
+    
+		- <b>CAB</b>:  the short (1-127) or long (128-10293) address of the engine decoder 
+		- <b>CV</b>: the number of the Configuration Variable memory location in the decoder to write to (1-1024)
+		- <b>VALUE</b>: the value to be written to the Configuration Variable memory location (0-255)
+    
+		returns: NONE
+		*/    
+
+	  DCCpp::mainRegs.writeCVByteMain(com+1);
 	  break;      
 
-/***** WRITE CONFIGURATION VARIABLE BIT TO ENGINE DECODER ON MAIN OPERATIONS TRACK  ****/    
 
-	case 'b':      // <b CAB CV BIT VALUE>
-/*
- *    writes, without any verification, a single bit within a Configuration Variable to the decoder of an engine on the main operations track
- *    
- *    CAB:  the short (1-127) or long (128-10293) address of the engine decoder 
- *    CV: the number of the Configuration Variable memory location in the decoder to write to (1-1024)
- *    BIT: the bit number of the Configurarion Variable regsiter to write (0-7)
- *    VALUE: the value of the bit to be written (0-1)
- *    
- *    returns: NONE
-*/        
-	  DCCppClass::mainRegs.writeCVBitMain(com+1);
+	case 'b':      
+		/**	\addtogroup commandsGroup
+		WRITE CONFIGURATION VARIABLE BIT TO ENGINE DECODER ON MAIN OPERATIONS TRACK
+		---------------------------------------------------------------------------
+
+		<b>
+		\verbatim
+		<b CAB CV BIT VALUE>
+		\endverbatim
+		</b>
+
+		writes, without any verification, a single bit within a Configuration Variable to the decoder of an engine on the main operations track
+    
+		- <b>CAB</b>:  the short (1-127) or long (128-10293) address of the engine decoder 
+		- <b>CV</b>: the number of the Configuration Variable memory location in the decoder to write to (1-1024)
+		- <b>BIT</b>: the bit number of the Configuration Variable register to write (0-7)
+		- <b>VALUE</b>: the value of the bit to be written (0-1)
+    
+		returns: NONE
+		*/        
+
+	  DCCpp::mainRegs.writeCVBitMain(com+1);
 	  break;      
 
-/***** WRITE CONFIGURATION VARIABLE BYTE TO ENGINE DECODER ON PROGRAMMING TRACK  ****/    
+	case 'W':      
+		/**	\addtogroup commandsGroup
+		WRITE CONFIGURATION VARIABLE BYTE TO ENGINE DECODER ON PROGRAMMING TRACK
+		------------------------------------------------------------------------
 
-	case 'W':      // <W CV VALUE CALLBACKNUM CALLBACKSUB>
-/*
- *    writes, and then verifies, a Configuration Variable to the decoder of an engine on the programming track
- *    
- *    CV: the number of the Configuration Variable memory location in the decoder to write to (1-1024)
- *    VALUE: the value to be written to the Configuration Variable memory location (0-255) 
- *    CALLBACKNUM: an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function
- *    CALLBACKSUB: a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function
- *    
- *    returns: <r CALLBACKNUM|CALLBACKSUB|CV Value)
- *    where VALUE is a number from 0-255 as read from the requested CV, or -1 if verificaiton read fails
-*/    
-	  DCCppClass::progRegs.writeCVByte(com+1);
+		<b>
+		\verbatim
+		<W CV VALUE CALLBACKNUM CALLBACKSUB>
+		\endverbatim
+		</b>
+
+		writes, and then verifies, a Configuration Variable to the decoder of an engine on the programming track
+    
+		- <b>CV</b>: the number of the Configuration Variable memory location in the decoder to write to (1-1024)
+		- <b>VALUE</b>: the value to be written to the Configuration Variable memory location (0-255) 
+		- <b>CALLBACKNUM</b>: an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function
+		- <b>CALLBACKSUB</b>: a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function
+    
+		returns: <b>\<r CALLBACKNUM|CALLBACKSUB|CV Value\></b>
+		where VALUE is a number from 0-255 as read from the requested CV, or -1 if verification read fails
+		*/    
+
+	  DCCpp::progRegs.writeCVByte(com+1);
 	  break;      
 
-/***** WRITE CONFIGURATION VARIABLE BIT TO ENGINE DECODER ON PROGRAMMING TRACK  ****/    
+	case 'B':      
+		/**	\addtogroup commandsGroup
+		WRITE CONFIGURATION VARIABLE BIT TO ENGINE DECODER ON PROGRAMMING TRACK
+		-----------------------------------------------------------------------
 
-	case 'B':      // <B CV BIT VALUE CALLBACKNUM CALLBACKSUB>
-/*
- *    writes, and then verifies, a single bit within a Configuration Variable to the decoder of an engine on the programming track
- *    
- *    CV: the number of the Configuration Variable memory location in the decoder to write to (1-1024)
- *    BIT: the bit number of the Configurarion Variable memory location to write (0-7)
- *    VALUE: the value of the bit to be written (0-1)
- *    CALLBACKNUM: an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function
- *    CALLBACKSUB: a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function
- *    
- *    returns: <r CALLBACKNUM|CALLBACKSUB|CV BIT VALUE)
- *    where VALUE is a number from 0-1 as read from the requested CV bit, or -1 if verificaiton read fails
-*/    
-	  DCCppClass::progRegs.writeCVBit(com+1);
+		<b>
+		\verbatim
+		<B CV BIT VALUE CALLBACKNUM CALLBACKSUB>
+		\endverbatim
+		</b>
+
+		writes, and then verifies, a single bit within a Configuration Variable to the decoder of an engine on the programming track
+		
+		- <b>CV</b>: the number of the Configuration Variable memory location in the decoder to write to (1-1024)
+		- <b>BIT</b>: the bit number of the Configuration Variable memory location to write (0-7)
+		- <b>VALUE</b>: the value of the bit to be written (0-1)
+		- <b>CALLBACKNUM</b>: an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function
+		- <b>CALLBACKSUB</b>: a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function
+		
+		returns: <b>\<r CALLBACKNUM|CALLBACKSUB|CV BIT VALUE\></b>
+		where VALUE is a number from 0-1 as read from the requested CV bit, or -1 if verification read fails
+		*/
+
+	  DCCpp::progRegs.writeCVBit(com+1);
 	  break;      
 
-/***** READ CONFIGURATION VARIABLE BYTE FROM ENGINE DECODER ON PROGRAMMING TRACK  ****/    
+	case 'R':     
+		/**	\addtogroup commandsGroup
+		READ CONFIGURATION VARIABLE BYTE FROM ENGINE DECODER ON PROGRAMMING TRACK
+		-------------------------------------------------------------------------
 
-	case 'R':     // <R CV CALLBACKNUM CALLBACKSUB>
-/*    
- *    reads a Configuration Variable from the decoder of an engine on the programming track
- *    
- *    CV: the number of the Configuration Variable memory location in the decoder to read from (1-1024)
- *    CALLBACKNUM: an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function
- *    CALLBACKSUB: a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function
- *    
- *    returns: <r CALLBACKNUM|CALLBACKSUB|CV VALUE)
- *    where VALUE is a number from 0-255 as read from the requested CV, or -1 if read could not be verified
-*/    
-	  DCCppClass::progRegs.readCV(com+1);
+		<b>
+		\verbatim
+		<R CV CALLBACKNUM CALLBACKSUB>
+		\endverbatim
+		</b>
+
+		reads a Configuration Variable from the decoder of an engine on the programming track
+		
+		- <b>CV</b>: the number of the Configuration Variable memory location in the decoder to read from (1-1024)
+		- <b>CALLBACKNUM</b>: an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function
+		- <b>CALLBACKSUB</b>: a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function
+		
+		returns: <b>\<r CALLBACKNUM|CALLBACKSUB|CV VALUE\></b>
+		where VALUE is a number from 0-255 as read from the requested CV, or -1 if read could not be verified
+		*/
+
+	  DCCpp::progRegs.readCV(com+1);
 	  break;
 
-/***** TURN ON POWER FROM MOTOR SHIELD TO TRACKS  ****/    
+	case '1':      
+		/**	\addtogroup commandsGroup
+		TURN ON POWER FROM MOTOR SHIELD TO TRACKS
+		-----------------------------------------
 
-	case '1':      // <1>
-/*   
- *    enables power from the motor shield to the main operations and programming tracks
- *    
- *    returns: <p1>
- */    
-	  DCCpp.powerOn();
+		<b>
+		\verbatim
+		<1>
+		\endverbatim
+		</b>
+
+		enables power from the motor shield to the main operations and programming tracks
+    
+		returns: <b>\<p1\></b>
+		*/    
+
+	  DCCpp::powerOn();
 	  break;
 		  
-/***** TURN OFF POWER FROM MOTOR SHIELD TO TRACKS  ****/    
+	case '0':     
+		/**	\addtogroup commandsGroup
+		TURN OFF POWER FROM MOTOR SHIELD TO TRACKS
+		------------------------------------------
 
-	case '0':     // <0>
-/*   
- *    disables power from the motor shield to the main operations and programming tracks
- *    
- *    returns: <p0>
- */
-		DCCpp.powerOff();
+		<b>
+		\verbatim
+		<0>
+		\endverbatim
+		</b>
+
+		disables power from the motor shield to the main operations and programming tracks
+    
+		returns: <b>\<p0\></b>
+		*/
+
+		DCCpp::powerOff();
 		break;
 
-/***** READ MAIN OPERATIONS TRACK CURRENT  ****/    
+	case 'c':     
+		/**	\addtogroup commandsGroup
+		READ MAIN OPERATIONS TRACK CURRENT
+		----------------------------------
 
-	case 'c':     // <c>
-/*
- *    reads current being drawn on main operations track
- *    
- *    returns: <a CURRENT> 
- *    where CURRENT = 0-1024, based on exponentially-smoothed weighting scheme
- */
+		<b>
+		\verbatim
+		<c>
+		\endverbatim
+		</b>
+
+		reads current being drawn on main operations track
+    
+		returns: <b>\<a CURRENT\> </b>
+		where CURRENT = 0-1024, based on exponentially-smoothed weighting scheme
+		*/
+
 	  INTERFACE.print("<a");
-	  INTERFACE.print(int(DCCpp.getCurrentMain()));
+	  INTERFACE.print(int(DCCpp::getCurrentMain()));
 	  INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
 	  INTERFACE.println("");
 #endif
 	  break;
 
-/***** READ STATUS OF DCC++ BASE STATION  ****/    
+	case 's':
+		/**	\addtogroup commandsGroup
+		STATUS OF DCC++ BASE STATION
+		----------------------------
 
-	case 's':      // <s>
-/*
- *    returns status messages containing track power status, throttle status, turn-out status, and a version number
- *    NOTE: this is very useful as a first command for an interface to send to this sketch in order to verify connectivity and update any GUI to reflect actual throttle and turn-out settings
- *    
- *    returns: series of status messages that can be read by an interface to determine status of DCC++ Base Station and important settings
- */
+		<b>
+		\verbatim
+		<s>
+		\endverbatim
+		</b>
+
+		returns status messages containing track power status, throttle status, turn-out status, and a version number
+		NOTE: this is very useful as a first command for an interface to send to this sketch in order to verify connectivity and update any GUI to reflect actual throttle and turn-out settings
+    
+		returns: series of status messages that can be read by an interface to determine status of DCC++ Base Station and important settings
+		*/
+
 	  if(digitalRead(DCCppConfig::SignalEnablePinProg)==LOW)      // could check either PROG or MAIN
 		INTERFACE.print("<p0>");
 	  else
@@ -372,15 +466,15 @@ void TextCommand::parse(char *com){
 #endif
 
 	  for(int i=1;i<=MAX_MAIN_REGISTERS;i++){
-		if(DCCppClass::mainRegs.speedTable[i]==0)
+		if(DCCpp::mainRegs.speedTable[i]==0)
 		  continue;
 		INTERFACE.print("<T");
 		INTERFACE.print(i); INTERFACE.print(" ");
-		if(DCCppClass::mainRegs.speedTable[i]>0){
-		  INTERFACE.print(DCCppClass::mainRegs.speedTable[i]);
+		if(DCCpp::mainRegs.speedTable[i]>0){
+		  INTERFACE.print(DCCpp::mainRegs.speedTable[i]);
 		  INTERFACE.print(" 1>");
 		} else{
-		  INTERFACE.print(- DCCppClass::mainRegs.speedTable[i]);
+		  INTERFACE.print(- DCCpp::mainRegs.speedTable[i]);
 		  INTERFACE.print(" 0>");
 		}          
 #if !defined(USE_ETHERNET)
@@ -427,37 +521,51 @@ void TextCommand::parse(char *com){
 #endif
 	  break;
 
-/***** STORE SETTINGS IN EEPROM  ****/
-
 #ifdef USE_EEPROM
-	case 'E':     // <E>
-/*
- *    stores settings for turnouts and sensors EEPROM
- *    
- *    returns: <e nTurnouts nSensors>
-*/
+	case 'E':     
+		/**	\addtogroup commandsGroup
+		STORE SETTINGS IN EEPROM
+		------------------------
+
+		<b>
+		\verbatim
+		<E>
+		\endverbatim
+		</b>
+
+		Stores settings for turnouts and sensors EEPROM
+    
+		returns: <b>\<e nTurnouts nSensors\></b>
+		*/
 	 
 	EEStore::store();
 	INTERFACE.print("<e ");
-	INTERFACE.print(EEStore::eeStore->data.nTurnouts);
+	INTERFACE.print(EEStore::data.nTurnouts);
 	INTERFACE.print(" ");
-	INTERFACE.print(EEStore::eeStore->data.nSensors);
+	INTERFACE.print(EEStore::data.nSensors);
 	INTERFACE.print(" ");
-	INTERFACE.print(EEStore::eeStore->data.nOutputs);
+	INTERFACE.print(EEStore::data.nOutputs);
 	INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
 	INTERFACE.println("");
 #endif
 	break;
 
-/***** CLEAR SETTINGS IN EEPROM  ****/    
+	case 'e':     
+		/**	\addtogroup commandsGroup
+		CLEAR SETTINGS IN EEPROM
+		------------------------
 
-	case 'e':     // <e>
-/*
- *    clears settings for Turnouts in EEPROM
- *    
- *    returns: <O>
-*/
+		<b>
+		\verbatim
+		<e>
+		\endverbatim
+		</b>
+
+		clears settings for Turnouts in EEPROM
+    
+		returns: <b>\<O\></b>
+		*/
 	 
 	EEStore::clear();
 	INTERFACE.print("<O>");
@@ -467,14 +575,22 @@ void TextCommand::parse(char *com){
 	break;
 #endif
 
-/***** PRINT CARRIAGE RETURN IN SERIAL MONITOR WINDOW  ****/    
-				
-	case ' ':     // < >                
-/*
- *    simply prints a carriage return - useful when interacting with Ardiuno through serial monitor window
- *    
- *    returns: a carriage return
-*/
+	case ' ':
+		/**	\addtogroup commandsGroup
+		PRINT CARRIAGE RETURN IN SERIAL MONITOR WINDOW
+		----------------------------------------------
+
+		<b>
+		\verbatim
+		< >
+		\endverbatim
+		</b>
+
+		simply prints a carriage return - useful when interacting with ArduIno through serial monitor window
+    
+		returns: a carriage return
+		*/
+
 	  INTERFACE.println("");
 	  break;  
 
@@ -483,13 +599,20 @@ void TextCommand::parse(char *com){
 /// PLEASE SEE SPECIFIC WARNINGS IN EACH COMMAND BELOW
 ///
 
-/***** ENTER DIAGNOSTIC MODE  ****/    
+	case 'D':       
+		/**	\addtogroup commandsGroup
+		ENTER DIAGNOSTIC MODE
+		---------------------
 
-	case 'D':       // <D>  
-/*
- *    changes the clock speed of the chip and the pre-scaler for the timers so that you can visually see the DCC signals flickering with an LED
- *    SERIAL COMMUNICAITON WILL BE INTERUPTED ONCE THIS COMMAND IS ISSUED - MUST RESET BOARD OR RE-OPEN SERIAL WINDOW TO RE-ESTABLISH COMMS
- */
+		<b>
+		\verbatim
+		<D>
+		\endverbatim
+		</b>
+
+		changes the clock speed of the chip and the pre-scaler for the timers so that you can visually see the DCC signals flickering with an LED
+		SERIAL COMMUNICATION WILL BE INTERUPTED ONCE THIS COMMAND IS ISSUED - MUST RESET BOARD OR RE-OPEN SERIAL WINDOW TO RE-ESTABLISH COMMS
+		*/
 
 	Serial.println("\nEntering Diagnostic Mode...");
 	delay(1000);
@@ -517,56 +640,80 @@ void TextCommand::parse(char *com){
 
 	break;
 
-/***** WRITE A DCC PACKET TO ONE OF THE REGSITERS DRIVING THE MAIN OPERATIONS TRACK  ****/    
-	  
-	case 'M':       // <M REGISTER BYTE1 BYTE2 [BYTE3] [BYTE4] [BYTE5]>
-/*
- *   writes a DCC packet of two, three, four, or five hexidecimal bytes to a register driving the main operations track
- *   FOR DEBUGGING AND TESTING PURPOSES ONLY.  DO NOT USE UNLESS YOU KNOW HOW TO CONSTRUCT NMRA DCC PACKETS - YOU CAN INADVERTENTLY RE-PROGRAM YOUR ENGINE DECODER
- *   
- *    REGISTER: an internal register number, from 0 through MAX_MAIN_REGISTERS (inclusive), to write (if REGISTER=0) or write and store (if REGISTER>0) the packet 
- *    BYTE1:  first hexidecimal byte in the packet
- *    BYTE2:  second hexidecimal byte in the packet
- *    BYTE3:  optional third hexidecimal byte in the packet
- *    BYTE4:  optional fourth hexidecimal byte in the packet
- *    BYTE5:  optional fifth hexidecimal byte in the packet
- *   
- *    returns: NONE   
- */
-	  DCCppClass::mainRegs.writeTextPacket(com+1);
+	case 'M':       
+		/**	\addtogroup commandsGroup
+		WRITE A DCC PACKE%T TO ONE OF THE REGISTERS DRIVING THE MAIN OPERATIONS TRACK
+		-----------------------------------------------------------------------------
+
+		<b>
+		\verbatim
+		<M REGISTER BYTE1 BYTE2 [BYTE3] [BYTE4] [BYTE5]>
+		\endverbatim
+		</b>
+
+		writes a DCC packet of two, three, four, or five hexadecimal bytes to a register driving the main operations track
+		fOR DEBUGGING AND TESTING PURPOSES ONLY.  DO NOT USE UNLESS YOU KNOW HOW TO CONSTRUCT NMRA DCC PACKETS - YOU CAN INADVERTENTLY RE-PROGRAM YOUR ENGINE DECODER
+   
+		- <b>REGISTE%R</b>: an internal register number, from 0 through MAX_MAIN_REGISTERS (inclusive), to write (if REGISTE%R=0) or write and store (if REGISTE%R>0) the packet 
+		- <b>BYTE1</b>:  first hexadecimal byte in the packet
+		- <b>BYTE2</b>:  second hexadecimal byte in the packet
+		- <b>BYTE3</b>:  optional third hexadecimal byte in the packet
+		- <b>BYTE4</b>:  optional fourth hexadecimal byte in the packet
+		- <b>BYTE5</b>:  optional fifth hexadecimal byte in the packet
+  
+		returns: NONE   
+		*/
+
+	  DCCpp::mainRegs.writeTextPacket(com+1);
 	  break;
 
-/***** WRITE A DCC PACKET TO ONE OF THE REGSITERS DRIVING THE MAIN OPERATIONS TRACK  ****/    
+	case 'P':       
+		/**	\addtogroup commandsGroup
+		WRITE A DCC PACKE%T TO ONE OF THE REGISTERS DRIVING THE MAIN OPERATIONS TRACK
+		-----------------------------------------------------------------------------
 
-	case 'P':       // <P REGISTER BYTE1 BYTE2 [BYTE3] [BYTE4] [BYTE5]>
-/*
- *   writes a DCC packet of two, three, four, or five hexidecimal bytes to a register driving the programming track
- *   FOR DEBUGGING AND TESTING PURPOSES ONLY.  DO NOT USE UNLESS YOU KNOW HOW TO CONSTRUCT NMRA DCC PACKETS - YOU CAN INADVERTENTLY RE-PROGRAM YOUR ENGINE DECODER
- *   
- *    REGISTER: an internal register number, from 0 through MAX_MAIN_REGISTERS (inclusive), to write (if REGISTER=0) or write and store (if REGISTER>0) the packet 
- *    BYTE1:  first hexidecimal byte in the packet
- *    BYTE2:  second hexidecimal byte in the packet
- *    BYTE3:  optional third hexidecimal byte in the packet
- *    BYTE4:  optional fourth hexidecimal byte in the packet
- *    BYTE5:  optional fifth hexidecimal byte in the packet
- *   
- *    returns: NONE   
- */
-	  DCCppClass::progRegs.writeTextPacket(com+1);
+		<b>
+		\verbatim
+		<P REGISTER BYTE1 BYTE2 [BYTE3] [BYTE4] [BYTE5]>
+		\endverbatim
+		</b>
+
+		writes a DCC packet of two, three, four, or five hexadecimal bytes to a register driving the programming track
+		FOR DEBUGGING AND TESTING PURPOSES ONLY.  DO NOT USE UNLESS YOU KNOW HOW TO CONSTRUCT NMRA DCC PACKETS - YOU CAN INADVERTENTLY RE-PROGRAM YOUR ENGINE DECODER
+   
+		- <b>REGISTE%R</b>: an internal register number, from 0 through MAX_MAIN_REGISTERS (inclusive), to write (if REGISTE%R=0) or write and store (if REGISTE%R>0) the packet 
+		- <b>BYTE1</b>:  first hexadecimal byte in the packet
+		- <b>BYTE2</b>:  second hexadecimal byte in the packet
+		- <b>BYTE3</b>:  optional third hexadecimal byte in the packet
+		- <b>BYTE4</b>:  optional fourth hexadecimal byte in the packet
+		- <b>BYTE5</b>:  optional fifth hexadecimal byte in the packet
+   
+		returns: NONE   
+		*/
+
+	  DCCpp::progRegs.writeTextPacket(com+1);
 	  break;
 			
-/***** ATTEMPTS TO DETERMINE HOW MUCH FREE SRAM IS AVAILABLE IN ARDUINO  ****/        
-	  
 #ifndef VISUALSTUDIO
-	case 'F':     // <F>
-/*
- *     measure amount of free SRAM memory left on the Arduino based on trick found on the internet.
- *     Useful when setting dynamic array sizes, considering the Uno only has 2048 bytes of dynamic SRAM.
- *     Unfortunately not very reliable --- would be great to find a better method
- *     
- *     returns: <f MEM>
- *     where MEM is the number of free bytes remaining in the Arduino's SRAM
- */
+	case 'F':     
+		/**	\addtogroup commandsGroup
+		ATTEMPTS TO DETERMINE HOW MUCH FREE SRAM IS AVAILABLE IN ARDUINO
+		----------------------------------------------------------------
+
+		<b>
+		\verbatim
+		<F>
+		\endverbatim
+		</b>
+
+		measure amount of free SRAM memory left on the Arduino based on trick found on the Internet.
+		Useful when setting dynamic array sizes, considering the Uno only has 2048 bytes of dynamic SRAM.
+		Unfortunately not very reliable --- would be great to find a better method
+     
+		returns: <b>\<f MEM\></b>
+		where MEM is the number of free bytes remaining in the Arduino's SRAM
+		*/
+
 	  int v; 
 	  INTERFACE.print("<f");
 	  INTERFACE.print((int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
@@ -577,16 +724,24 @@ void TextCommand::parse(char *com){
 	  break;
 #endif
 
-/***** LISTS BIT CONTENTS OF ALL INTERNAL DCC PACKET REGISTERS  ****/        
+	case 'L':     
+		/**	\addtogroup commandsGroup
+		LISTS BIT CONTENTS OF ALL INTERNAL DCC PACKE%T REGISTERS
+		-------------------------------------------------------
 
-	case 'L':     // <L>
-/*
- *    lists the packet contents of the main operations track registers and the programming track registers
- *    FOR DIAGNOSTIC AND TESTING USE ONLY
- */
+		<b>
+		\verbatim
+		<L>
+		\endverbatim
+		</b>
+
+		lists the packet contents of the main operations track registers and the programming track registers
+		FOR DIAGNOSTIC AND TESTING USE ONLY
+		*/
+
 	  INTERFACE.println("");
-	  for(Register *p = DCCppClass::mainRegs.reg; p <= DCCppClass::mainRegs.maxLoadedReg;p++){
-		INTERFACE.print("M"); INTERFACE.print((int)(p - DCCppClass::mainRegs.reg)); INTERFACE.print(":\t");
+	  for(Register *p = DCCpp::mainRegs.reg; p <= DCCpp::mainRegs.maxLoadedReg;p++){
+		INTERFACE.print("M"); INTERFACE.print((int)(p - DCCpp::mainRegs.reg)); INTERFACE.print(":\t");
 		INTERFACE.print((int)p); INTERFACE.print("\t");
 		INTERFACE.print((int)(p->activePacket)); INTERFACE.print("\t");
 		INTERFACE.print(p->activePacket->nBits); INTERFACE.print("\t");
@@ -595,8 +750,8 @@ void TextCommand::parse(char *com){
 		}
 		INTERFACE.println("");
 	  }
-	  for(Register *p = DCCppClass::progRegs.reg; p <= DCCppClass::progRegs.maxLoadedReg;p++){
-		INTERFACE.print("P"); INTERFACE.print((int)(p - DCCppClass::progRegs.reg)); INTERFACE.print(":\t");
+	  for(Register *p = DCCpp::progRegs.reg; p <= DCCpp::progRegs.maxLoadedReg;p++){
+		INTERFACE.print("P"); INTERFACE.print((int)(p - DCCpp::progRegs.reg)); INTERFACE.print(":\t");
 		INTERFACE.print((int)p); INTERFACE.print("\t");
 		INTERFACE.print((int)p->activePacket); INTERFACE.print("\t");
 		INTERFACE.print(p->activePacket->nBits); INTERFACE.print("\t");

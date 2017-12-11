@@ -9,6 +9,9 @@ Part of DCC++ BASE STATION for the Arduino
 
 #include "Sensor.h"
 #ifdef USE_SENSOR
+#ifdef VISUALSTUDIO
+#include "string.h"
+#endif
 #include "DCCpp_Uno.h"
 #include "EEStore.h"
 #ifdef USE_EEPROM
@@ -19,9 +22,8 @@ Part of DCC++ BASE STATION for the Arduino
 ///////////////////////////////////////////////////////////////////////////////
 
 void Sensor::begin(int snum, int pin, int pullUp) {
-#ifdef DCCPP_DEBUG_MODE
-	if (EEStore::eeStore != NULL)
-	{
+#if defined(USE_EEPROM)	&& defined(DCCPP_DEBUG_MODE)
+	if (strncmp(EEStore::data.id, EESTORE_ID, sizeof(EESTORE_ID)) != 0) {    // check to see that eeStore contains valid DCC++ ID
 		INTERFACE.println(F("Sensor::begin() must be called BEFORE DCCpp.begin() !"));
 	}
 #endif
@@ -199,7 +201,7 @@ void Sensor::load() {
 	struct SensorData data;
 	Sensor *tt;
 
-	for (int i = 0; i<EEStore::eeStore->data.nSensors; i++) {
+	for (int i = 0; i<EEStore::data.nSensors; i++) {
 #ifdef VISUALSTUDIO
 		EEPROM.get(EEStore::pointer(), (void *)&(data), sizeof(SensorData));	// ArduiEmulator version...
 #else
@@ -226,7 +228,7 @@ void Sensor::store() {
 	Sensor *tt;
 
 	tt = firstSensor;
-	EEStore::eeStore->data.nSensors = 0;
+	EEStore::data.nSensors = 0;
 
 	while (tt != NULL) {
 #ifdef VISUALSTUDIO
@@ -236,7 +238,7 @@ void Sensor::store() {
 #endif
 		EEStore::advance(sizeof(tt->data));
 		tt = tt->nextSensor;
-		EEStore::eeStore->data.nSensors++;
+		EEStore::data.nSensors++;
 	}
 }
 #endif

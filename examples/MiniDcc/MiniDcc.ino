@@ -32,7 +32,7 @@ ButtonsCommanderSwitchOnePin buttonF1;
 int locoId;	// DCC id for this loco
 int locoStepsNumber;	// 14, 28 or 128
 int locoSpeed;	// Current speed
-bool locoDirectionToLeft;	// current direction.
+bool locoDirectionForward;	// current direction.
 FunctionsState locoFunctions;	// Current functions
 
 void setup()
@@ -46,20 +46,20 @@ void setup()
 	buttonF0.begin(EVENT_FUNCTION0, A1);
 	buttonF1.begin(EVENT_FUNCTION1, A2);
 
-	DCCpp.begin();
+	DCCpp::begin();
 	// Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
-	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
+	DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
 
 	locoId = 3;
 	locoStepsNumber = 128;
 	locoSpeed = 0;
-	locoDirectionToLeft = false;
+	locoDirectionForward = true;
 	//locoFunctions.Clear();	// Already done by the constructor...
 }
 
 void loop()
 {
-	DCCpp.loop();
+	DCCpp::loop();
 	unsigned long event = Commanders::loop();
 
 	switch (event)
@@ -71,7 +71,7 @@ void loop()
 			locoSpeed++;
 		if (locoSpeed > locoStepsNumber)
 			locoSpeed = locoStepsNumber;
-		DCCpp.setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
+		DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
 		break;
 
 	case EVENT_LESS:
@@ -81,7 +81,7 @@ void loop()
 			locoSpeed--;
 		if (locoSpeed < 0)
 			locoSpeed = 0;
-		DCCpp.setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
+		DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
 		break;
 
 	case EVENT_FUNCTION0:
@@ -89,7 +89,7 @@ void loop()
 			locoFunctions.inactivate(0);
 		else
 			locoFunctions.activate(0);
-		DCCpp.setFunctionsMain(2, locoId, locoFunctions);
+		DCCpp::setFunctionsMain(2, locoId, locoFunctions);
 		break;
 
 	case EVENT_FUNCTION1:
@@ -97,7 +97,7 @@ void loop()
 			locoFunctions.inactivate(1);
 		else
 			locoFunctions.activate(1);
-		DCCpp.setFunctionsMain(2, locoId, locoFunctions);
+		DCCpp::setFunctionsMain(2, locoId, locoFunctions);
 		break;
 	}
 }

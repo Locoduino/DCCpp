@@ -98,36 +98,144 @@ $(document).ready(function(){initNavTree('classFunctionsState.html','');});
   <div class="clear-floats"></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &quot;<a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>&quot;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac3c57ed356ad6ea8527144d5c25970bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac3c57ed356ad6ea8527144d5c25970bf"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
-<tr class="separator:ac3c57ed356ad6ea8527144d5c25970bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46032879bee0942e4f93540db1d8a9f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46032879bee0942e4f93540db1d8a9f2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>activate</b> (byte inFunctionNumber)</td></tr>
-<tr class="separator:a46032879bee0942e4f93540db1d8a9f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb80c35a553e068c7249a1f1ff1ebb53"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb80c35a553e068c7249a1f1ff1ebb53"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>inactivate</b> (byte inFunctionNumber)</td></tr>
-<tr class="separator:aeb80c35a553e068c7249a1f1ff1ebb53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad70e6952bef3280ddb50ec5461bd1632"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad70e6952bef3280ddb50ec5461bd1632"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isActivated</b> (byte inFunctionNumber)</td></tr>
-<tr class="separator:ad70e6952bef3280ddb50ec5461bd1632"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb6fbac1f43127c8097153da40b79d9c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionsState.html#adb6fbac1f43127c8097153da40b79d9c">FunctionsState</a> ()</td></tr>
+<tr class="separator:adb6fbac1f43127c8097153da40b79d9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8bb3912a3ce86b15842e79d0b421204"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionsState.html#ac8bb3912a3ce86b15842e79d0b421204">clear</a> ()</td></tr>
+<tr class="separator:ac8bb3912a3ce86b15842e79d0b421204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45dac1a6f931fe0dc711d8d6b2e831b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionsState.html#a45dac1a6f931fe0dc711d8d6b2e831b1">activate</a> (byte inFunctionNumber)</td></tr>
+<tr class="separator:a45dac1a6f931fe0dc711d8d6b2e831b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2eaf9525bbe7a59c88c6d6d632ddf82c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionsState.html#a2eaf9525bbe7a59c88c6d6d632ddf82c">inactivate</a> (byte inFunctionNumber)</td></tr>
+<tr class="separator:a2eaf9525bbe7a59c88c6d6d632ddf82c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a731fd012960b50658aa7d515cd1c03"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionsState.html#a1a731fd012960b50658aa7d515cd1c03">isActivated</a> (byte inFunctionNumber)</td></tr>
+<tr class="separator:a1a731fd012960b50658aa7d515cd1c03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00008">8</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/Mes documents/Trusty/Arduino/Libraries/DCCpp/src/<a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a></li>
-<li>D:/Mes documents/Trusty/Arduino/Libraries/DCCpp/src/<a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a></li>
-</ul>
+<div class="textblock"><p>This is a class to handle decoder functions. An instance of this class handle the status of the functions of one decoder. A function can be active or not. </p>
+
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00013">13</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="adb6fbac1f43127c8097153da40b79d9c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FunctionsState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Initialize the instance. </p>
+
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00024">24</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="ac8bb3912a3ce86b15842e79d0b421204"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Reset all functions to inactive. </p>
+
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00029">29</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a45dac1a6f931fe0dc711d8d6b2e831b1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void activate </td>
+          <td>(</td>
+          <td class="paramtype">byte&#160;</td>
+          <td class="paramname"><em>inFunctionNumber</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Activate one function. The allowed number goes from 0 to 28, maximum for DCC. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inFunctionNumber</td><td>Number of the function to activate. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00038">38</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2eaf9525bbe7a59c88c6d6d632ddf82c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void inactivate </td>
+          <td>(</td>
+          <td class="paramtype">byte&#160;</td>
+          <td class="paramname"><em>inFunctionNumber</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Inactivate one function. The allowed number goes from 0 to 28, maximum for DCC. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inFunctionNumber</td><td>Number of the function to inactivate. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00043">43</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1a731fd012960b50658aa7d515cd1c03"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isActivated </td>
+          <td>(</td>
+          <td class="paramtype">byte&#160;</td>
+          <td class="paramname"><em>inFunctionNumber</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Check if the given function is activated. The allowed number goes from 0 to 28, maximum for DCC. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inFunctionNumber</td><td>Number of the function to activate. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the given function is activated. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00048">48</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- Generated by DoxyPress 1.2.10 -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classFunctionsState.html">FunctionsState</a></li>
-    <li class="footer">Generated on lun. nov. 27 2017 16:55:13 for DCCpp &nbsp; by
+    <li class="footer">Generated on lun. déc. 11 2017 17:23:23 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.2.10 </li>
   </ul>

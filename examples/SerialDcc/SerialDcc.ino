@@ -14,13 +14,13 @@ void setup()
 {
 	Serial.begin(115200);
 
-	DCCpp.begin();
+	DCCpp::begin();
 	// Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
-	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
+	DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
 }
 
 void loop()
 {
-	DCCpp.loop();
+	DCCpp::loop();
 }
 

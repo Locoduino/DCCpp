@@ -14,12 +14,10 @@ Part of DCC++ BASE STATION for the Arduino
 
 // Define constants used for reading CVs from the Programming Track
 
-#define  ACK_BASE_COUNT            100      // number of analogRead samples to take before each CV verify to establish a baseline current
-#define  ACK_SAMPLE_COUNT          500      // number of analogRead samples to take when monitoring current after a CV verify (bit or byte) has been sent 
-#define  ACK_SAMPLE_SMOOTHING      0.2      // exponential smoothing to use in processing the analogRead samples after a CV verify (bit or byte) has been sent
-#define  ACK_SAMPLE_THRESHOLD       30      // the threshold that the exponentially-smoothed analogRead samples (after subtracting the baseline current) must cross to establish ACKNOWLEDGEMENT
-
-// Define a series of registers that can be sequentially accessed over a loop to generate a repeating series of DCC Packets
+#define  ACK_BASE_COUNT            100      /**< Number of analogRead samples to take before each CV verify to establish a baseline current.*/
+#define  ACK_SAMPLE_COUNT          500      /**< Number of analogRead samples to take when monitoring current after a CV verify (bit or byte) has been sent.*/ 
+#define  ACK_SAMPLE_SMOOTHING      0.2      /**< Exponential smoothing to use in processing the analogRead samples after a CV verify (bit or byte) has been sent.*/
+#define  ACK_SAMPLE_THRESHOLD       30      /**< The threshold that the exponentially-smoothed analogRead samples (after subtracting the baseline current) must cross to establish ACKNOWLEDGEMENT.*/
 
 struct Packet{
   byte buf[10];
@@ -33,7 +31,9 @@ struct Register{
   void initPackets();
 }; // Register
   
-struct RegisterList{  
+/** Define a series of registers that can be sequentially accessed over a loop to generate a repeating series of DCC Packets.
+ */
+struct RegisterList{
   int maxNumRegs;
   Register *reg;
   Register **regMap;

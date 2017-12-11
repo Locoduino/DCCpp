@@ -98,32 +98,75 @@ $(document).ready(function(){initNavTree('structSensorData.html','');});
   <div class="clear-floats"></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &quot;<a class="el" href="Sensor_8h_source.html">Sensor.h</a>&quot;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a8c649835983803786f3c862a3a213194"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c649835983803786f3c862a3a213194"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>snum</b></td></tr>
-<tr class="separator:a8c649835983803786f3c862a3a213194"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38168d6e9536f80c0bd818ea7701bd35"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38168d6e9536f80c0bd818ea7701bd35"></a>
-byte&#160;</td><td class="memItemRight" valign="bottom"><b>pin</b></td></tr>
-<tr class="separator:a38168d6e9536f80c0bd818ea7701bd35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6c7ef984646e6aa041bf96ff30198ed"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af6c7ef984646e6aa041bf96ff30198ed"></a>
-byte&#160;</td><td class="memItemRight" valign="bottom"><b>pullUp</b></td></tr>
-<tr class="separator:af6c7ef984646e6aa041bf96ff30198ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88de83d09c15d47cac7b011ee235b480"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensorData.html#a88de83d09c15d47cac7b011ee235b480">snum</a></td></tr>
+<tr class="separator:a88de83d09c15d47cac7b011ee235b480"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab17e87ffa7bbb8cac12a4ec11a52b5e2"><td class="memItemLeft" align="right" valign="top">byte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensorData.html#ab17e87ffa7bbb8cac12a4ec11a52b5e2">pin</a></td></tr>
+<tr class="separator:ab17e87ffa7bbb8cac12a4ec11a52b5e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae81b71f6330e8a7468f086ddbeb02136"><td class="memItemLeft" align="right" valign="top">byte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensorData.html#ae81b71f6330e8a7468f086ddbeb02136">pullUp</a></td></tr>
+<tr class="separator:ae81b71f6330e8a7468f086ddbeb02136"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Sensor_8h_source.html#l00020">20</a> of file <a class="el" href="Sensor_8h_source.html">Sensor.h</a>.</p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>D:/Mes documents/Trusty/Arduino/Libraries/DCCpp/src/<a class="el" href="Sensor_8h_source.html">Sensor.h</a></li>
-</ul>
+<div class="textblock"><p>Data associated to each <a class="el" href="structSensor.html">Sensor</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="Sensor_8h_source.html#l00021">21</a> of file <a class="el" href="Sensor_8h_source.html">Sensor.h</a>.</p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a88de83d09c15d47cac7b011ee235b480"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int snum</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>the numeric ID (0-32767) of the sensor. </p>
+
+<p class="definition">Definition at line <a class="el" href="Sensor_8h_source.html#l00022">22</a> of file <a class="el" href="Sensor_8h_source.html">Sensor.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab17e87ffa7bbb8cac12a4ec11a52b5e2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">byte pin</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The arduino pin number the sensor is connected to. </p>
+
+<p class="definition">Definition at line <a class="el" href="Sensor_8h_source.html#l00023">23</a> of file <a class="el" href="Sensor_8h_source.html">Sensor.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae81b71f6330e8a7468f086ddbeb02136"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">byte pullUp</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>1 = use internal pull-up resistor for pin, 0 = don't use internal pull-up resistor for pin. </p>
+
+<p class="definition">Definition at line <a class="el" href="Sensor_8h_source.html#l00024">24</a> of file <a class="el" href="Sensor_8h_source.html">Sensor.h</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- Generated by DoxyPress 1.2.10 -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structSensorData.html">SensorData</a></li>
-    <li class="footer">Generated on lun. nov. 27 2017 16:55:13 for DCCpp &nbsp; by
+    <li class="footer">Generated on lun. déc. 11 2017 17:23:23 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.2.10 </li>
   </ul>

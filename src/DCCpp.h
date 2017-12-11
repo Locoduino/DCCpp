@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------
 
 /**	 @mainpage
-**********************************************************************
+-------------------------------------------------------------------------------------------------------
 
 DCC++ BASE STATION
 COPYRIGHT (c) 2013-2016 Gregg E. Berman
@@ -25,10 +25,10 @@ Copyright Locoduino 2017
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses
 
-**********************************************************************
-      
+-------------------------------------------------------------------------------------------------------
+
 DCC++ BASE STATION is a C++ program written for the Arduino Uno and Arduino Mega
-using the Arduino IDE 1.6.6.
+using the Arduino IDE 1.6.6, adapted to this library named DCCpp for IDE 1.8.4 .
 
 It allows a standard Arduino Uno or Mega with an Arduino Motor Shield (as well as others)
 to be used as a fully-functioning digital command and control (DCC) base station
@@ -41,8 +41,8 @@ This version of DCC++ BASE STATION supports:
   * Simultaneous control of multiple locomotives
   * 128-step speed throttling
   * Cab functions F0-F28
-  * Activate/de-activate accessory functions using 512 addresses, each with 4 sub-addresses
-      - includes optional functionailty to monitor and store of the direction of any connected turnouts
+  * Activate/deactivate accessory functions using 512 addresses, each with 4 sub-addresses
+      - includes optional functionality to monitor and store of the direction of any connected turnouts
   * Programming on the Main Operations Track
       - write configuration variable bytes
       - set/clear specific configuration variable bits
@@ -54,7 +54,7 @@ This version of DCC++ BASE STATION supports:
 DCC++ BASE STATION is controlled with simple text commands received via
 the Arduino's serial interface.  Users can type these commands directly
 into the Arduino IDE Serial Monitor, or can send such commands from another
-device or computer program.
+device or computer program.	A DCCpp class can also send orders through methods without any text.
 
 When compiled for the Arduino Mega, an Ethernet Shield can be used for network
 communications instead of using serial communications.
@@ -80,15 +80,15 @@ DCC++ to be developed and distributed in the same fashion.
 
 REFERENCES:
 
-  NMRA DCC Standards:          http://www.nmra.org/index-nmra-standards-and-recommended-practices
-  Arduino:                     http://www.arduino.cc/
-  Processing:                  http://processing.org/
-  GNU General Public License:  http://opensource.org/licenses/GPL-3.0
+  - NMRA DCC Standards:          http://www.nmra.org/index-nmra-standards-and-recommended-practices
+  - Arduino:                     http://www.arduino.cc/
+  - Processing:                  http://processing.org/
+  - GNU General Public License:  http://opensource.org/licenses/GPL-3.0
 
 BRIEF NOTES ON THE THEORY AND OPERATION OF DCC++ BASE STATION:
 
 DCC++ BASE STATION for the Uno configures the OC0B interrupt pin associated with Timer 0,
-and the OC1B interupt pin associated with Timer 1, to generate separate 0-5V
+and the OC1B interrupt pin associated with Timer 1, to generate separate 0-5V
 unipolar signals that each properly encode zero and one bits conforming with
 DCC timing standards.  When compiled for the Mega, DCC++ BASE STATION uses OC3B instead of OC0B.
 
@@ -103,9 +103,9 @@ registers numbered 1 through MAX_MAIN_REGISTERS (as defined in DCCpp_Uno.h).
 It is generally considered good practice to continuously send throttle control packets
 to every cab so that if an engine should momentarily lose electrical connectivity with the tracks,
 it will very quickly receive another throttle control signal as soon as connectivity is
-restored (such as when a trin passes over  rough portion of track or the frog of a turnout).
+restored (such as when a train passes over  rough portion of track or the frog of a turnout).
 
-DCC++ Base Station therefore sequentially loops through each main operations track packet regsiter
+DCC++ Base Station therefore sequentially loops through each main operations track packet register
 that has been loaded with a throttle control setting for a given cab.  For each register, it
 transmits the appropriate DCC packet bits to the track, then moves onto the next register
 without any pausing to ensure continuous bi-polar power is being provided to the tracks.
@@ -114,10 +114,10 @@ fashion and the sequencer is pointed to that register immediately after being ch
 can be transmitted to the appropriate cab without delay or any interruption in the bi-polar power signal.
 The cabs identified in each stored throttle setting should be unique across registers.  If two registers
 contain throttle setting for the same cab, the throttle in the engine will oscillate between the two,
-which is probably not a desireable outcome.
+which is probably not a desirable outcome.
 
 For both the main operations track and the programming track there is also a special packet register with id=0
-that is used to store all other DCC packets that do not require continious transmittal to the tracks.
+that is used to store all other DCC packets that do not require continuous transmittal to the tracks.
 This includes DCC packets to control decoder functions, set accessory decoders, and read and write Configuration Variables.
 It is common practice that transmittal of these one-time packets is usually repeated a few times to ensure
 proper receipt by the receiving decoder.  DCC decoders are designed to listen for repeats of the same packet
@@ -137,7 +137,7 @@ For the Mega, the OC1B output is produced directly on pin 12, so no jumper is ne
 Motor Shield's DIRECTION A input.  However, one small jumper wire is needed to connect the Mega's OC3B output (pin 2)
 to the Motor Shield's DIRECTION B input (pin 13).
 
-Other Motor Shields may require different sets of jumper or configurations (see Config.h and DCCpp_Uno.h for details).
+Other Motor Shields may require different sets of jumper or configurations (see \ref commonPage page for other details).
 
 When configured as such, the CHANNEL A and CHANNEL B outputs of the Motor Shield may be
 connected directly to the tracks.  This software assumes CHANNEL A is connected
@@ -146,95 +146,99 @@ to the Main Operations Track, and CHANNEL B is connected to the Programming Trac
 DCC++ BASE STATION in split into multiple modules, each with its own header file:
 
   DCCpp_Uno:        declares required global objects and contains initial Arduino setup()
-                    and Arduino loop() functions, as well as interrput code for OC0B and OC1B.
-                    Also includes declarations of optional array of Turn-Outs and optional array of Sensors 
+                    and Arduino loop() functions, as well as interrupt code for OC0B and OC1B.
+                    Also includes declarations of optional array of Turn-Outs and optional array of Sensors. 
 
-  TextCommand:      contains methods to read and interpret text commands from the serial line,
+  TextCommand:      contains methods to read and interpret text commands from the serial/Ethernet line,
                     process those instructions, and, if necessary call appropriate Packet RegisterList methods
-                    to update either the Main Track or Programming Track Packet Registers. (old name SerialCommand)
+                    to update either the Main Track or Programming Track Packet Registers. (old name SerialCommand).
 
-  PacketRegister:   contains methods to load, store, and update Packet Registers with DCC instructions
+  PacketRegister:   contains methods to load, store, and update Packet Registers with DCC instructions.
 
   CurrentMonitor:   contains methods to separately monitor and report the current drawn from CHANNEL A and
                     CHANNEL B of the Arduino Motor Shield's, and shut down power if a short-circuit overload
-                    is detected
+                    is detected.
 
   Turnout:          contains methods to operate and store the status of any optionally-defined turnouts controlled
-                    by a DCC stationary accessory decoder. (old name Accessories)
+                    by a DCC stationary accessory decoder. (old name Accessories).
 
   Sensor:           contains methods to monitor and report on the status of optionally-defined infrared
-                    sensors embedded in the Main Track and connected to various pins on the Arudino Uno
+                    sensors embedded in the Main Track and connected to various pins on the Arduino Uno.
 
-  Output:           contains methods to configure one or more Arduino pins as an output for your own custom use
+  Output:           contains methods to configure one or more Arduino pins as an output for your own custom use.
 
   EEStore:          contains methods to store, update, and load various DCC settings and status
-                    (e.g. the states of all defined turnouts) in the EEPROM for recall after power-up
+                    (e.g. the states of all defined turnouts) in the EEPROM for recall after power-up.
 
-DCC++ BASE STATION is configured through the Config.h file that contains all user-definable parameters 
-
-*************************************************************************************************
+-------------------------------------------------------------------------------------------------------
 
 Complement of the documentation for this library:
 
-This library is a free interpretation of the Gregg's work to adapt it in a library, and minimize
-the needs to modify the library sources to use it.
+This library is a free interpretation of the Gregg's work to adapt it to a library, and minimize
+the needs to modify the library sources to use it. The only configuration still needed in .h file is 
+to decide of the Ethernet interface model.
 
-\page Common Configuration Lines
+\page commonPage Common Configuration Lines
 
 This is the 'begin' lines for some common configurations. Note that for LMD18200, the two final arguments must be adapted to your need...
-The wiring for these configurations is visible here : http://www.locoduino.org/spip.php?article187 . The text is in french, but schemas can be understood !
+The wiring for these configurations is visible here : http://www.locoduino.org/spip.php?article187 . The text is in French, but schema can be understood !
+
+For Arduino or Pololu shields, signalPinMain must be connected to Direction motor A, and signalPinProg to Direction motor B
+If a track is not connected, main or programming, the signalPin should stay to default at 255 (UNDEFINED_PIN).
+For H bridge connected directly to the pins, like LMD18200, signalPin and Direction motor should have the same pin number,
+or directions can be set to UNDEFINED_PIN.
 
 \par Arduino Uno + LMD18200 + MAX471
 
 \verbatim
-DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
+DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
 \endverbatim
 
 \par Arduino Uno + 2 LMD18200 + 2 MAX471
 
 \verbatim
-DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
-DCCpp.beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 5, A1);
+DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
+DCCpp::beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 5, A1);
 \endverbatim
 
 \par Arduino Mega2560 + LMD18200 + MAX471
 
 \verbatim
-DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
+DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
 \endverbatim
 
 \par Arduino Mega2560 + 2 LMD18200 + 2 MAX471
 
 \verbatim
-DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
-DCCpp.beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 11, A1);
+DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
+DCCpp::beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 11, A1);
 \endverbatim
 
 \par Arduino Uno or Mega2560 + Arduino Motor Shield
 
 \verbatim
-DCCpp.beginMainMotorShield();
-DCCpp.beginProgMotorShield();
+DCCpp::beginMainMotorShield();
+DCCpp::beginProgMotorShield();
 \endverbatim
 or
 \verbatim
-DCCpp.beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN);
-DCCpp.beginProg(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG, MOTOR_SHIELD_CURRENT_MONITOR_PIN_PROG);
+DCCpp::beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN);
+DCCpp::beginProg(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG, MOTOR_SHIELD_CURRENT_MONITOR_PIN_PROG);
 \endverbatim
 
-\par Arduino Uno ou Mega2560 + Pololu Motor Shield
+\par Arduino Uno or Mega2560 + Pololu MC33926 Motor Shield
 
 \verbatim
-DCCpp.beginMainPololu();
-DCCpp.beginProgPololu();
+DCCpp::beginMainPololu();
+DCCpp::beginProgPololu();
 \endverbatim
 or
 \verbatim
-DCCpp.beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, POLOLU_SIGNAL_ENABLE_PIN_MAIN, POLOLU_CURRENT_MONITOR_PIN_MAIN);
-DCCpp.beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG);
+DCCpp::beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, POLOLU_SIGNAL_ENABLE_PIN_MAIN, POLOLU_CURRENT_MONITOR_PIN_MAIN);
+DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG);
 \endverbatim
 
-\page Revision History
+\page revPage Revision History
 
 \par 27/11/2017 V0.7.0
 - Retour des chaines de validation de commande renvoyées à l'interface...
@@ -242,7 +246,7 @@ DCCpp.beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOL
 - Ajout des fonctions beginMainMotorShield, beginProgMotorShield, beginMainPololu et beginProgPololu
 - EthernetProtocol::None supprimé.
 _______________
-- Ack strings are back.
+- Acknowledgment strings are back.
 - ARDUINO_AVR_MEGA2560 defined if ARDUINO_AVR_MEGA defined.
 - Added functions beginMainMotorShield, beginProgMotorShield, beginMainPololu and beginProgPololu
 - EthernetProtocol::None removed.
@@ -251,7 +255,7 @@ _______________
 - Retour des chaines de validation de commande renvoyées à l'interface...
 - Corrections de Turnout et Output quand EEPROM utilisée.
 _______________
-- Ack strings are back.
+- Acknowledgment strings are back.
 - Fixes for Turnout and Output when EEPROM is used.
 
 \par 25/08/2017 V0 Initial Release
@@ -342,7 +346,7 @@ your program if you activate debug mode.*/
 text to the console... It has no effect if DCCPP_DEBUG_MODE is not activated.*/
 #define DCCPP_DEBUG_VERBOSE_MODE
 /** If this is defined, the function Accessories::printAccessories() will become available. This is useful to try
-to understand why a port, or an accessory is not corretly defined.
+to understand why a port, or an accessory is not correctly defined.
 This function uses a lot of memory, so activate it only if necessary, and be careful about your program's memory.
 You can use the define PRINT_DCCPP() in your sketch instead of a call to DCCpp.showConfiguration().
 If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you will not have a compilation error.*/

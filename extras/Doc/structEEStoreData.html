@@ -98,35 +98,92 @@ $(document).ready(function(){initNavTree('structEEStoreData.html','');});
   <div class="clear-floats"></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &quot;<a class="el" href="EEStore_8h_source.html">EEStore.h</a>&quot;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a5f0a6608f53ee071399e0e977dd2193e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5f0a6608f53ee071399e0e977dd2193e"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> [sizeof (EESTORE_ID)]</td></tr>
-<tr class="separator:a5f0a6608f53ee071399e0e977dd2193e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9401ce4adea47949d4a3435f729c06fb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9401ce4adea47949d4a3435f729c06fb"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>nTurnouts</b></td></tr>
-<tr class="separator:a9401ce4adea47949d4a3435f729c06fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b65880b2aefcb0023ceeeff3be95188"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1b65880b2aefcb0023ceeeff3be95188"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>nSensors</b></td></tr>
-<tr class="separator:a1b65880b2aefcb0023ceeeff3be95188"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3b033a0ed58d0d3be8dbcadc7c9fd6e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac3b033a0ed58d0d3be8dbcadc7c9fd6e"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>nOutputs</b></td></tr>
-<tr class="separator:ac3b033a0ed58d0d3be8dbcadc7c9fd6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ba5380452830d1540bbdc6c89714363"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEEStoreData.html#a1ba5380452830d1540bbdc6c89714363">id</a> [sizeof (EESTORE_ID)+1]</td></tr>
+<tr class="separator:a1ba5380452830d1540bbdc6c89714363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac19c509a8490618f5b61b83edc16c3d9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEEStoreData.html#ac19c509a8490618f5b61b83edc16c3d9">nTurnouts</a></td></tr>
+<tr class="separator:ac19c509a8490618f5b61b83edc16c3d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7708e38584383f3bfbbcb7d4edb22ad"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEEStoreData.html#ac7708e38584383f3bfbbcb7d4edb22ad">nSensors</a></td></tr>
+<tr class="separator:ac7708e38584383f3bfbbcb7d4edb22ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac475e3c32410620ce172c55ddca57307"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEEStoreData.html#ac475e3c32410620ce172c55ddca57307">nOutputs</a></td></tr>
+<tr class="separator:ac475e3c32410620ce172c55ddca57307"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="EEStore_8h_source.html#l00019">19</a> of file <a class="el" href="EEStore_8h_source.html">EEStore.h</a>.</p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>D:/Mes documents/Trusty/Arduino/Libraries/DCCpp/src/<a class="el" href="EEStore_8h_source.html">EEStore.h</a></li>
-</ul>
+<div class="textblock"><p>This structure stores data of <a class="el" href="structEEStore.html">EEStore</a> class. </p>
+
+<p class="definition">Definition at line <a class="el" href="EEStore_8h_source.html#l00020">20</a> of file <a class="el" href="EEStore_8h_source.html">EEStore.h</a>.</p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a1ba5380452830d1540bbdc6c89714363"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char id[sizeof (EESTORE_ID)+1]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>String used to check if the data already in the EEPROM was saved by DCC++. </p>
+
+<p class="definition">Definition at line <a class="el" href="EEStore_8h_source.html#l00021">21</a> of file <a class="el" href="EEStore_8h_source.html">EEStore.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac19c509a8490618f5b61b83edc16c3d9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int nTurnouts</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Turnouts number. </p>
+
+<p class="definition">Definition at line <a class="el" href="EEStore_8h_source.html#l00023">23</a> of file <a class="el" href="EEStore_8h_source.html">EEStore.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac7708e38584383f3bfbbcb7d4edb22ad"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int nSensors</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sensors number. </p>
+
+<p class="definition">Definition at line <a class="el" href="EEStore_8h_source.html#l00026">26</a> of file <a class="el" href="EEStore_8h_source.html">EEStore.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac475e3c32410620ce172c55ddca57307"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int nOutputs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Outputs number. </p>
+
+<p class="definition">Definition at line <a class="el" href="EEStore_8h_source.html#l00029">29</a> of file <a class="el" href="EEStore_8h_source.html">EEStore.h</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- Generated by DoxyPress 1.2.10 -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structEEStoreData.html">EEStoreData</a></li>
-    <li class="footer">Generated on lun. nov. 27 2017 16:55:13 for DCCpp &nbsp; by
+    <li class="footer">Generated on lun. déc. 11 2017 17:23:23 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.2.10 </li>
   </ul>

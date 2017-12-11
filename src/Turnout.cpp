@@ -11,6 +11,10 @@ Part of DCC++ BASE STATION for the Arduino
 
 #ifdef USE_TURNOUT
 
+#ifdef VISUALSTUDIO
+#include "string.h"
+#endif
+
 #include "Turnout.h"
 #include "DCCpp_Uno.h"
 //#include "Comm.h"
@@ -28,9 +32,8 @@ Part of DCC++ BASE STATION for the Arduino
 
 void Turnout::begin(int id, int add, int subAdd) {
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
-#ifdef DCCPP_DEBUG_MODE
-	if (EEStore::eeStore != NULL)
-	{
+#if defined(USE_EEPROM)	&& defined(DCCPP_DEBUG_MODE)
+	if (strncmp(EEStore::data.id, EESTORE_ID, sizeof(EESTORE_ID)) != 0) {    // check to see that eeStore contains valid DCC++ ID
 		INTERFACE.println(F("Turnout::begin() must be called BEFORE DCCpp.begin() !"));
 	}
 #endif
@@ -68,7 +71,7 @@ void Turnout::set(int id, int add, int subAdd) {
 
 void Turnout::activate(int s) {
 	data.tStatus = (s>0);                                    // if s>0 set turnout=ON, else if zero or negative set turnout=OFF
-	DCCppClass::mainRegs.setAccessory(this->data.address, this->data.subAddress, this->data.tStatus);
+	DCCpp::mainRegs.setAccessory(this->data.address, this->data.subAddress, this->data.tStatus);
 #ifdef USE_EEPROM
 	if (this->eepromPos>0)
 #ifdef VISUALSTUDIO
@@ -149,7 +152,7 @@ void Turnout::load() {
 	struct TurnoutData data;
 	Turnout *tt;
 
-	for (int i = 0; i<EEStore::eeStore->data.nTurnouts; i++) {
+	for (int i = 0; i<EEStore::data.nTurnouts; i++) {
 #ifdef VISUALSTUDIO
 		EEPROM.get(EEStore::pointer(), (void *)&data, sizeof(TurnoutData));
 #else
@@ -178,7 +181,7 @@ void Turnout::store() {
 	Turnout *tt;
 
 	tt = firstTurnout;
-	EEStore::eeStore->data.nTurnouts = 0;
+	EEStore::data.nTurnouts = 0;
 
 	while (tt != NULL) {
 		tt->eepromPos = EEStore::pointer();
@@ -189,7 +192,7 @@ void Turnout::store() {
 #endif
 		EEStore::advance(sizeof(tt->data));
 		tt = tt->nextTurnout;
-		EEStore::eeStore->data.nTurnouts++;
+		EEStore::data.nTurnouts++;
 	}
 }
 #endif

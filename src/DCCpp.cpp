@@ -7,16 +7,17 @@ description: <DCCpp class>
 #include "DCCpp.h"
 #include "arduino.h"
 
-DCCppClass DCCppClass::DCCppInstance;
-
 // NEXT DECLARE GLOBAL OBJECTS TO PROCESS AND STORE DCC PACKETS AND MONITOR TRACK CURRENTS.
 // NOTE REGISTER LISTS MUST BE DECLARED WITH "VOLATILE" QUALIFIER TO ENSURE THEY ARE PROPERLY UPDATED BY INTERRUPT ROUTINES
 
-volatile RegisterList DCCppClass::mainRegs(MAX_MAIN_REGISTERS);    // create list of registers for MAX_MAIN_REGISTER Main Track Packets
-volatile RegisterList DCCppClass::progRegs(2);                     // create a shorter list of only two registers for Program Track Packets
+volatile RegisterList DCCpp::mainRegs(MAX_MAIN_REGISTERS);    // create list of registers for MAX_MAIN_REGISTER Main Track Packets
+volatile RegisterList DCCpp::progRegs(3);                     // create a shorter list of only two registers for Program Track Packets
 
-CurrentMonitor DCCppClass::mainMonitor;  // create monitor for current on Main Track
-CurrentMonitor DCCppClass::progMonitor;  // create monitor for current on Program Track
+CurrentMonitor DCCpp::mainMonitor;  // create monitor for current on Main Track
+CurrentMonitor DCCpp::progMonitor;  // create monitor for current on Program Track
+
+bool DCCpp::programMode;
+bool DCCpp::panicStopped; 
 
 // *********************************************************** FunctionsState
 
@@ -69,31 +70,13 @@ void FunctionsState::printActivated()
 
 // *********************************************************** DCCpp class
 
-DCCppClass::DCCppClass()
-{ 
-	this->programMode = false; 
-	this->panicStopped = false;
-
-	DCCppConfig::SignalEnablePinMain = UNDEFINED_PIN;
-	DCCppConfig::CurrentMonitorMain = UNDEFINED_PIN;
-
-	DCCppConfig::SignalEnablePinProg = UNDEFINED_PIN;
-	DCCppConfig::CurrentMonitorProg = UNDEFINED_PIN;
-
-	DCCppConfig::DirectionMotorA = UNDEFINED_PIN;
-	DCCppConfig::DirectionMotorB = UNDEFINED_PIN;
-
-	mainMonitor.begin(UNDEFINED_PIN, "");
-	progMonitor.begin(UNDEFINED_PIN, "");
-}
-	
 static bool first = true;
 
 ///////////////////////////////////////////////////////////////////////////////
 // MAIN ARDUINO LOOP
 ///////////////////////////////////////////////////////////////////////////////
 
-void DCCppClass::loop()
+void DCCpp::loop()
 {
 #ifdef USE_TEXTCOMMAND
 	TextCommand::process();              // check for, and process, and new serial commands
@@ -109,39 +92,16 @@ void DCCppClass::loop()
 
 	if (CurrentMonitor::checkTime())
 	{      // if sufficient time has elapsed since last update, check current draw on Main and Program Tracks 
-		this->mainMonitor.check();
-		this->progMonitor.check();
+		mainMonitor.check();
+		progMonitor.check();
 	}
 
 #ifdef USE_SENSOR
-	Sensor::check();    // check sensors for activate/de-activate
+	Sensor::check();    // check sensors for activated or not
 #endif
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// INITIAL SETUP
-///////////////////////////////////////////////////////////////////////////////
-
-// For Arduino or Pololu shields, signalPinMain must be connected to Direction motor A, and signalPinProg to Direction motor B
-// If a track is not connected,  main or prog, the signalPin should stay to default at 255 (UNDEFINED_PIN).
-// For H bridge connected directly to the pins, like LMD18200, signalPin and Direction motor should have the same pin number.
-
-// For Arduino Motor Shield
-// beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN);
-// beginProg(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG, MOTOR_SHIELD_CURRENT_MONITOR_PIN_PROG);
-
-// For Pololu Motor Shield
-// beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, POLOLU_SIGNAL_ENABLE_PIN_MAIN, POLOLU_CURRENT_MONITOR_PIN_MAIN);
-// beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG);
-
-// For single LMD18200
-// beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
-
-// For double LMD18200
-// beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
-// beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 11, A1);
-
-void DCCppClass::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
+void DCCpp::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
 {
 	DCCppConfig::DirectionMotorA = inOptionalDirectionMotor;
 	DCCppConfig::SignalEnablePinMain = inSignalEnable;	// PWM
@@ -156,7 +116,7 @@ void DCCppClass::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 		return;
 	}
 
-	this->mainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
+	mainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
 
 	// CONFIGURE TIMER_1 TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC1B INTERRUPT PINS
 
@@ -176,7 +136,7 @@ void DCCppClass::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 		digitalWrite(DCCppConfig::DirectionMotorA, LOW);
 	}
 
-	pinMode(inSignalPin, OUTPUT);      // THIS ARDUINO OUPUT PIN MUST BE PHYSICALLY CONNECTED TO THE PIN FOR DIRECTION-A OF MOTOR CHANNEL-A
+	pinMode(inSignalPin, OUTPUT);      // FOR SHIELDS, THIS ARDUINO OUPUT PIN MUST BE PHYSICALLY CONNECTED TO THE PIN FOR DIRECTION-A OF MOTOR CHANNEL-A
 
 	bitSet(TCCR1A, WGM10);     // set Timer 1 to FAST PWM, with TOP=OCR1A
 	bitSet(TCCR1A, WGM11);
@@ -205,13 +165,13 @@ void DCCppClass::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 #endif
 }
 
-void DCCppClass::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
+void DCCpp::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnable, uint8_t inCurrentMonitor)
 {
 	DCCppConfig::DirectionMotorB = inOptionalDirectionMotor;
 	DCCppConfig::SignalEnablePinProg = inSignalEnable;
 	DCCppConfig::CurrentMonitorProg = inCurrentMonitor;
 
-	// If no prog line, exit.
+	// If no programming line, exit.
 	if (DCCppConfig::SignalEnablePinProg == UNDEFINED_PIN)
 	{
 #ifdef DCCPP_DEBUG_MODE
@@ -220,13 +180,13 @@ void DCCppClass::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 		return;
 	}
 
-	this->progMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
+	progMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
 
 	// CONFIGURE EITHER TIMER_0 (UNO) OR TIMER_3 (MEGA) TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC0B (UNO) OR OC3B (MEGA) INTERRUPT PINS
 
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)      // Configuration for UNO
 
-	// Directon Pin for Motor Shield Channel B - PROGRAMMING TRACK
+	// Direction Pin for Motor Shield Channel B - PROGRAMMING TRACK
 	// Controlled by Arduino 8-bit TIMER 0 / OC0B Interrupt Pin
 	// Values for 8-bit OCR0A and OCR0B registers calibrated for 1:64 prescale at 16 MHz clock frequency
 	// Resulting waveforms are 200 microseconds for a ZERO bit and 116 microseconds for a ONE bit with as-close-as-possible to 50% duty cycle
@@ -267,7 +227,7 @@ void DCCppClass::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 
 #else      // Configuration for MEGA
 
-	// Directon Pin for Motor Shield Channel B - PROGRAMMING TRACK
+	// Direction Pin for Motor Shield Channel B - PROGRAMMING TRACK
 	// Controlled by Arduino 16-bit TIMER 3 / OC3B Interrupt Pin
 	// Values for 16-bit OCR3A and OCR3B registers calibrated for 1:1 prescale at 16 MHz clock frequency
 	// Resulting waveforms are 200 microseconds for a ZERO bit and 116 microseconds for a ONE bit with exactly 50% duty cycle
@@ -315,11 +275,26 @@ void DCCppClass::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin
 #endif
 }
 
-void DCCppClass::begin()
+void DCCpp::begin()
 {
+	programMode = false;
+	panicStopped = false;
+
+	DCCppConfig::SignalEnablePinMain = UNDEFINED_PIN;
+	DCCppConfig::CurrentMonitorMain = UNDEFINED_PIN;
+
+	DCCppConfig::SignalEnablePinProg = UNDEFINED_PIN;
+	DCCppConfig::CurrentMonitorProg = UNDEFINED_PIN;
+
+	DCCppConfig::DirectionMotorA = UNDEFINED_PIN;
+	DCCppConfig::DirectionMotorB = UNDEFINED_PIN;
+
+	mainMonitor.begin(UNDEFINED_PIN, "");
+	progMonitor.begin(UNDEFINED_PIN, "");
+
 #ifdef SDCARD_CS
 	pinMode(SDCARD_CS, OUTPUT);
-	digitalWrite(SDCARD_CS, HIGH);     // Deselect the SD card
+	digitalWrite(SDCARD_CS, HIGH);     // De-select the SD card
 #endif
 
 #ifdef USE_EEPROM
@@ -330,16 +305,18 @@ void DCCppClass::begin()
 
 #ifdef DCCPP_DEBUG_MODE
 	//pinMode(LED_BUILTIN, OUTPUT);
-	Serial.println(F("begin achivied"));
+	Serial.println(F("begin achieved"));
 #endif
 
 } // begin
 
 #ifdef USE_ETHERNET
-void DCCppClass::beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol inProtocol)
+void DCCpp::beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol inProtocol)
 {
-	for (int i = 0; i < 4; i++)
-		DCCppConfig::EthernetIp[i] = inIp[i];
+	if (inIp != NULL)
+		for (int i = 0; i < 4; i++)
+			DCCppConfig::EthernetIp[i] = inIp[i];
+
 	for (int i = 0; i < 6; i++)
 		DCCppConfig::EthernetMac[i] = inMac[i];
 
@@ -354,7 +331,7 @@ void DCCppClass::beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol i
 #ifdef DCCPP_DEBUG_MODE
 	//pinMode(LED_BUILTIN, OUTPUT);
 	showConfiguration();
-	Serial.println(F("beginEthernet achivied"));
+	Serial.println(F("beginEthernet achieved"));
 #endif
 } // beginEthernet
 #endif
@@ -370,11 +347,11 @@ void DCCppClass::beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol i
   // DCC ZERO and DCC ONE bits.
 
   // These are hardware-driven interrupts that will be called automatically when triggered regardless of what
-  // DCC++ BASE STATION was otherwise processing.  But once inside the interrupt, all other interrupt routines are temporarily diabled.
+  // DCC++ BASE STATION was otherwise processing.  But once inside the interrupt, all other interrupt routines are temporarily disabled.
   // Since a short pulse only lasts for 116 microseconds, and there are TWO separate interrupts
   // (one for Main Track Registers and one for the Program Track Registers), the interrupt code must complete
-  // in much less than 58 microsends, otherwise there would be no time for the rest of the program to run.  Worse, if the logic
-  // of the interrupt code ever caused it to run longer than 58 microsends, an interrupt trigger would be missed, the OCNA and OCNB
+  // in much less than 58 microseconds, otherwise there would be no time for the rest of the program to run.  Worse, if the logic
+  // of the interrupt code ever caused it to run longer than 58 microseconds, an interrupt trigger would be missed, the OCNA and OCNB
   // registers would not be updated, and the net effect would be a DCC signal that keeps sending the same DCC bit repeatedly until the
   // interrupt code completes and can be called again.
 
@@ -382,8 +359,8 @@ void DCCppClass::beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol i
   // DCC bit stream upfront, so that the interrupt code below can be as simple and efficient as possible.
 
   // Note that we need to create two very similar copies of the code --- one for the Main Track OC1B interrupt and one for the
-  // Programming Track OCOB interrupt.  But rather than create a generic function that incurrs additional overhead, we create a macro
-  // that can be invoked with proper paramters for each interrupt.  This slightly increases the size of the code base by duplicating
+  // Programming Track OCOB interrupt.  But rather than create a generic function that incurs additional overhead, we create a macro
+  // that can be invoked with proper parameters for each interrupt.  This slightly increases the size of the code base by duplicating
   // some of the logic for each interrupt, but saves additional time.
 
   // As structured, the interrupt code below completes at an average of just under 6 microseconds with a worse-case of just under 11 microseconds
@@ -425,19 +402,19 @@ void DCCppClass::beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol i
 // NOW USE THE ABOVE MACRO TO CREATE THE CODE FOR EACH INTERRUPT
 
 ISR(TIMER1_COMPB_vect) {              // set interrupt service for OCR1B of TIMER-1 which flips direction bit of Motor Shield Channel A controlling Main Track
-	DCC_SIGNAL(DCCppClass::mainRegs, 1)
+	DCC_SIGNAL(DCCpp::mainRegs, 1)
 }
 
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)      // Configuration for UNO
 
-ISR(TIMER0_COMPB_vect) {              // set interrupt service for OCR1B of TIMER-0 which flips direction bit of Motor Shield Channel B controlling Prog Track
-	DCC_SIGNAL(DCCppClass::progRegs, 0)
+ISR(TIMER0_COMPB_vect) {              // set interrupt service for OCR1B of TIMER-0 which flips direction bit of Motor Shield Channel B controlling Programming Track
+	DCC_SIGNAL(DCCpp::progRegs, 0)
 }
 
 #else      // Configuration for MEGA
 
-ISR(TIMER3_COMPB_vect) {              // set interrupt service for OCR3B of TIMER-3 which flips direction bit of Motor Shield Channel B controlling Prog Track
-	DCC_SIGNAL(DCCppClass::progRegs, 3)
+ISR(TIMER3_COMPB_vect) {              // set interrupt service for OCR3B of TIMER-3 which flips direction bit of Motor Shield Channel B controlling Programming Track
+	DCC_SIGNAL(DCCpp::progRegs, 3)
 }
 
 #endif
@@ -447,7 +424,7 @@ ISR(TIMER3_COMPB_vect) {              // set interrupt service for OCR3B of TIME
 // PRINT CONFIGURATION INFO TO SERIAL PORT REGARDLESS OF INTERFACE TYPE
 // - ACTIVATED ON STARTUP IF SHOW_CONFIG_PIN IS TIED HIGH 
 
-void DCCppClass::showConfiguration()
+void DCCpp::showConfiguration()
 {
 	Serial.println(F("*** DCCpp LIBRARY ***"));
 
@@ -491,15 +468,15 @@ void DCCppClass::showConfiguration()
 #if defined(USE_EEPROM)
 #if defined(USE_TURNOUT)
 	Serial.print(F("\n\nNUM TURNOUTS: "));
-	Serial.println(EEStore::eeStore->data.nTurnouts);
+	Serial.println(EEStore::data.nTurnouts);
 #endif
 #if defined(USE_SENSOR)
 	Serial.print(F("     SENSORS: "));
-	Serial.println(EEStore::eeStore->data.nSensors);
+	Serial.println(EEStore::data.nSensors);
 #endif
 #if defined(USE_OUTPUT)
 	Serial.print(F("     OUTPUTS: "));
-	Serial.println(EEStore::eeStore->data.nOutputs);
+	Serial.println(EEStore::data.nOutputs);
 #endif
 #endif
 
@@ -536,9 +513,9 @@ void DCCppClass::showConfiguration()
 }
 #endif
 
-void DCCppClass::panicStop(bool inStop)
+void DCCpp::panicStop(bool inStop)
 {
-	this->panicStopped = inStop;
+	panicStopped = inStop;
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("DCCpp PanicStop "));
@@ -547,13 +524,13 @@ void DCCppClass::panicStop(bool inStop)
 
 	/* activate or not the current output on rails */
 
-	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
-		digitalWrite(DCCppConfig::SignalEnablePinMain, inStop ? LOW : HIGH);
-	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
-		digitalWrite(DCCppConfig::SignalEnablePinProg, inStop ? LOW : HIGH);
+	if (inStop)
+		powerOff();
+	else
+		powerOn();
 }
 
-void DCCppClass::powerOn()
+void DCCpp::powerOn()
 {
 	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, HIGH);
@@ -565,7 +542,7 @@ void DCCppClass::powerOn()
 #endif
 }
 
-void DCCppClass::powerOff()
+void DCCpp::powerOff()
 {
 	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
@@ -579,11 +556,11 @@ void DCCppClass::powerOff()
 
 /***************************** Driving functions */
 
-bool DCCppClass::setThrottle(volatile RegisterList *inpRegs, int nReg,  int inLocoId, int inStepsNumber, int inNewSpeed, bool inToLeft)
+bool DCCpp::setThrottle(volatile RegisterList *inpRegs, int nReg,  int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward)
 {
 	int val = 0;
 
-	if (this->panicStopped)
+	if (panicStopped)
 		val = 1;
 	else
 		if (inNewSpeed > 0)
@@ -591,7 +568,7 @@ bool DCCppClass::setThrottle(volatile RegisterList *inpRegs, int nReg,  int inLo
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("DCCpp SetSpeed "));
-	Serial.print(inNewSpeed);
+	Serial.print(inForward?inNewSpeed:-inNewSpeed);
 	Serial.print(F("/"));
 	Serial.print(inStepsNumber);
 	Serial.print(F(" (in Dcc "));
@@ -599,13 +576,25 @@ bool DCCppClass::setThrottle(volatile RegisterList *inpRegs, int nReg,  int inLo
 	Serial.println(F(" )"));
 #endif
 
-	inpRegs->setThrottle(nReg, inLocoId, val, inToLeft);
+	inpRegs->setThrottle(nReg, inLocoId, val, inForward);
 
 	return true;
 }
 
-void DCCppClass::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId, FunctionsState inStates)
+void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId, FunctionsState inStates)
 {
+#ifdef DCCPP_DEBUG_MODE
+	if (inpRegs == &mainRegs)
+	{
+		if (nReg > MAX_MAIN_REGISTERS)
+			Serial.println(F("Invalid register number on main track."));
+	}
+	else
+	{
+		if (nReg > MAX_PROG_REGISTERS)
+			Serial.println(F("Invalid register number on programming track."));
+	}
+#endif
 	byte flags = 0;
 
 	byte oneByte1 = 128;	// Group one functions F0-F4
@@ -707,7 +696,7 @@ void DCCppClass::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLo
 #endif
 }
 
-void DCCppClass::writeCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
+void DCCpp::writeCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
 {
 	inReg->writeCVByte(inCv, inValue, 100, 101);
 
@@ -719,14 +708,14 @@ void DCCppClass::writeCv(volatile RegisterList *inReg, int inLocoId, int inCv, b
 #endif
 }
 
-int DCCppClass::readCv(volatile RegisterList *inReg, int inLocoId, byte inCv)
+int DCCpp::readCv(volatile RegisterList *inReg, int inLocoId, byte inCv)
 {
 	return inReg->readCVmain(1, 100+inCv, 100+inCv);
 }
 
-void DCCppClass::setAccessory(int inAddress, byte inSubAddress, byte inActivate)
+void DCCpp::setAccessory(int inAddress, byte inSubAddress, byte inActivate)
 {
-	this->mainRegs.setAccessory(inAddress, inSubAddress, inActivate);
+	mainRegs.setAccessory(inAddress, inSubAddress, inActivate);
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("DCCpp AccessoryOperation "));

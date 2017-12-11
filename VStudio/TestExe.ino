@@ -57,7 +57,7 @@ Sensor s1, s2, s3;
 int locoId;	// DCC id for this loco
 int locoStepsNumber;	// 14, 28 or 128
 int locoSpeed;	// Current speed
-bool locoDirectionToLeft;	// current direction.
+bool locoDirectionForward;	// current direction.
 FunctionsState locoFunctions;	// Current functions
 
 void setup()
@@ -129,8 +129,8 @@ void setup()
 	Output::show();
 	Sensor::show();
 
-	DCCpp.begin();
-	DCCpp.beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
+	DCCpp::begin();
+	DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A6);    // Dc: Dir, Pwm, current sensor
 
 	Turnout::show();
 	Output::show();
@@ -139,13 +139,13 @@ void setup()
 	locoId = 3;
 	locoStepsNumber = 128;
 	locoSpeed = 0;
-	locoDirectionToLeft = false;
+	locoDirectionForward = false;
 	//locoFunctions.Clear();	// Already done by the constructor...
 }
 
 void loop()
 {
-	DCCpp.loop();
+	DCCpp::loop();
 
 	unsigned long event = Commanders::loop();
 	int s = 0;
@@ -162,7 +162,7 @@ void loop()
 			locoSpeed++;
 		if (locoSpeed > locoStepsNumber)
 			locoSpeed = locoStepsNumber;
-		DCCpp.SetSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
+		DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
 		break;
 
 	case EVENT_LESS:
@@ -172,23 +172,23 @@ void loop()
 			locoSpeed--;
 		if (locoSpeed < 0)
 			locoSpeed = 0;
-		DCCpp.SetSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionToLeft);
+		DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
 		break;
 
 	case EVENT_FUNCTION0:
-		if (locoFunctions.IsActivated(0))
-			locoFunctions.Inactivate(0);
+		if (locoFunctions.isActivated(0))
+			locoFunctions.inactivate(0);
 		else
-			locoFunctions.Activate(0);
-		DCCpp.SetFunctionsMain(2, locoId, locoFunctions);
+			locoFunctions.activate(0);
+		DCCpp::setFunctionsMain(2, locoId, locoFunctions);
 		break;
 
 	case EVENT_FUNCTION1:
-		if (locoFunctions.IsActivated(1))
-			locoFunctions.Inactivate(1);
+		if (locoFunctions.isActivated(1))
+			locoFunctions.inactivate(1);
 		else
-			locoFunctions.Activate(1);
-		DCCpp.SetFunctionsMain(3, locoId, locoFunctions);
+			locoFunctions.activate(1);
+		DCCpp::setFunctionsMain(3, locoId, locoFunctions);
 		break;
 
 	case EVENT_TURNOUT1:

@@ -24,30 +24,30 @@ Part of DCC++ BASE STATION for the Arduino
 void EEStore::init(){
 
   
-  eeStore=(EEStore *)calloc(1,sizeof(EEStore));
+  //eeStore=(EEStore *)calloc(1,sizeof(EEStore));
 
   //EEPROM.get(0,eeStore->data);                                       // get eeStore data 
 #ifdef VISUALSTUDIO
-  EEPROM.get(0, (void *)&eeStore->data, sizeof(EEStoreData));
+  EEPROM.get(0, (void *)&data, sizeof(EEStoreData));
 #else
-  EEPROM.get(0, eeStore->data);
+  EEPROM.get(0, data);
 #endif
   
-  if(strncmp(eeStore->data.id,EESTORE_ID,sizeof(EESTORE_ID))!=0){    // check to see that eeStore contains valid DCC++ ID
-    sprintf(eeStore->data.id,EESTORE_ID);                           // if not, create blank eeStore structure (no turnouts, no sensors) and save it back to EEPROM
+  if(strncmp(data.id,EESTORE_ID,sizeof(EESTORE_ID))!=0){    // check to see that eeStore contains valid DCC++ ID
+    sprintf(data.id,EESTORE_ID);                           // if not, create blank eeStore structure (no turnouts, no sensors) and save it back to EEPROM
 #ifdef USE_TURNOUT
-	eeStore->data.nTurnouts=0;
+	data.nTurnouts=0;
 #endif
 #ifdef USE_SENSOR
-	eeStore->data.nSensors=0;
+	data.nSensors=0;
 #endif
 #ifdef USE_OUTPUT
-	eeStore->data.nOutputs=0;
+	data.nOutputs=0;
 #endif
 #ifdef VISUALSTUDIO
-	EEPROM.put(0, (void *)&eeStore->data, sizeof(EEStoreData));
+	EEPROM.put(0, (void *)&data, sizeof(EEStoreData));
 #else
-	EEPROM.put(0, eeStore->data);
+	EEPROM.put(0, data);
 #endif
   }
   
@@ -67,20 +67,20 @@ void EEStore::init(){
 
 void EEStore::clear(){
     
-  sprintf(eeStore->data.id,EESTORE_ID);                           // create blank eeStore structure (no turnouts, no sensors) and save it back to EEPROM
+  sprintf(data.id,EESTORE_ID);                           // create blank eeStore structure (no turnouts, no sensors) and save it back to EEPROM
 #ifdef USE_TURNOUT
-  eeStore->data.nTurnouts=0;
+  data.nTurnouts=0;
 #endif
 #ifdef USE_SENSOR
-  eeStore->data.nSensors=0;
+  data.nSensors=0;
 #endif
 #ifdef USE_OUTPUT
-  eeStore->data.nOutputs=0;
+  data.nOutputs=0;
 #endif
 #ifdef VISUALSTUDIO
-  EEPROM.put(0, (void *)&eeStore->data, sizeof(EEStoreData));
+  EEPROM.put(0, (void *)&data, sizeof(EEStoreData));
 #else
-  EEPROM.put(0, eeStore->data);
+  EEPROM.put(0, data);
 #endif
 
 }
@@ -95,11 +95,11 @@ void EEStore::store() {
 #ifdef USE_SENSOR
 	Sensor::store();
 #endif
-#ifdef USE_SENSOR
+#ifdef USE_OUTPUT
 	Output::store();
 #endif
 #ifdef VISUALSTUDIO
-	EEPROM.put(0, (void *)&eeStore->data, sizeof(EEStoreData));
+	EEPROM.put(0, (void *)&data, sizeof(EEStoreData));
 #else
 	EEPROM.put(0, eeStore->data);
 #endif
@@ -109,14 +109,16 @@ void EEStore::store() {
 
 bool EEStore::needsRefreshing() {
 #ifdef USE_TURNOUT
-	if (eeStore->data.nTurnouts != Turnout::count())
+	if (data.nTurnouts != Turnout::count())
 		return true;
 #endif
 #ifdef USE_SENSOR
-	Sensor::store();
+	if (data.nSensors != Sensor::count())
+		return true;
 #endif
-#ifdef USE_SENSOR
-	Output::store();
+#ifdef USE_OUTPUT
+	if (data.nOutputs!= Output::count())
+		return true;
 #endif
 	return false;
 }
@@ -139,7 +141,9 @@ int EEStore::pointer(){
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-EEStore *EEStore::eeStore=NULL;
+//EEStore *EEStore::eeStore=NULL;
+EEStoreData EEStore::data;
+
 int EEStore::eeAddress=0;
 
 #endif

@@ -12,13 +12,17 @@ Part of DCC++ BASE STATION for the Arduino
 
 #include "arduino.h"
 
+/**	Use it as an argument to specify an unused pin. */
 #define UNDEFINED_PIN	255
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
 // DEFINE NUMBER OF MAIN TRACK REGISTER
 
+/** Number of track registers for the main line. 0 for transient orders, the others for continual orders. */
 #define MAX_MAIN_REGISTERS 12
+/** Number of track registers for the programming line. 0 for transient orders, the two others for continual orders for the only loco on this track. */
+#define MAX_PROG_REGISTERS 3
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
@@ -31,7 +35,9 @@ Part of DCC++ BASE STATION for the Arduino
 
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)      // Configuration for UNO or NANO
 
+/** Interruption pin for main track.*/
 #define DCC_SIGNAL_PIN_MAIN 10          // Arduino Uno  - uses OC1B
+/** Interruption pin for programming track.*/
 #define DCC_SIGNAL_PIN_PROG 5           // Arduino Uno  - uses OC0B
 
 #elif defined(ARDUINO_AVR_MEGA2560)
@@ -45,6 +51,7 @@ Part of DCC++ BASE STATION for the Arduino
 // SELECT MOTOR SHIELD
 /////////////////////////////////////////////////////////////////////////////////////
 
+/** Interruption pin for main track.*/
 #define MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN 3
 #define MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG 11
 

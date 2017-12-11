@@ -38,7 +38,7 @@ void CurrentMonitor::check()
 	if (signalPin == UNDEFINED_PIN)
 		signalPin = DCCppConfig::SignalEnablePinMain;
 
-	// current overload and Prog Signal is on (or could have checked Main Signal, since both are always on or off together)
+	// current overload and Programming Signal is on (or could have checked Main Signal, since both are always on or off together)
 	if (this->current > this->currentSampleMax && digitalRead(signalPin) == HIGH)
 	{
 		if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)

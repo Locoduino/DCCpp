@@ -9,6 +9,9 @@ Part of DCC++ BASE STATION for the Arduino
 #include "Outputs.h"
 
 #ifdef USE_TURNOUT
+#ifdef VISUALSTUDIO
+#include "string.h"
+#endif
 #include "TextCommand.h"
 #include "DCCpp_Uno.h"
 #include "EEStore.h"
@@ -21,9 +24,8 @@ Part of DCC++ BASE STATION for the Arduino
 
 void Output::begin(int id, int pin, int iFlag) {
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
-#ifdef DCCPP_DEBUG_MODE
-	if (EEStore::eeStore != NULL)
-	{
+#if defined(USE_EEPROM)	&& defined(DCCPP_DEBUG_MODE)
+	if (strncmp(EEStore::data.id, EESTORE_ID, sizeof(EESTORE_ID)) != 0) {    // check to see that eeStore contains valid DCC++ ID
 		INTERFACE.println(F("Output::begin() must be called BEFORE DCCpp.begin() !"));
 	}
 #endif
@@ -151,7 +153,7 @@ void Output::load() {
 	struct OutputData data;
 	Output *tt;
 
-	for (int i = 0; i<EEStore::eeStore->data.nOutputs; i++) {
+	for (int i = 0; i<EEStore::data.nOutputs; i++) {
 #ifdef VISUALSTUDIO
 		EEPROM.get(EEStore::pointer(), (void *)&data, sizeof(OutputData));	// ArduiEmulator version...
 #else
@@ -189,7 +191,7 @@ void Output::store() {
 	Output *tt;
 
 	tt = firstOutput;
-	EEStore::eeStore->data.nOutputs = 0;
+	EEStore::data.nOutputs = 0;
 
 	while (tt != NULL) {
 		tt->num = EEStore::pointer();
@@ -200,7 +202,7 @@ void Output::store() {
 #endif
 		EEStore::advance(sizeof(tt->data));
 		tt = tt->nextOutput;
-		EEStore::eeStore->data.nOutputs++;
+		EEStore::data.nOutputs++;
 	}
 }
 #endif

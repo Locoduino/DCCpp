@@ -46,9 +46,9 @@ Part of DCC++ BASE STATION for the Arduino
 //    <* REG: B1 B2 ... Bn CSUM / REPEAT>
 //
 //    REG: the number of the main operations track packet register that was modified
-//    B1: the first hexidecimal byte of the DCC packet
-//    B2: the second hexidecimal byte of the DCC packet
-//    Bn: the nth hexidecimal byte of the DCC packet
+//    B1: the first hexadecimal byte of the DCC packet
+//    B2: the second hexadecimal byte of the DCC packet
+//    Bn: the nth hexadecimal byte of the DCC packet
 //    CSUM: a checksum byte that is required to be the final byte in any DCC packet
 //    REPEAT: the number of times the DCC packet was re-transmitted to the tracks after its iniital transmission
  

@@ -1,192 +1,124 @@
 var NAVTREE =
 [
   [ "DCCpp", "index.html", [
-    [ "Configuration Lines", "Common.html", null ],
-    [ "History", "Revision.html", null ],
+    [ "Common Configuration Lines", "commonPage.html", null ],
+    [ "Revision History", "revPage.html", null ],
+    [ "Modules", "modules.html", [
+      [ "Text Commands Syntax", "group__commandsGroup.html", null ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", [
         [ "CurrentMonitor", "structCurrentMonitor.html", [
-          [ "begin", "structCurrentMonitor.html#a3c5f6225cfa205596c5e1b5d48b2b9d9", null ],
-          [ "check", "structCurrentMonitor.html#a485def380e9c87c17dc2f1c8720e005a", null ],
-          [ "current", "structCurrentMonitor.html#a5d7913a8c985e532b36962d2088cb676", null ],
-          [ "currentSampleMax", "structCurrentMonitor.html#a12b999d776526131f8d008d3396589ff", null ],
-          [ "msg", "structCurrentMonitor.html#a0d39b1f9324033a87094feebd2b1b501", null ],
-          [ "pin", "structCurrentMonitor.html#a75c7b76d3cbc8207f6f77ef2b6e35301", null ]
+          [ "begin", "structCurrentMonitor.html#a02f9ea5e724c59e5325100488b068ac9", null ],
+          [ "check", "structCurrentMonitor.html#a83f8adca24e250bfb5c9a90a35503ae9", null ],
+          [ "pin", "structCurrentMonitor.html#aeabac9491522ec7f68102bfeab33d5c1", null ],
+          [ "currentSampleMax", "structCurrentMonitor.html#ae04eb956c01d669583be386c2400a6ed", null ],
+          [ "current", "structCurrentMonitor.html#af9653d31acfffa5a40aa709b2065e00b", null ],
+          [ "msg", "structCurrentMonitor.html#a2c3cb87d009c003069b9a90f020f8a9f", null ]
         ] ],
-        [ "DCCppClass", "classDCCppClass.html", [
-          [ "DCCppClass", "classDCCppClass.html#a03861da5c716447c004ea575d20bee0d", null ],
-          [ "begin", "classDCCppClass.html#a81f0b7f8b46858227ecfb22aa9a1719c", null ],
-          [ "beginEthernet", "classDCCppClass.html#a9aa85dd2b35b5447cf0bb7742f4a809c", null ],
-          [ "beginMain", "classDCCppClass.html#a6d2443c6cc3203f21f59ad8b550cda70", null ],
-          [ "beginMainMotorShield", "classDCCppClass.html#a8c9622a95229b4cf379b4aab1c00bbaa", null ],
-          [ "beginMainPololu", "classDCCppClass.html#a372ec2bce8c1c5ab31d2e0ccde246126", null ],
-          [ "beginProg", "classDCCppClass.html#a6092bff715256fa93da8d3fd59fc6282", null ],
-          [ "beginProgMotorShield", "classDCCppClass.html#ac4fb329237579ed02ecc6ea97cccbc0c", null ],
-          [ "beginProgPololu", "classDCCppClass.html#a8b55c87ab2ff647d4ebb667f7c3d9fd3", null ],
-          [ "getCurrentMain", "classDCCppClass.html#aeb530863e199ff50421500aa50a56c79", null ],
-          [ "getCurrentProg", "classDCCppClass.html#a67edf375d6bcd75ef060780679e9e45f", null ],
-          [ "loop", "classDCCppClass.html#ac3b72e4e4ebaacf37a8dc14a849f0360", null ],
-          [ "panicStop", "classDCCppClass.html#af8eb0e1146fefb45a008e6d153e5c4c5", null ],
-          [ "powerOff", "classDCCppClass.html#aaab82a0a1bbea3c5f7336818f0456a97", null ],
-          [ "powerOn", "classDCCppClass.html#a52a8892652e0059674700cb4b986aa68", null ],
-          [ "readCvMain", "classDCCppClass.html#ab7c309964fc5841e20d26b1e844db863", null ],
-          [ "readCvProg", "classDCCppClass.html#ae38be0f03b3fb2b337be61b913b49bcc", null ],
-          [ "setAccessory", "classDCCppClass.html#ac9b958fd06b782af1354aab307adb40e", null ],
-          [ "setCurrentSampleMaxMain", "classDCCppClass.html#a4e4cd60879ce23e7170ffff4bf041603", null ],
-          [ "setCurrentSampleMaxProg", "classDCCppClass.html#aee86c176883818f8af65fc678dd124c7", null ],
-          [ "setFunctionsMain", "classDCCppClass.html#adfce128f9d727ac5cf72135ed26c1f97", null ],
-          [ "setFunctionsProg", "classDCCppClass.html#a23d5e41c9de0d9292f203c4644776d1e", null ],
-          [ "setSpeedMain", "classDCCppClass.html#a670068767581a68a3eb21db045bbeeb4", null ],
-          [ "setSpeedProg", "classDCCppClass.html#a2e0e6f7b584b7ce53e1744ee39341541", null ],
-          [ "writeCvMain", "classDCCppClass.html#a8f9e3fe6f37b0307cc57ba4d96beabe7", null ],
-          [ "writeCvProg", "classDCCppClass.html#aa26aa9cf92e80c0698c4184602c2f1f6", null ]
-        ] ],
+        [ "DCCpp", "classDCCpp.html", null ],
         [ "DCCppConfig", "structDCCppConfig.html", null ],
-        [ "EEStore", "structEEStore.html", [
-          [ "data", "structEEStore.html#a598facb2a4402fc78cb384e0adfd0a59", null ]
-        ] ],
+        [ "EEStore", "structEEStore.html", null ],
         [ "EEStoreData", "structEEStoreData.html", [
-          [ "id", "structEEStoreData.html#a5f0a6608f53ee071399e0e977dd2193e", null ],
-          [ "nOutputs", "structEEStoreData.html#ac3b033a0ed58d0d3be8dbcadc7c9fd6e", null ],
-          [ "nSensors", "structEEStoreData.html#a1b65880b2aefcb0023ceeeff3be95188", null ],
-          [ "nTurnouts", "structEEStoreData.html#a9401ce4adea47949d4a3435f729c06fb", null ]
+          [ "id", "structEEStoreData.html#a1ba5380452830d1540bbdc6c89714363", null ],
+          [ "nTurnouts", "structEEStoreData.html#ac19c509a8490618f5b61b83edc16c3d9", null ],
+          [ "nSensors", "structEEStoreData.html#ac7708e38584383f3bfbbcb7d4edb22ad", null ],
+          [ "nOutputs", "structEEStoreData.html#ac475e3c32410620ce172c55ddca57307", null ]
         ] ],
         [ "FunctionsState", "classFunctionsState.html", [
-          [ "FunctionsState", "classFunctionsState.html#add4c8d7abcd0f86a4cb923f4fab5bb8f", null ],
-          [ "activate", "classFunctionsState.html#a46032879bee0942e4f93540db1d8a9f2", null ],
-          [ "clear", "classFunctionsState.html#ac3c57ed356ad6ea8527144d5c25970bf", null ],
-          [ "inactivate", "classFunctionsState.html#aeb80c35a553e068c7249a1f1ff1ebb53", null ],
-          [ "isActivated", "classFunctionsState.html#ad70e6952bef3280ddb50ec5461bd1632", null ]
+          [ "FunctionsState", "classFunctionsState.html#adb6fbac1f43127c8097153da40b79d9c", null ],
+          [ "clear", "classFunctionsState.html#ac8bb3912a3ce86b15842e79d0b421204", null ],
+          [ "activate", "classFunctionsState.html#a45dac1a6f931fe0dc711d8d6b2e831b1", null ],
+          [ "inactivate", "classFunctionsState.html#a2eaf9525bbe7a59c88c6d6d632ddf82c", null ],
+          [ "isActivated", "classFunctionsState.html#a1a731fd012960b50658aa7d515cd1c03", null ]
         ] ],
         [ "Output", "structOutput.html", [
-          [ "activate", "structOutput.html#abbbbf317399d4aedf1f8660c1341a44b", null ],
-          [ "begin", "structOutput.html#a0de4b9278295a88ad5b683197b1358e1", null ],
-          [ "isActivated", "structOutput.html#a939a087d2940eb75a6d380d24f8581c3", null ],
-          [ "set", "structOutput.html#af7fd951759faf21562c201e8bb6e767b", null ],
-          [ "data", "structOutput.html#af5cd4a7dfc59160d3353b8a148f85881", null ],
-          [ "nextOutput", "structOutput.html#a752437648e2a561f9e2665cf3cc9c900", null ],
-          [ "num", "structOutput.html#aee743a57c9850dd62957ff30952bb207", null ]
+          [ "begin", "structOutput.html#aa31ded1ba7c9ef78de2ff90a3afd7a0d", null ],
+          [ "set", "structOutput.html#a13434d67f6e51cadf154233f47c43015", null ],
+          [ "activate", "structOutput.html#ace2124ba445d39d043fd2e5483425af3", null ],
+          [ "isActivated", "structOutput.html#ae90edacf43e2076bf06a65215070b262", null ],
+          [ "data", "structOutput.html#a077d5ad9d4ed47074eacf90d7272072e", null ],
+          [ "nextOutput", "structOutput.html#aae916f35aea7805b684c0140b9aef0fa", null ],
+          [ "num", "structOutput.html#a86cf672daa4e0ad11ad10efc894d19c8", null ]
         ] ],
         [ "OutputData", "structOutputData.html", [
-          [ "id", "structOutputData.html#a122614687c244b97e9314e85e5d902e6", null ],
-          [ "iFlag", "structOutputData.html#aceab4a131fb17b622ca0ceab7e9a6bc5", null ],
-          [ "oStatus", "structOutputData.html#a06b4b35b94b2c11ee892284d5d75cf1c", null ],
-          [ "pin", "structOutputData.html#add69888878a12e5ce7b140d86e5073b1", null ]
+          [ "oStatus", "structOutputData.html#aaf64cfe1a84ea5460c4257b4f22ae500", null ],
+          [ "id", "structOutputData.html#a7441ef0865bcb3db9b8064dd7375c1ea", null ],
+          [ "pin", "structOutputData.html#ab17e87ffa7bbb8cac12a4ec11a52b5e2", null ],
+          [ "iFlag", "structOutputData.html#ad25404956d526f1a96d81702a484f1e7", null ]
         ] ],
         [ "Packet", "structPacket.html", [
-          [ "buf", "structPacket.html#a6cfcc974d95f0a6bee530517a5c9ad51", null ],
-          [ "nBits", "structPacket.html#a883cff7d134d63f66d59145300675b8f", null ]
+          [ "buf", "structPacket.html#aa813c6d9247d79b5d32e318ccdff9adc", null ],
+          [ "nBits", "structPacket.html#a59cf1015379b35236b5e9ac040d6d869", null ]
         ] ],
         [ "Register", "structRegister.html", [
-          [ "initPackets", "structRegister.html#a5ee802b8841361a04a988818ae956011", null ],
-          [ "activePacket", "structRegister.html#a7c37978c106fd6fbe52c47f16498014f", null ],
-          [ "packet", "structRegister.html#a66a305055571616e57916cd4eb8e8316", null ],
-          [ "updatePacket", "structRegister.html#ab7784fb786f0c3737a941b620c55fdca", null ]
+          [ "initPackets", "structRegister.html#ad11f55c101f5450d607444e8bf242af5", null ],
+          [ "packet", "structRegister.html#ace43ac5558048d38b18f4891085ade5b", null ],
+          [ "activePacket", "structRegister.html#a49dee662027f55c2908cd57b50814d2f", null ],
+          [ "updatePacket", "structRegister.html#a505f52137cd2664de870b924aba2b8bf", null ]
         ] ],
         [ "RegisterList", "structRegisterList.html", [
-          [ "RegisterList", "structRegisterList.html#add47b62e4420e83443e03dadb63f5445", null ],
-          [ "loadPacket", "structRegisterList.html#a95cef5ce087416d70790d31cb4edfe15", null ],
-          [ "readCV", "structRegisterList.html#adef482c0d582ba5fde118e883e4fb020", null ],
-          [ "readCVmain", "structRegisterList.html#ab3895b85aeb0f01628dd96cfb486331b", null ],
-          [ "readCVraw", "structRegisterList.html#a15ba65266ea92edb14ed5fae345cf105", null ],
-          [ "setAccessory", "structRegisterList.html#aa489c669af57940e57bead9ee1334635", null ],
-          [ "setFunction", "structRegisterList.html#a6783d019c914041fe4c8b8a911273773", null ],
-          [ "setThrottle", "structRegisterList.html#ad2938b4410fb6746c9c8633092848a32", null ],
-          [ "writeCVBit", "structRegisterList.html#a12985892e0f3733e6f8fbc88d769e286", null ],
-          [ "writeCVBitMain", "structRegisterList.html#a260b8ea53c6667c7e3ac2d70aabd055a", null ],
-          [ "writeCVByte", "structRegisterList.html#a2429ef740892e49326bc70b8e32ab371", null ],
-          [ "writeCVByteMain", "structRegisterList.html#a0a7f04d6c410d2c2bd10ccb135ecf6ad", null ],
-          [ "writeTextPacket", "structRegisterList.html#a68f768bed1e99f774d8a1931ed4d27e1", null ],
-          [ "currentBit", "structRegisterList.html#ac5be57bc687e293cee5f0e9e58c50843", null ],
-          [ "currentReg", "structRegisterList.html#ac1042cd6005847f7588fda41a6b66357", null ],
-          [ "maxLoadedReg", "structRegisterList.html#a10b3f242dec87a5bc89e802afa6972b2", null ],
-          [ "maxNumRegs", "structRegisterList.html#af56e9e5ed6472290008aae1ec13fea44", null ],
-          [ "nextReg", "structRegisterList.html#a4aa3ecdb369ddf1428193f966eae81be", null ],
-          [ "nRepeat", "structRegisterList.html#a1040a48f0519eb56c491754933ec90bf", null ],
-          [ "reg", "structRegisterList.html#a36c12a117d51c06551a007be899ac491", null ],
-          [ "regMap", "structRegisterList.html#a34fb7f658b4b1f4c11f05e2bea0adb42", null ],
-          [ "speedTable", "structRegisterList.html#a62f3bcf15062a981e6dc9fea9890f4d3", null ],
-          [ "tempPacket", "structRegisterList.html#a6a87974dadffdd85e3bd21a4fb9c77df", null ]
+          [ "RegisterList", "structRegisterList.html#aee9073ff8a48cb7c3a05404b7bb771ac", null ],
+          [ "loadPacket", "structRegisterList.html#ac54cd670362e9b4daf6b576618a6fc93", null ],
+          [ "readCVraw", "structRegisterList.html#a9e5cf02df96f3f3fb25981b8c11183c8", null ],
+          [ "setThrottle", "structRegisterList.html#a4b8fb53caadb8d687f45164ae34a8d8b", null ],
+          [ "setFunction", "structRegisterList.html#ad8a431c688063a462f2212d676002753", null ],
+          [ "setAccessory", "structRegisterList.html#a5b5ebd3c6bff3c402d36cdaaa450a28d", null ],
+          [ "writeTextPacket", "structRegisterList.html#a7e03d486332de6c7408c0d710714355c", null ],
+          [ "readCV", "structRegisterList.html#a6e1d05548a2b7c8c5ff3623971965e16", null ],
+          [ "readCVmain", "structRegisterList.html#a9792628c358697f4c5946059901ab117", null ],
+          [ "writeCVByte", "structRegisterList.html#a6f7d93e00d7eab02f1bfaea95c6260f2", null ],
+          [ "writeCVBit", "structRegisterList.html#a692fa4551f5e5baab4fc5172814c6aaa", null ],
+          [ "writeCVByteMain", "structRegisterList.html#a4a3dedc5e660a0f49939d0474e0a8adc", null ],
+          [ "writeCVBitMain", "structRegisterList.html#a08661387a95749fe83f919d80b6b4237", null ],
+          [ "maxNumRegs", "structRegisterList.html#a8cead966a1320a6edcc0ed61ec900064", null ],
+          [ "reg", "structRegisterList.html#a48ff5916d6e3574e88784e42f39864c8", null ],
+          [ "regMap", "structRegisterList.html#a954302e6dc20ae777ab2d60f8fca8051", null ],
+          [ "currentReg", "structRegisterList.html#a9d652a3fa55c839ae1db68e93a9c77a8", null ],
+          [ "maxLoadedReg", "structRegisterList.html#a284f41c05ba3edd20da72481b5eb6ce2", null ],
+          [ "nextReg", "structRegisterList.html#ab06499a998c4213fd7680defa3bfeac4", null ],
+          [ "tempPacket", "structRegisterList.html#a5ebba65c50b258befc61c80317748e18", null ],
+          [ "currentBit", "structRegisterList.html#a838ddf2c5eb9b9038ada842d482b292a", null ],
+          [ "nRepeat", "structRegisterList.html#a5e6feacc32012b2eb499315d28d2fd36", null ],
+          [ "speedTable", "structRegisterList.html#aa1bc1dfdfadd9a8a8ba97382688519f7", null ]
         ] ],
         [ "Sensor", "structSensor.html", [
-          [ "begin", "structSensor.html#adcf987ab90ea531f8469ec25cbb14a85", null ],
-          [ "isActive", "structSensor.html#ac38a51e9e7aa634503dcd32830931fac", null ],
-          [ "set", "structSensor.html#a8bc88cdc22f1d5b2d67c1790dba8093f", null ],
-          [ "active", "structSensor.html#ad2dcd5fa3886a4a9c7a5261e1a3ddb51", null ],
-          [ "data", "structSensor.html#a4e4b92cf13d45726834a2e51c5b2ec74", null ],
-          [ "nextSensor", "structSensor.html#ad242559dd9ddbba6dbc463e06364d6ca", null ],
-          [ "signal", "structSensor.html#a03efc05452821e5fa4990bf6df365dba", null ]
+          [ "begin", "structSensor.html#a120f63f045d6cb0deae4ee87d3556b4e", null ],
+          [ "set", "structSensor.html#a747a78f676b4ede33a09edfc491af850", null ],
+          [ "isActive", "structSensor.html#a64df75c672535b0fc1b1fe565dcb434b", null ],
+          [ "data", "structSensor.html#a3fbb1875a608855683db807596db272f", null ],
+          [ "active", "structSensor.html#a3acee43f445ecc4630f3ed3419730515", null ],
+          [ "signal", "structSensor.html#aecd1153495bae55e2b9e8bafc0dac8c1", null ],
+          [ "nextSensor", "structSensor.html#a6a8e041b318df2843ff47628d028bc91", null ]
         ] ],
         [ "SensorData", "structSensorData.html", [
-          [ "pin", "structSensorData.html#a38168d6e9536f80c0bd818ea7701bd35", null ],
-          [ "pullUp", "structSensorData.html#af6c7ef984646e6aa041bf96ff30198ed", null ],
-          [ "snum", "structSensorData.html#a8c649835983803786f3c862a3a213194", null ]
+          [ "snum", "structSensorData.html#a88de83d09c15d47cac7b011ee235b480", null ],
+          [ "pin", "structSensorData.html#ab17e87ffa7bbb8cac12a4ec11a52b5e2", null ],
+          [ "pullUp", "structSensorData.html#ae81b71f6330e8a7468f086ddbeb02136", null ]
         ] ],
         [ "TextCommand", "structTextCommand.html", null ],
         [ "Turnout", "structTurnout.html", [
-          [ "activate", "structTurnout.html#af25bcc47a674e6040134b1565e59d136", null ],
-          [ "begin", "structTurnout.html#a3e39c675007579c6db294a0e1f57f39d", null ],
-          [ "inactivate", "structTurnout.html#a01b4e8e33fc8fca0458f20beee2f1ed5", null ],
-          [ "isActivated", "structTurnout.html#a8d2cd012d42732e65333fa80592a20fb", null ],
-          [ "set", "structTurnout.html#ab7d51e1b8aa3cf3a862e3b500be3a88c", null ],
-          [ "data", "structTurnout.html#a404b78691015f78baf8183b0db3dc5a2", null ],
-          [ "eepromPos", "structTurnout.html#a8899396b83282ac85ab7b02cc4f37a1d", null ],
-          [ "nextTurnout", "structTurnout.html#ab1de16672bf5e622f93dc0316a6dd532", null ]
+          [ "begin", "structTurnout.html#a123c9bd65aa6525aa88f3870aec99fac", null ],
+          [ "set", "structTurnout.html#aaf9ea083e16f694689bde92d6014e1b4", null ],
+          [ "activate", "structTurnout.html#ace2124ba445d39d043fd2e5483425af3", null ],
+          [ "inactivate", "structTurnout.html#ac6deef9bfe1b6ebff7b061c3b402ed8c", null ],
+          [ "isActivated", "structTurnout.html#ae90edacf43e2076bf06a65215070b262", null ],
+          [ "data", "structTurnout.html#a42856d5ed31089579f633ca6914acd5f", null ],
+          [ "nextTurnout", "structTurnout.html#a90494d25ec5a7dd1d46f1d1acb956417", null ],
+          [ "eepromPos", "structTurnout.html#a2d582641db96f70f4b6496488777a1da", null ]
         ] ],
         [ "TurnoutData", "structTurnoutData.html", [
-          [ "address", "structTurnoutData.html#a748ccb89448c3efd2b288d779ba231f4", null ],
-          [ "id", "structTurnoutData.html#a5a444c531b83c4aa95926a82b4c0f042", null ],
-          [ "subAddress", "structTurnoutData.html#ac5f5d5124dc7595c0717dd793031657a", null ],
-          [ "tStatus", "structTurnoutData.html#abc11a69999b966332b9d6f2314151ad1", null ]
+          [ "tStatus", "structTurnoutData.html#a78c60dff737057c9d8fb5b4cb3a07a5b", null ],
+          [ "subAddress", "structTurnoutData.html#a18cb1e6525ef14974bcbbc2c044f7ab3", null ],
+          [ "id", "structTurnoutData.html#a7441ef0865bcb3db9b8064dd7375c1ea", null ],
+          [ "address", "structTurnoutData.html#a45c6bc6d1135dc398bf8deae861a2ebc", null ]
         ] ]
       ] ],
       [ "Class Index", "classes.html", null ],
       [ "Class Members", "functions_all.html", [
         [ "All", "functions_all.html", null ],
-        [ "Functions", "functions_func.html", null ]
-      ] ]
-    ] ],
-    [ "Files", null, [
-      [ "File List", "files.html", [
-        [ "src", "dir_d41d8cd98f00b204e9800998ecf8427e.html", [
-          [ "DCCpp.h", "DCCpp_8h.html", [
-            [ "USE_EEPROM", "DCCpp_8h.html#abd7d46fa3888b2e1bed34df076372b30", null ],
-            [ "USE_ETHERNET", "DCCpp_8h.html#afdde4edc4a1dd814fb31b14166214e6d", null ],
-            [ "USE_ETHERNET_ENC28J60", "DCCpp_8h.html#a70605414b539dc47fdaaa65bded21008", null ],
-            [ "USE_OUTPUT", "DCCpp_8h.html#a6f8d193bd84df6f05773b458355e7bd8", null ],
-            [ "USE_SENSOR", "DCCpp_8h.html#a22f58986dc11249373f6ee1d5fb50c0a", null ],
-            [ "USE_TEXTCOMMAND", "DCCpp_8h.html#ad7034344270036501578d215e708bc82", null ],
-            [ "USE_TURNOUT", "DCCpp_8h.html#a62257f60a9be8ccb699ec6f902c30630", null ]
-          ] ]
-        ] ]
-      ] ],
-      [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
-        [ "Macros", "globals_defs.html", null ]
-      ] ]
-    ] ],
-    [ "File Source", "filesource.html", [
-      [ "src", "dir_d41d8cd98f00b204e9800998ecf8427e.html", [
-        [ "Comm.h", "Comm_8h_source.html", null ],
-        [ "Config.h", "Config_8h_source.html", null ],
-        [ "CurrentMonitor.cpp", "CurrentMonitor_8cpp_source.html", null ],
-        [ "CurrentMonitor.h", "CurrentMonitor_8h_source.html", null ],
-        [ "DCCpp.cpp", "DCCpp_8cpp_source.html", null ],
-        [ "DCCpp.h", "DCCpp_8h_source.html", null ],
-        [ "DCCpp.hpp", "DCCpp_8hpp_source.html", null ],
-        [ "DCCpp_Uno.h", "DCCpp__Uno_8h_source.html", null ],
-        [ "EEStore.cpp", "EEStore_8cpp_source.html", null ],
-        [ "EEStore.h", "EEStore_8h_source.html", null ],
-        [ "Outputs.cpp", "Outputs_8cpp_source.html", null ],
-        [ "Outputs.h", "Outputs_8h_source.html", null ],
-        [ "PacketRegister.cpp", "PacketRegister_8cpp_source.html", null ],
-        [ "PacketRegister.h", "PacketRegister_8h_source.html", null ],
-        [ "Sensor.cpp", "Sensor_8cpp_source.html", null ],
-        [ "Sensor.h", "Sensor_8h_source.html", null ],
-        [ "TextCommand.cpp", "TextCommand_8cpp_source.html", null ],
-        [ "TextCommand.h", "TextCommand_8h_source.html", null ],
-        [ "Turnout.cpp", "Turnout_8cpp_source.html", null ],
-        [ "Turnout.h", "Turnout_8h_source.html", null ]
+        [ "Functions", "functions_func.html", null ],
+        [ "Variables", "functions_vars.html", null ]
       ] ]
     ] ]
   ] ]
@@ -194,7 +126,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"Comm_8h_source.html"
+"annotated.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

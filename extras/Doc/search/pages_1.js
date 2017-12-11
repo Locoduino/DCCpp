@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['history',['History',['../Revision.html',1,'']]]
+  ['revision_20history',['Revision History',['../revPage.html',1,'']]]
 ];
