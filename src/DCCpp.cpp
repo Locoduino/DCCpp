@@ -33,6 +33,8 @@ void FunctionsState::clear()
 	this->activeFlags[1] = 0;
 	this->activeFlags[2] = 0;
 	this->activeFlags[3] = 0;
+
+	this->statesSent();
 }
 
 void FunctionsState::activate(byte inFunctionNumber)
@@ -48,6 +50,17 @@ void FunctionsState::inactivate(byte inFunctionNumber)
 bool FunctionsState::isActivated(byte inFunctionNumber)
 {
 	return bitRead(this->activeFlags[inFunctionNumber / 8], inFunctionNumber % 8);
+}
+
+bool FunctionsState::isActivationChanged(byte inFunctionNumber)
+{
+	return bitRead(this->activeFlagsSent[inFunctionNumber / 8], inFunctionNumber % 8) != isActivated(inFunctionNumber);
+}
+
+void FunctionsState::statesSent() 
+{ 
+	for (int i = 0; i < 4; i++)
+		this->activeFlagsSent[i] = this->activeFlags[i]; 
 }
 
 #ifdef DCCPP_DEBUG_MODE
@@ -522,7 +535,7 @@ void DCCpp::panicStop(bool inStop)
 	Serial.println(inStop ? F("pressed"):F("canceled"));
 #endif
 
-	/* activate or not the current output on rails */
+	/* activate or not the power on rails */
 
 	if (inStop)
 		powerOff();
@@ -581,7 +594,7 @@ bool DCCpp::setThrottle(volatile RegisterList *inpRegs, int nReg,  int inLocoId,
 	return true;
 }
 
-void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId, FunctionsState inStates)
+void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId, FunctionsState &inStates)
 {
 #ifdef DCCPP_DEBUG_MODE
 	if (inpRegs == &mainRegs)
@@ -614,7 +627,8 @@ void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId,
 			* BYTE2 : omitted
 			*/
 
-			flags |= 1;
+			if (inStates.isActivationChanged(func))
+				flags |= 1;
 			if (inStates.isActivated(func))
 			{
 				if (func == 0)
@@ -632,7 +646,8 @@ void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId,
 			* BYTE2 : omitted
 			*/
 
-			flags |= 2;
+			if (inStates.isActivationChanged(func))
+				flags |= 2;
 			if (inStates.isActivated(func))
 				twoByte1 += (1 << (func - 5));
 		}
@@ -645,7 +660,8 @@ void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId,
 			* BYTE2 : omitted
 			*/
 
-			flags |= 4;
+			if (inStates.isActivationChanged(func))
+				flags |= 4;
 			if (inStates.isActivated(func))
 				threeByte1 += (1 << (func - 9));
 		}
@@ -658,7 +674,8 @@ void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId,
 			* BYTE2 : F13 * 1 + F14 * 2 + F15 * 4 + F16 * 8 + F17 * 16 + F18 * 32 + F19 * 64 + F20 * 128
 			*/
 
-			flags |= 8;
+			if (inStates.isActivationChanged(func))
+				flags |= 8;
 			if (inStates.isActivated(func))
 				fourByte2 += (1 << (func - 13));
 		}
@@ -671,7 +688,8 @@ void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId,
 			* BYTE2 : F21 * 1 + F22 * 2 + F23 * 4 + F24 * 8 + F25 * 16 + F26 * 32 + F27 * 64 + F28 * 128
 			*/
 
-			flags |= 16;
+			if (inStates.isActivationChanged(func))
+				flags |= 16;
 			if (inStates.isActivated(func))
 				fiveByte2 += (1 << (func - 21));
 		}
@@ -687,6 +705,8 @@ void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId,
 		inpRegs->setFunction(nReg, inLocoId, 222, fourByte2);
 	if (flags & 16)
 		inpRegs->setFunction(nReg, inLocoId, 223, fiveByte2);
+
+	inStates.statesSent();
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("DCCpp SetFunctions for loco"));

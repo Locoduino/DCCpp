@@ -17,6 +17,11 @@ class FunctionsState
 		A bit at true is an activated function.*/
 		byte activeFlags[4];
 
+		/**This is the last states sent to the decoder by DCC.
+		Used to be sure to send only changed states.
+		*/
+		byte activeFlagsSent[4];
+
 		inline byte byteNumber(byte inFunctionNumber) { return inFunctionNumber / 8; }
 		inline byte bitNumber(byte inFunctionNumber) { return inFunctionNumber % 8; }
 
@@ -41,6 +46,14 @@ class FunctionsState
 		@return True if the given function is activated.
 		*/
 		bool isActivated(byte inFunctionNumber);
+		/**Copy the current active flags into 'sent' active flags.*/
+		void statesSent();
+		/** Check if the given function had its activation flag changed when sent to the decoder last time.
+		The allowed number goes from 0 to 28, maximum for DCC.
+		@param inFunctionNumber	Number of the function to check.
+		@return True if the given function activation flag is different between activFlags and sentActiveFlags.
+		*/
+		bool isActivationChanged(byte inFunctionNumber);
 
 #ifdef DCCPP_DEBUG_MODE
 		/** Print the list of activated functions.
@@ -63,7 +76,7 @@ class DCCpp
 		static bool setThrottle(volatile RegisterList *inReg, int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward);
 		static int readCv(volatile RegisterList *inReg, int inLocoId, byte inCvId);
 		static void writeCv(volatile RegisterList *inReg, int inLocoId, int inCvId, byte inCvValue);
-		static void setFunctions(volatile RegisterList *inReg, int nReg, int inLocoId, FunctionsState inStates);
+		static void setFunctions(volatile RegisterList *inReg, int nReg, int inLocoId, FunctionsState &inStates);
 
 	public:
 		static volatile RegisterList mainRegs, progRegs;
@@ -170,7 +183,7 @@ class DCCpp
 		@param inLocoId	Decoder address in short or long format.
 		@param inStates	FunctionsState class with the wanted new status.
 		*/
-		static inline void setFunctionsMain(int nReg, int inLocoId, const FunctionsState &inStates) { setFunctions(&(mainRegs), nReg, inLocoId, inStates); }
+		static inline void setFunctionsMain(int nReg, int inLocoId, FunctionsState &inStates) { setFunctions(&(mainRegs), nReg, inLocoId, inStates); }
 
 		// Programming driving functions
 
@@ -199,7 +212,7 @@ class DCCpp
 		@param inLocoId	Decoder address in short or long format.
 		@param inStates	FunctionsState class with the wanted new status.
 		*/
-		static inline void setFunctionsProg(int nReg, int inLocoId, FunctionsState inStates) { setFunctions(&(progRegs), nReg, inLocoId, inStates); }
+		static inline void setFunctionsProg(int nReg, int inLocoId, FunctionsState &inStates) { setFunctions(&(progRegs), nReg, inLocoId, inStates); }
 
 		// Accessories
 

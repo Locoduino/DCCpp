@@ -30,7 +30,9 @@ var NAVTREE =
           [ "clear", "classFunctionsState.html#ac8bb3912a3ce86b15842e79d0b421204", null ],
           [ "activate", "classFunctionsState.html#a45dac1a6f931fe0dc711d8d6b2e831b1", null ],
           [ "inactivate", "classFunctionsState.html#a2eaf9525bbe7a59c88c6d6d632ddf82c", null ],
-          [ "isActivated", "classFunctionsState.html#a1a731fd012960b50658aa7d515cd1c03", null ]
+          [ "isActivated", "classFunctionsState.html#a1a731fd012960b50658aa7d515cd1c03", null ],
+          [ "statesSent", "classFunctionsState.html#ac302871cf32468659559f9f57ce00596", null ],
+          [ "isActivationChanged", "classFunctionsState.html#aafba7f68820d7b4f3ac1e3d18a58a6ce", null ]
         ] ],
         [ "Output", "structOutput.html", [
           [ "begin", "structOutput.html#aa31ded1ba7c9ef78de2ff90a3afd7a0d", null ],

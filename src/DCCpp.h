@@ -239,6 +239,13 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 22/12/2017 V0.9.0
+- Envoi de la seule commande DCC concernée lors d'une activation/désactivation de fonction.
+- Nouvel exemple Autotest.
+_______________
+- Send only necessary DCC command when activating/dis-activating a function.
+- New sample Autotest.
+
 \par 11/12/2017 V0.8.0
 - fin de la documentation
 - DCCpp classe passée en statique
@@ -307,7 +314,7 @@ Main include file of the library.*/
 /**Comment this line to avoid using and compiling Sensors.*/
 //#define USE_SENSOR
 /**Comment this line to avoid using and compiling Serial commands.*/
-//#define USE_TEXTCOMMAND
+#define USE_TEXTCOMMAND
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip (Arduino Shield v1).*/
 //#define USE_ETHERNET_WIZNET_5100
 /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip (Arduino Shield v2).*/

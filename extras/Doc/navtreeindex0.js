@@ -6,6 +6,8 @@ var NAVTREEINDEX0 =
 "classFunctionsState.html#a1a731fd012960b50658aa7d515cd1c03":[3,0,5,4],
 "classFunctionsState.html#a2eaf9525bbe7a59c88c6d6d632ddf82c":[3,0,5,3],
 "classFunctionsState.html#a45dac1a6f931fe0dc711d8d6b2e831b1":[3,0,5,2],
+"classFunctionsState.html#aafba7f68820d7b4f3ac1e3d18a58a6ce":[3,0,5,6],
+"classFunctionsState.html#ac302871cf32468659559f9f57ce00596":[3,0,5,5],
 "classFunctionsState.html#ac8bb3912a3ce86b15842e79d0b421204":[3,0,5,1],
 "classFunctionsState.html#adb6fbac1f43127c8097153da40b79d9c":[3,0,5,0],
 "classes.html":[3,1],
