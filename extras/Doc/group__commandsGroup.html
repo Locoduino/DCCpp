@@ -95,115 +95,6 @@ $(document).ready(function(){initNavTree('group__commandsGroup.html','');});
   <div class="clear-floats"></div>
 </div><!--header-->
 <div class="contents">
-<h2>CREATES A NEW OUTPUT </h2>
-<p><b> </p><pre class="fragment">&lt;Z ID PIN IFLAG&gt;
-</pre><p> </b></p>
-<p>creates a new output ID, with specified PIN and IFLAG values. if output ID already exists, it is updated with specified PIN and IFLAG. note: output state will be immediately set to ACTIVE/INACTIVE and pin will be set to HIGH/LOW according to IFLAG value specified (see output class comment).</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the output</li>
-<li><b>PIN</b>: the arduino pin number to use for the output</li>
-<li><b>STATE</b>: the state of the output (0=INACTIVE / 1=ACTIVE)</li>
-<li><b>IFLAG</b>: defines the operational behavior of the output based on bits 0, 1, and 2 (see 'lists all outputs' command for more information).</li>
-</ul>
-<p>returns: <b>&lt;O&gt;</b> if successful and <b>&lt;X&gt;</b> if unsuccessful (e.g. out of memory)</p>
-<h2>DELETES AN EXISTING OUTPUT </h2>
-<p><b> </p><pre class="fragment">&lt;Z ID&gt;
-</pre><p> </b></p>
-<p>deletes definition of output ID</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the output</li>
-</ul>
-<p>returns: <b>&lt;O&gt;</b> if successful and <b>&lt;X&gt;</b> if unsuccessful (e.g. ID does not exist)</p>
-<h2>LISTS ALL OUTPUTS </h2>
-<p><b> </p><pre class="fragment">&lt;Z&gt;
-</pre><p> </b></p>
-<p>lists all defined output pins</p>
-<p>returns: <b>&lt;Y ID PIN IFLAG STATE&gt;</b> for each defined output pin or <b>&lt;X&gt;</b> if no output pins defined where</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the output</li>
-<li><b>PIN</b>: the arduino pin number to use for the output</li>
-<li><b>STATE</b>: the state of the output (0=INACTIVE / 1=ACTIVE)</li>
-<li><b>IFLAG</b>: defines the operational behavior of the output based on bits 0, 1, and 2 as follows:<ul>
-<li>IFLAG, bit 0: 0 = forward operation (ACTIVE=HIGH / INACTIVE=LOW) 1 = inverted operation (ACTIVE=LOW / INACTIVE=HIGH)</li>
-<li>IFLAG, bit 1: 0 = state of pin restored on power-up to either ACTIVE or INACTIVE depending on state before power-down; state of pin set to INACTIVE when first created 1 = state of pin set on power-up, or when first created, to either ACTIVE of INACTIVE depending on IFLAG, bit 2</li>
-<li>IFLAG, bit 2: 0 = state of pin set to INACTIVE upon power-up or when first created 1 = state of pin set to ACTIVE upon power-up or when first created</li>
-</ul>
-</li>
-</ul>
-<h2>CHANGES OUTPUT STATE </h2>
-<p><b> </p><pre class="fragment">&lt;Z ID STATE&gt;
-</pre><p> </b></p>
-<p>sets output ID to either ACTIVE or INACTIVE state</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the output</li>
-<li><b>PIN</b>: the arduino pin number to use for the output</li>
-<li><b>STATE</b>: the state of the output (0=INACTIVE / 1=ACTIVE)</li>
-</ul>
-<p>returns: <b>&lt;Y ID STATE&gt;</b>, or <b>&lt;X&gt;</b> if turnout ID does not exist</p>
-<h2>CREATES A NEW SENSOR </h2>
-<p><b> </p><pre class="fragment">&lt;S ID PIN PULLUP&gt;
-</pre><p> </b></p>
-<p>creates a new sensor ID, with specified PIN and PULLUP if sensor ID already exists, it is updated with specified PIN and PULLUP</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the sensor</li>
-<li><b>PIN</b>: the arduino pin number the sensor is connected to</li>
-<li><b>PULLUP</b>: PULLUP: 1=use internal pull-up resistor for PIN, 0=don't use internal pull-up resistor for PIN</li>
-</ul>
-<p>returns: <b>&lt;O&gt;</b> if successful and <b>&lt;X&gt;</b> if unsuccessful (e.g. out of memory)</p>
-<h2>DELETES AN EXISTING SENSOR </h2>
-<p><b> </p><pre class="fragment">&lt;S ID&gt;
-</pre><p> </b></p>
-<p>deletes definition of sensor ID.</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the sensor to check</li>
-</ul>
-<p>returns: <b>&lt;O&gt;</b> if successful and <b>&lt;X&gt;</b> if unsuccessful (e.g. ID does not exist)</p>
-<h2>LISTS ALL DEFINED SENSORS </h2>
-<p><b> </p><pre class="fragment">&lt;S&gt;
-</pre><p> </b></p>
-<p>lists all defined sensors</p>
-<p>returns: <b>&lt;Q ID PIN PULLUP&gt;</b> for each defined sensor or <b>&lt;X&gt;</b> if no sensors defined where</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the sensor</li>
-<li><b>PIN</b>: the arduino pin number the sensor is connected to</li>
-<li><b>PULLUP</b>: PULLUP: 1=use internal pull-up resistor for PIN, 0=don't use internal pull-up resistor for PIN</li>
-</ul>
-<h2>CREATES A NEW TURNOUT </h2>
-<p><b> </p><pre class="fragment">&lt;T ID ADDRESS SUBADDRESS&gt;
-</pre><p> </b></p>
-<p>creates a new turnout ID, with specified ADDRESS and SUBADDRESS if turnout ID already exists, it is updated with specified ADDRESS and SUBADDRESS</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the turnout to control</li>
-<li><b> ADDRESS</b>: the primary address of the decoder controlling this turnout (0-511)</li>
-<li><b> SUBADDRESS</b>: the sub-address of the decoder controlling this turnout (0-3)</li>
-</ul>
-<p>returns: <b>&lt;O&gt;</b> if successful and <b>&lt;X&gt;</b> if unsuccessful (e.g. out of memory)</p>
-<h2>DELETES AN EXISTING TURNOUT </h2>
-<p><b> </p><pre class="fragment">&lt;T ID&gt;
-</pre><p> </b></p>
-<p>deletes definition of turnout ID</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the turnout to control</li>
-</ul>
-<p>returns: <b>&lt;O&gt;</b> if successful and <b>&lt;X&gt;</b> if unsuccessful (e.g. ID does not exist)</p>
-<h2>LISTS ALL TURNOUTS </h2>
-<p><b> </p><pre class="fragment">&lt;T&gt;
-</pre><p> </b></p>
-<p>returns: <b>&lt;H ID ADDRESS SUBADDRESS THROW&gt;</b> for each defined turnout or <b>&lt;X&gt;</b> if no turnouts defined where</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the turnout to control</li>
-<li><b>ADDRESS</b>: the primary address of the decoder controlling this turnout (0-511)</li>
-<li><b>SUBADDRESS</b>: the sub-address of the decoder controlling this turnout (0-3)</li>
-</ul>
-<h2>THROWS AN EXISTING TURNOUT </h2>
-<p><b> </p><pre class="fragment">&lt;T ID THROW&gt;
-</pre><p> </b></p>
-<p>sets turnout ID to either the "thrown" or "not thrown" position</p>
-<ul>
-<li><b>ID</b>: the numeric ID (0-32767) of the turnout to control</li>
-<li><b>THROW</b>: 0 (not thrown) or 1 (thrown)</li>
-</ul>
-<p>returns: <b>&lt;H ID THROW&gt;</b>, or <b>&lt;X&gt;</b> if turnout ID does not exist </p>
 <h2>SET ENGINE THROTTLES USING 128-STEP SPEED CONTROL </h2>
 <p><b> </p><pre class="fragment"> &lt;t REGISTER CAB SPEED DIRECTION&gt;</pre><p> </b></p>
 <p>sets the throttle for a given register/cab combination</p>
@@ -339,16 +230,6 @@ $(document).ready(function(){initNavTree('group__commandsGroup.html','');});
 </pre><p> </b></p>
 <p>returns status messages containing track power status, throttle status, turn-out status, and a version number NOTE: this is very useful as a first command for an interface to send to this sketch in order to verify connectivity and update any GUI to reflect actual throttle and turn-out settings</p>
 <p>returns: series of status messages that can be read by an interface to determine status of DCC++ Base Station and important settings</p>
-<h2>STORE SETTINGS IN EEPROM </h2>
-<p><b> </p><pre class="fragment">&lt;E&gt;
-</pre><p> </b></p>
-<p>Stores settings for turnouts and sensors EEPROM</p>
-<p>returns: <b>&lt;e nTurnouts nSensors&gt;</b></p>
-<h2>CLEAR SETTINGS IN EEPROM </h2>
-<p><b> </p><pre class="fragment">&lt;e&gt;
-</pre><p> </b></p>
-<p>clears settings for Turnouts in EEPROM</p>
-<p>returns: <b>&lt;O&gt;</b></p>
 <h2>PRINT CARRIAGE RETURN IN SERIAL MONITOR WINDOW </h2>
 <p><b> </p><pre class="fragment">&lt; &gt;
 </pre><p> </b></p>
@@ -399,7 +280,7 @@ $(document).ready(function(){initNavTree('group__commandsGroup.html','');});
 <!-- Generated by DoxyPress 1.2.10 -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on ven. déc. 22 2017 14:02:05 for DCCpp &nbsp; by
+    <li class="footer">Generated on dim. janv. 7 2018 17:46:35 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.2.10 </li>
   </ul>

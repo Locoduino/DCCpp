@@ -18,13 +18,6 @@ var NAVTREE =
         ] ],
         [ "DCCpp", "classDCCpp.html", null ],
         [ "DCCppConfig", "structDCCppConfig.html", null ],
-        [ "EEStore", "structEEStore.html", null ],
-        [ "EEStoreData", "structEEStoreData.html", [
-          [ "id", "structEEStoreData.html#a1ba5380452830d1540bbdc6c89714363", null ],
-          [ "nTurnouts", "structEEStoreData.html#ac19c509a8490618f5b61b83edc16c3d9", null ],
-          [ "nSensors", "structEEStoreData.html#ac7708e38584383f3bfbbcb7d4edb22ad", null ],
-          [ "nOutputs", "structEEStoreData.html#ac475e3c32410620ce172c55ddca57307", null ]
-        ] ],
         [ "FunctionsState", "classFunctionsState.html", [
           [ "FunctionsState", "classFunctionsState.html#adb6fbac1f43127c8097153da40b79d9c", null ],
           [ "clear", "classFunctionsState.html#ac8bb3912a3ce86b15842e79d0b421204", null ],
@@ -33,21 +26,6 @@ var NAVTREE =
           [ "isActivated", "classFunctionsState.html#a1a731fd012960b50658aa7d515cd1c03", null ],
           [ "statesSent", "classFunctionsState.html#ac302871cf32468659559f9f57ce00596", null ],
           [ "isActivationChanged", "classFunctionsState.html#aafba7f68820d7b4f3ac1e3d18a58a6ce", null ]
-        ] ],
-        [ "Output", "structOutput.html", [
-          [ "begin", "structOutput.html#aa31ded1ba7c9ef78de2ff90a3afd7a0d", null ],
-          [ "set", "structOutput.html#a13434d67f6e51cadf154233f47c43015", null ],
-          [ "activate", "structOutput.html#ace2124ba445d39d043fd2e5483425af3", null ],
-          [ "isActivated", "structOutput.html#ae90edacf43e2076bf06a65215070b262", null ],
-          [ "data", "structOutput.html#a077d5ad9d4ed47074eacf90d7272072e", null ],
-          [ "nextOutput", "structOutput.html#aae916f35aea7805b684c0140b9aef0fa", null ],
-          [ "num", "structOutput.html#a86cf672daa4e0ad11ad10efc894d19c8", null ]
-        ] ],
-        [ "OutputData", "structOutputData.html", [
-          [ "oStatus", "structOutputData.html#aaf64cfe1a84ea5460c4257b4f22ae500", null ],
-          [ "id", "structOutputData.html#a7441ef0865bcb3db9b8064dd7375c1ea", null ],
-          [ "pin", "structOutputData.html#ab17e87ffa7bbb8cac12a4ec11a52b5e2", null ],
-          [ "iFlag", "structOutputData.html#ad25404956d526f1a96d81702a484f1e7", null ]
         ] ],
         [ "Packet", "structPacket.html", [
           [ "buf", "structPacket.html#aa813c6d9247d79b5d32e318ccdff9adc", null ],
@@ -84,37 +62,7 @@ var NAVTREE =
           [ "nRepeat", "structRegisterList.html#a5e6feacc32012b2eb499315d28d2fd36", null ],
           [ "speedTable", "structRegisterList.html#aa1bc1dfdfadd9a8a8ba97382688519f7", null ]
         ] ],
-        [ "Sensor", "structSensor.html", [
-          [ "begin", "structSensor.html#a120f63f045d6cb0deae4ee87d3556b4e", null ],
-          [ "set", "structSensor.html#a747a78f676b4ede33a09edfc491af850", null ],
-          [ "isActive", "structSensor.html#a64df75c672535b0fc1b1fe565dcb434b", null ],
-          [ "data", "structSensor.html#a3fbb1875a608855683db807596db272f", null ],
-          [ "active", "structSensor.html#a3acee43f445ecc4630f3ed3419730515", null ],
-          [ "signal", "structSensor.html#aecd1153495bae55e2b9e8bafc0dac8c1", null ],
-          [ "nextSensor", "structSensor.html#a6a8e041b318df2843ff47628d028bc91", null ]
-        ] ],
-        [ "SensorData", "structSensorData.html", [
-          [ "snum", "structSensorData.html#a88de83d09c15d47cac7b011ee235b480", null ],
-          [ "pin", "structSensorData.html#ab17e87ffa7bbb8cac12a4ec11a52b5e2", null ],
-          [ "pullUp", "structSensorData.html#ae81b71f6330e8a7468f086ddbeb02136", null ]
-        ] ],
-        [ "TextCommand", "structTextCommand.html", null ],
-        [ "Turnout", "structTurnout.html", [
-          [ "begin", "structTurnout.html#a123c9bd65aa6525aa88f3870aec99fac", null ],
-          [ "set", "structTurnout.html#aaf9ea083e16f694689bde92d6014e1b4", null ],
-          [ "activate", "structTurnout.html#ace2124ba445d39d043fd2e5483425af3", null ],
-          [ "inactivate", "structTurnout.html#ac6deef9bfe1b6ebff7b061c3b402ed8c", null ],
-          [ "isActivated", "structTurnout.html#ae90edacf43e2076bf06a65215070b262", null ],
-          [ "data", "structTurnout.html#a42856d5ed31089579f633ca6914acd5f", null ],
-          [ "nextTurnout", "structTurnout.html#a90494d25ec5a7dd1d46f1d1acb956417", null ],
-          [ "eepromPos", "structTurnout.html#a2d582641db96f70f4b6496488777a1da", null ]
-        ] ],
-        [ "TurnoutData", "structTurnoutData.html", [
-          [ "tStatus", "structTurnoutData.html#a78c60dff737057c9d8fb5b4cb3a07a5b", null ],
-          [ "subAddress", "structTurnoutData.html#a18cb1e6525ef14974bcbbc2c044f7ab3", null ],
-          [ "id", "structTurnoutData.html#a7441ef0865bcb3db9b8064dd7375c1ea", null ],
-          [ "address", "structTurnoutData.html#a45c6bc6d1135dc398bf8deae861a2ebc", null ]
-        ] ]
+        [ "TextCommand", "structTextCommand.html", null ]
       ] ],
       [ "Class Index", "classes.html", null ],
       [ "Class Members", "functions_all.html", [

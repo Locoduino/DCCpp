@@ -9,8 +9,8 @@ In extras folder, click on Doc/index.html to have a complete documentation in En
 
 == License ==
 
-Copyright (c) 2015/2017 Locoduino.org. All right reserved.
-Copyright (c) 2015/2017 Thierry Paris.  All right reserved.
+Copyright (c) 2017/2018 Locoduino.org. All right reserved.
+Copyright (c) 2017/2018 Thierry Paris.  All right reserved.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

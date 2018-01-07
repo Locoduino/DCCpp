@@ -118,8 +118,6 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a3a4fe18f22d10d36cb6d3df96772d041"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add468dfdc802bd418ae9cf7b5a5fded3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#add468dfdc802bd418ae9cf7b5a5fded3">beginProgPololu</a> ()</td></tr>
 <tr class="separator:add468dfdc802bd418ae9cf7b5a5fded3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43b3ce2413e65c0a51553b701db288ee"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#a43b3ce2413e65c0a51553b701db288ee">beginEthernet</a> (uint8_t *inMac, uint8_t *inIp, EthernetProtocol inProtocol = EthernetProtocol::TCP)</td></tr>
-<tr class="separator:a43b3ce2413e65c0a51553b701db288ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
 <tr class="separator:afe461d27b9c48d5921c00d521181f12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad348e5fc03020deabd80c51de9b9c3ba"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#ad348e5fc03020deabd80c51de9b9c3ba">panicStop</a> (bool inStop)</td></tr>
@@ -416,56 +414,6 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 <p>Initializes the programming line for a Pololu MC33926 Motor Shield. </p>
 
 <p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00118">118</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a43b3ce2413e65c0a51553b701db288ee"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void beginEthernet </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>inMac</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>inIp</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">EthernetProtocol&#160;</td>
-          <td class="paramname"><em>inProtocol</em> = <code>EthernetProtocol::TCP</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Initializes the Ethernet link. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">inMac</td><td>Mac address of this network element. </td></tr>
-    <tr><td class="paramname">inIp</td><td>IP address, or NULL for DHCP configuration. </td></tr>
-    <tr><td class="paramname">inProtocol</td><td>Can be HTTP or TCP. Default is TCP. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00327">327</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
 
 </div>
 </div>
@@ -1167,7 +1115,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classDCCpp.html">DCCpp</a></li>
-    <li class="footer">Generated on ven. déc. 22 2017 14:02:05 for DCCpp &nbsp; by
+    <li class="footer">Generated on dim. janv. 7 2018 17:46:35 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.2.10 </li>
   </ul>

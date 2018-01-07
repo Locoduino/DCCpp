@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['output',['Output',['../structOutput.html',1,'']]],
-  ['outputdata',['OutputData',['../structOutputData.html',1,'']]]
+  ['register',['Register',['../structRegister.html',1,'']]],
+  ['registerlist',['RegisterList',['../structRegisterList.html',1,'']]]
 ];
