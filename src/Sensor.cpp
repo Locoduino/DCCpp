@@ -120,23 +120,24 @@ int Sensor::count() {
 void Sensor::check(){
   Sensor *tt;
 
-  for(tt=firstSensor;tt!=NULL;tt=tt->nextSensor){
-    tt->signal=(float)(tt->signal*(1.0-SENSOR_DECAY)+digitalRead(tt->data.pin)*SENSOR_DECAY);
+  for(tt = firstSensor; tt != NULL; tt = tt->nextSensor){
+    tt->signal = (float)(tt->signal * (1.0 - SENSOR_DECAY) + digitalRead(tt->data.pin) * SENSOR_DECAY);
     
     if(!tt->active && tt->signal<0.5){
       tt->active=true;
-      INTERFACE.print("<Q");
+#if defined(USE_ETHERNET)
+	  INTERFACE.print("<Q");
       INTERFACE.print(tt->data.snum);
       INTERFACE.print(">");
+#endif
     } else if(tt->active && tt->signal>0.9){
       tt->active=false;
-      INTERFACE.print("<q");
+#if defined(USE_ETHERNET)
+	  INTERFACE.print("<q");
       INTERFACE.print(tt->data.snum);
       INTERFACE.print(">");
-	}
-#if !defined(USE_ETHERNET)
-	  INTERFACE.println("");
 #endif
+	}
   } // loop over all sensors
     
 } // Sensor::check

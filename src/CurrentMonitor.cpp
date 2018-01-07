@@ -33,7 +33,9 @@ void CurrentMonitor::check()
 {
 	if (this->pin == UNDEFINED_PIN)
 		return;
-	this->current = (float) (analogRead(this->pin) * CURRENT_SAMPLE_SMOOTHING + this->current * (1.0-CURRENT_SAMPLE_SMOOTHING));      // compute new exponentially-smoothed current
+
+	this->current = (float)(analogRead(this->pin) * CURRENT_SAMPLE_SMOOTHING + this->current * (1.0 - CURRENT_SAMPLE_SMOOTHING));      // compute new exponentially-smoothed current
+
 	int signalPin = DCCppConfig::SignalEnablePinProg;
 	if (signalPin == UNDEFINED_PIN)
 		signalPin = DCCppConfig::SignalEnablePinMain;
@@ -41,10 +43,7 @@ void CurrentMonitor::check()
 	// current overload and Programming Signal is on (or could have checked Main Signal, since both are always on or off together)
 	if (this->current > this->currentSampleMax && digitalRead(signalPin) == HIGH)
 	{
-		if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
-			digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);		// disable both Motor Shield Channels
-		if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
-			digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);        // regardless of which caused current overload
+		DCCpp::powerOff();
 		INTERFACE.print(this->msg);                                     // print corresponding error message
 #if !defined(USE_ETHERNET)
 		INTERFACE.println("");

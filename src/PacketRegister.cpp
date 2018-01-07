@@ -206,6 +206,12 @@ void RegisterList::setFunction(int nReg, int cab, int fByte, int eByte) volatile
 	INTERFACE.println("");
 #endif
 #endif
+	/* NMRA DCC norm ask for two DCC packets instead of only one:
+	"Command Stations that generate these packets, and which are not periodically refreshing these functions,
+	must send at least two repetitions of these commands when any function state is changed."
+	https://www.nmra.org/sites/default/files/s-9.2.1_2012_07.pdf
+	*/
+	loadPacket(nReg, b, nB, 4, 1);
 	loadPacket(nReg, b, nB, 4, 1);
 } // RegisterList::setFunction(ints)
 
@@ -334,7 +340,7 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg
 		bRead[2] = 0xE8 + i;
 
 		loadPacket(0, resetPacket, 2, 3);          // NMRA recommends starting with 3 reset packets
-		loadPacket(0, bRead, 3, 5);                // NMRA recommends 5 verfy packets
+		loadPacket(0, bRead, 3, 5);                // NMRA recommends 5 verify packets
 		loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
 
 		for (int j = 0; j<ACK_SAMPLE_COUNT; j++)
@@ -360,7 +366,7 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg
 	bRead[2] = bValue;
 
 	loadPacket(0, resetPacket, 2, 3);          // NMRA recommends starting with 3 reset packets
-	loadPacket(0, bRead, 3, 5);                // NMRA recommends 5 verfy packets
+	loadPacket(0, bRead, 3, 5);                // NMRA recommends 5 verify packets
 	loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
 
 	for (int j = 0; j<ACK_SAMPLE_COUNT; j++) {

@@ -239,6 +239,13 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 27/12/2017 V1.0.0
+- Pour se conformer à la norme DCC, la commande DCC de fonction est doublée.
+- Correction de Sensor dont le 'check' provoquait une grande quantité de lignes vides sur la console.
+_______________
+- To be closer of the DCC norm, the function DCC orders will be send twice.
+- Fix Sensor::check(). A lot of empty lines was sent to the Serial console...
+
 \par 22/12/2017 V0.9.0
 - Envoi de la seule commande DCC concernée lors d'une activation/désactivation de fonction.
 - Nouvel exemple Autotest.
