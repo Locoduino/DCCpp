@@ -136,6 +136,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a9e14e6eb86017ad7b80b7fa14b2a70b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a198cf8385f95029dbdd4eecdcaebb465"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#a198cf8385f95029dbdd4eecdcaebb465">setSpeedMain</a> (int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward)</td></tr>
 <tr class="separator:a198cf8385f95029dbdd4eecdcaebb465"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62f40bd3db66ba34ef1ab048fd172281"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#a62f40bd3db66ba34ef1ab048fd172281">identifyLocoIdMain</a> ()</td></tr>
+<tr class="separator:a62f40bd3db66ba34ef1ab048fd172281"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7c155f6f72fb16bc946f1d59f236e1d"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#ae7c155f6f72fb16bc946f1d59f236e1d">identifyLocoIdProg</a> ()</td></tr>
+<tr class="separator:ae7c155f6f72fb16bc946f1d59f236e1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bab035e9d10c0d2f65cd36c6a85febd"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#a6bab035e9d10c0d2f65cd36c6a85febd">readCvMain</a> (int inLocoId, byte inCvId)</td></tr>
 <tr class="separator:a6bab035e9d10c0d2f65cd36c6a85febd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79ea406d9d3fa1f50d9641af0fa86a72"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#a79ea406d9d3fa1f50d9641af0fa86a72">writeCvMain</a> (int inLocoId, int inCvId, byte inValue)</td></tr>
@@ -707,6 +711,58 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 
 </div>
 </div>
+<a class="anchor" id="a62f40bd3db66ba34ef1ab048fd172281"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int identifyLocoIdMain </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Try to identify the address of a decoder on the main track. Be sure there is only one loco on the track to call this function ! </p><dl class="section return"><dt>Returns</dt><dd>CV 1 value: the loco decoder Id or -1 if no decoder identified. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00172">172</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae7c155f6f72fb16bc946f1d59f236e1d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int identifyLocoIdProg </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Try to identify the address of a decoder on the programmation track. Be sure there is only one loco on the track to call this function ! </p><dl class="section return"><dt>Returns</dt><dd>CV 1 value: the loco decoder Id or -1 if no decoder identified. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00176">176</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a6bab035e9d10c0d2f65cd36c6a85febd"></a>
 <div class="memitem">
 <div class="memproto">
@@ -747,7 +803,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CV value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00174">174</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00182">182</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
 
 </div>
 </div>
@@ -797,7 +853,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00180">180</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00188">188</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
 
 </div>
 </div>
@@ -847,7 +903,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00186">186</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00194">194</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
 
 </div>
 </div>
@@ -911,7 +967,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00197">197</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00205">205</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
 
 </div>
 </div>
@@ -955,7 +1011,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CV value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00203">203</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00211">211</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
 
 </div>
 </div>
@@ -1005,7 +1061,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00209">209</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00217">217</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
 
 </div>
 </div>
@@ -1055,7 +1111,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00215">215</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00223">223</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1171,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classDCCpp.html">DCCpp</a></li>
-    <li class="footer">Generated on lun. janv. 8 2018 17:10:56 for DCCpp &nbsp; by
+    <li class="footer">Generated on lun. janv. 8 2018 17:56:21 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.2.10 </li>
   </ul>

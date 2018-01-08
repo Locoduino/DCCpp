@@ -39,11 +39,13 @@ beginMainPololu	KEYWORD2
 beginProgPololu	KEYWORD2
 
 setSpeedMain		KEYWORD2
+identifyLocoIdMain	KEYWORD2
 readCvMain			KEYWORD2
 writeCvMain			KEYWORD2
 setFunctionsMain	KEYWORD2
 
 setSpeedProg		KEYWORD2
+identifyLocoIdProg	KEYWORD2
 readCvProg			KEYWORD2
 writeCvProg			KEYWORD2
 setFunctionsProg	KEYWORD2

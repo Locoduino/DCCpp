@@ -396,14 +396,15 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg
 	return bValue;
 }
 
-void RegisterList::readCV(int cv, int callBack, int callBackSub) volatile 
+int RegisterList::readCV(int cv, int callBack, int callBackSub) volatile 
 {
-	/*int bValue = */RegisterList::readCVraw(cv, callBack, callBackSub, true);
+	int bValue = RegisterList::readCVraw(cv, callBack, callBackSub, true);
 
+	return bValue;
 } // RegisterList::readCV(ints)
 
 #ifdef USE_TEXTCOMMAND
-void RegisterList::readCV(char *s) volatile
+int RegisterList::readCV(char *s) volatile
 {
 	int cv, callBack, callBackSub;
 
@@ -412,10 +413,10 @@ void RegisterList::readCV(char *s) volatile
 #ifdef DCCPP_DEBUG_MODE
 		Serial.println(F("R Syntax error"));
 #endif
-		return;
+		return -1;
 	}
 
-	this->readCV(cv, callBack, callBackSub);
+	return this->readCV(cv, callBack, callBackSub);
 } // RegisterList::readCV(string)
 #endif
 

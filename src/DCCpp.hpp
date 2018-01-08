@@ -166,6 +166,14 @@ class DCCpp
 		@param inForward	True means forward move, false means backward.	
 		*/
 		static inline bool setSpeedMain(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward) { return setThrottle(&(mainRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inForward); }
+		/** Try to identify the address of a decoder on the main track. Be sure there is only one loco on the track to call this function !
+		@return CV 1 value: the loco decoder Id or -1 if no decoder identified.
+		*/
+		static inline int identifyLocoIdMain() { return mainRegs.readCVmain(1, 100, 100); }
+		/** Try to identify the address of a decoder on the programmation track. Be sure there is only one loco on the track to call this function !
+		@return CV 1 value: the loco decoder Id or -1 if no decoder identified.
+		*/
+		static inline int identifyLocoIdProg() { return progRegs.readCV(1, 100, 100); }
 		/** For the given decoder id, read the given CV on the main line.
 		@param inLocoId	Decoder address in short or long format.
 		@param inCvId	CV id from 0 to 255.

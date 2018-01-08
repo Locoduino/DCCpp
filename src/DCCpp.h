@@ -239,6 +239,15 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 08/01/2018 V1.1.0
+- Correction de readCV(ints) et readCV(string) qui ne retournaient aucune valeur !
+- Correction d'un warning dans les exemples miniDcc et maxiDcc.
+- Ajout de identifyLocoIdMain() et identifyLocoIdProg() pour lire le CV1 d'une loco présente sur la voie.
+_______________
+- Fix readCV(ints) and readCV(string) to return values !
+- Fix a warning in samples mini and maxi.
+- Added identifyLocoIdMain() and identifyLocoIdProg() to find the address of a decoder on the track.
+
 \par 08/01/2018 V1.0.1
 - Correction des exemples mini et maxi qui ne géraient pas correctement l'encodeur.
 - Ajout d'un test pour un beginMain/beginProg avec le signal pin à 255.

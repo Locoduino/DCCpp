@@ -99,6 +99,7 @@ void loop()
 	switch (event)
 	{
 	case EVENT_ENCODER:
+	{
 		int data = Commanders::GetLastEventData();
 
 		if (data > 0)
@@ -121,6 +122,7 @@ void loop()
 				locoSpeed = 0;
 			DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
 		}
+	}
 
 	case EVENT_FUNCTION0:
 		if (locoFunctions.isActivated(0))

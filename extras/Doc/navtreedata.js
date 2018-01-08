@@ -45,7 +45,7 @@ var NAVTREE =
           [ "setFunction", "structRegisterList.html#ad8a431c688063a462f2212d676002753", null ],
           [ "setAccessory", "structRegisterList.html#a5b5ebd3c6bff3c402d36cdaaa450a28d", null ],
           [ "writeTextPacket", "structRegisterList.html#a7e03d486332de6c7408c0d710714355c", null ],
-          [ "readCV", "structRegisterList.html#a6e1d05548a2b7c8c5ff3623971965e16", null ],
+          [ "readCV", "structRegisterList.html#a49c22800bcffd3fcbd42d1cfebfed281", null ],
           [ "readCVmain", "structRegisterList.html#a9792628c358697f4c5946059901ab117", null ],
           [ "writeCVByte", "structRegisterList.html#a6f7d93e00d7eab02f1bfaea95c6260f2", null ],
           [ "writeCVBit", "structRegisterList.html#a692fa4551f5e5baab4fc5172814c6aaa", null ],
