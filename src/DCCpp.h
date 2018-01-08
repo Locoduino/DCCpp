@@ -239,6 +239,13 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 08/01/2018 V1.0.1
+- Correction des exemples mini et maxi qui ne géraient pas correctement l'encodeur.
+- Ajout d'un test pour un beginMain/beginProg avec le signal pin à 255.
+_______________
+- Fix samples mini and maxi which did not use EVENT_ENCODER event !
+- Add a test in beginMain/beginProg to check undefined signal pin.
+
 \par 27/12/2017 V1.0.0
 - Pour se conformer à la norme DCC, la commande DCC de fonction est doublée.
 - Correction de Sensor dont le 'check' provoquait une grande quantité de lignes vides sur la console.

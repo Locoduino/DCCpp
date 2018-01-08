@@ -124,7 +124,7 @@ void DCCpp::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 	if (DCCppConfig::SignalEnablePinMain == UNDEFINED_PIN)
 	{
 #ifdef DCCPP_DEBUG_MODE
-		Serial.println("No main line");
+		Serial.println("No main track");
 #endif
 		return;
 	}
@@ -149,7 +149,8 @@ void DCCpp::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 		digitalWrite(DCCppConfig::DirectionMotorA, LOW);
 	}
 
-	pinMode(inSignalPin, OUTPUT);      // FOR SHIELDS, THIS ARDUINO OUPUT PIN MUST BE PHYSICALLY CONNECTED TO THE PIN FOR DIRECTION-A OF MOTOR CHANNEL-A
+	if (inSignalPin != UNDEFINED_PIN)
+		pinMode(inSignalPin, OUTPUT); // FOR SHIELDS, THIS ARDUINO OUTPUT PIN MUST BE PHYSICALY CONNECTED TO THE PIN FOR DIRECTION-A OF MOTOR CHANNEL-A
 
 	bitSet(TCCR1A, WGM10);     // set Timer 1 to FAST PWM, with TOP=OCR1A
 	bitSet(TCCR1A, WGM11);
@@ -188,7 +189,7 @@ void DCCpp::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 	if (DCCppConfig::SignalEnablePinProg == UNDEFINED_PIN)
 	{
 #ifdef DCCPP_DEBUG_MODE
-		Serial.println("No prog line");
+		Serial.println("No prog track");
 #endif
 		return;
 	}
@@ -216,7 +217,8 @@ void DCCpp::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 		digitalWrite(DCCppConfig::DirectionMotorB, LOW);
 	}
 
-	pinMode(inSignalPin, OUTPUT);      // THIS ARDUINO OUTPUT PIN MUST BE PHYSICALLY CONNECTED TO THE PIN FOR DIRECTION-B OF MOTOR CHANNEL-B
+	if (inSignalPin != UNDEFINED_PIN)
+		pinMode(inSignalPin, OUTPUT);      // THIS ARDUINO OUTPUT PIN MUST BE PHYSICALY CONNECTED TO THE PIN FOR DIRECTION-B OF MOTOR CHANNEL-B
 
 	bitSet(TCCR0A, WGM00);     // set Timer 0 to FAST PWM, with TOP=OCR0A
 	bitSet(TCCR0A, WGM01);

@@ -64,24 +64,29 @@ void loop()
 
 	switch (event)
 	{
-	case EVENT_MORE:
-		if (locoStepsNumber >= 100)
-			locoSpeed += 10;
-		else
-			locoSpeed++;
-		if (locoSpeed > locoStepsNumber)
-			locoSpeed = locoStepsNumber;
-		DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
-		break;
+	case EVENT_ENCODER:
+		int data = Commanders::GetLastEventData();
 
-	case EVENT_LESS:
-		if (locoStepsNumber >= 100)
-			locoSpeed -= 10;
-		else
-			locoSpeed--;
-		if (locoSpeed < 0)
-			locoSpeed = 0;
-		DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
+		if (data > 0)
+		{
+			if (locoStepsNumber >= 100)
+				locoSpeed += 10;
+			else
+				locoSpeed++;
+			if (locoSpeed > locoStepsNumber)
+				locoSpeed = locoStepsNumber;
+			DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
+		}
+		if (data < 0)
+		{
+			if (locoStepsNumber >= 100)
+				locoSpeed -= 10;
+			else
+				locoSpeed--;
+			if (locoSpeed < 0)
+				locoSpeed = 0;
+			DCCpp::setSpeedMain(1, locoId, locoStepsNumber, locoSpeed, locoDirectionForward);
+		}
 		break;
 
 	case EVENT_FUNCTION0:
