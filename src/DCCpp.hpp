@@ -74,8 +74,9 @@ class DCCpp
 		static bool panicStopped;
 
 		static bool setThrottle(volatile RegisterList *inReg, int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward);
-		static int readCv(volatile RegisterList *inReg, int inLocoId, byte inCvId);
-		static void writeCv(volatile RegisterList *inReg, int inLocoId, int inCvId, byte inCvValue);
+		static int readCv(volatile RegisterList *inReg, byte inCvId, int callBack = 100, int callBackSub = 200) { return inReg->readCVmain(inCvId, callBack, callBackSub); }
+		static void writeCv(volatile RegisterList *inReg, int inCvId, byte inCvValue, int callBack = 100, int callBackSub = 200);
+		static int identifyLocoId(volatile RegisterList *inReg);
 		static void setFunctions(volatile RegisterList *inReg, int nReg, int inLocoId, FunctionsState &inStates);
 
 	public:
@@ -88,14 +89,14 @@ class DCCpp
 		/** Begins the DCCpp library.
 		*/
 		static void begin();
-		/** Initializes the main line.
+		/** Initializes the main track.
 		@param inOptionalDirectionMotor	Pin for the rerouting of shields direction pin, set it to UNDEFINED_PIN if not used.
 		@param inSignalPin	Pin for the signal pin, the one driven by an interruption, set it to UNDEFINED_PIN if not used (but the line will be always down...).
 		@param inSignalEnablePin	Pin for the enable/PWM pin, set it to UNDEFINED_PIN if not used.
 		@param inCurrentMonitor	Pin for the current monitor analog pin, set it to UNDEFINED_PIN if not used.
 		*/
 		static void beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnablePin, uint8_t inCurrentMonitor);
-		/** Initializes the programming line.
+		/** Initializes the programming track.
 		@param inOptionalDirectionMotor	Pin for the rerouting of shields direction pin, set it to UNDEFINED_PIN if not used.
 		@param inSignalPin	Pin for the signal pin, the one driven by an interruption, set it to UNDEFINED_PIN if not used (but the line will be always down...).
 		@param inSignalEnablePin	Pin for the enable/PWM pin, set it to UNDEFINED_PIN if not used.
@@ -103,17 +104,17 @@ class DCCpp
 		*/
 		static void beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnablePin, uint8_t inCurrentMonitor);
 
-		/** Initializes the main line for an Arduino Motor Shield.
+		/** Initializes the main track for an Arduino Motor Shield.
 		*/
 		static inline void beginMainMotorShield() { beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN); }
-		/** Initializes the programming line for an Arduino Motor Shield.
+		/** Initializes the programming track for an Arduino Motor Shield.
 		*/
 		static inline void beginProgMotorShield() { beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG, MOTOR_SHIELD_CURRENT_MONITOR_PIN_PROG); }
 
-		/** Initializes the main line for a Pololu MC33926 Motor Shield.
+		/** Initializes the main track for a Pololu MC33926 Motor Shield.
 		*/
 		static inline void beginMainPololu() { beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, POLOLU_SIGNAL_ENABLE_PIN_MAIN, POLOLU_CURRENT_MONITOR_PIN_MAIN); }
-		/** Initializes the programming line for a Pololu MC33926 Motor Shield.
+		/** Initializes the programming track for a Pololu MC33926 Motor Shield.
 		*/
 		static inline void beginProgPololu() { beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG); }
 #ifdef USE_ETHERNET
@@ -130,35 +131,36 @@ class DCCpp
 		/** Main loop function of the library.
 		*/
 		static void loop();
-		/** Stop/restore the power on all the lines.
+		/** Stop/restore the power on all the tracks.
 		@param inStop If true, stop the power, otherwise restore the power.
 		*/
 		static void panicStop(bool inStop);
-		/** Stop the power on all the lines.
+		/** Stop the power on all the tracks.
 		*/
 		static void powerOn();
-		/** Restore the power on all the lines.
+		/** Restore the power on all the tracks.
 		*/
 		static void powerOff();
-		/** Set the maximum current value before an event 'too much current consumption detected !' for main line.
+		/** Set the maximum current value before an event 'too much current consumption detected !' for main track.
 		@param inMax	Maximum value between 0 and 1023. Default is 300.
 		*/
 		static inline void setCurrentSampleMaxMain(float inMax) { mainMonitor.currentSampleMax = inMax; }
-		/** Set the maximum current value before an event 'too much current consumption detected !' for programming line.
+		/** Set the maximum current value before an event 'too much current consumption detected !' for programming track.
 		@param inMax	Maximum value between 0 and 1023. Default is 300.
 		*/
 		static inline void setCurrentSampleMaxProg(float inMax) { progMonitor.currentSampleMax = inMax; }
-		/** Get the actual analog level for the current detection pin for the main line.
+		/** Get the actual analog level for the current detection pin for the main track.
 		@return Current value between 0 and 1023 using an exponential smoother...
 		*/
 		static inline float getCurrentMain() { return mainMonitor.pin == UNDEFINED_PIN ? 0 : mainMonitor.current; }
-		/** Get the actual analog level for the current detection pin for the programming line.
+		/** Get the actual analog level for the current detection pin for the programming track.
 		@return Current value between 0 and 1023.
 		*/
 		static inline float getCurrentProg() { return progMonitor.pin == UNDEFINED_PIN ? 0 : progMonitor.current; }
 
-		// Main driving functions
-		/** For the given decoder id, set the speed and the direction on the main line.
+		// Main track functions
+
+		/** For the given decoder id, set the speed and the direction on the main track.
 		@param nReg	Register number. Avoid register 0, used for one shot commands like accessories or CV programming.
 		@param inLocoId	Decoder address in short or long format.
 		@param inStepsNumber	According to the decoder configuration, set it to 14, 28 or 128 .
@@ -169,33 +171,33 @@ class DCCpp
 		/** Try to identify the address of a decoder on the main track. Be sure there is only one loco on the track to call this function !
 		@return CV 1 value: the loco decoder Id or -1 if no decoder identified.
 		*/
-		static inline int identifyLocoIdMain() { return mainRegs.readCVmain(1, 100, 100); }
-		/** Try to identify the address of a decoder on the programmation track. Be sure there is only one loco on the track to call this function !
-		@return CV 1 value: the loco decoder Id or -1 if no decoder identified.
-		*/
-		static inline int identifyLocoIdProg() { return progRegs.readCV(1, 100, 100); }
-		/** For the given decoder id, read the given CV on the main line.
-		@param inLocoId	Decoder address in short or long format.
+		static inline int identifyLocoIdMain() { return identifyLocoId(&(mainRegs)); }
+		/** Try to read a CV from a decoder on the main track.
+		Be sure there is only one loco on the track before calling this function !
 		@param inCvId	CV id from 0 to 255.
-		@return CV value.
+		@param callBack		an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function. Default 100.
+		@param callBackSub	a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function. Default 200
+		@return CV value: the CV value if the value cannot be read.
 		*/
-		static inline int readCvMain(int inLocoId, byte inCvId) { return readCv(&(mainRegs), inLocoId, inCvId); }
-		/** For the given decoder id, write the given CV on the main line.
-		@param inLocoId	Decoder address in short or long format.
+		static inline int readCvMain(int inCvId, int callBack = 100, int callBackSub = 200) { return mainRegs.readCVmain(inCvId, callBack, callBackSub); }
+		/** Write the given CV on the main track.
+		Be sure there is only one loco on the track before calling this function !
 		@param inCvId	CV id from 0 to 255.
 		@param inValue	CV new value from 0 to 255.
+		@param callBack		an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function. Default 100.
+		@param callBackSub	a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function. Default 200
 		*/
-		static inline void writeCvMain(int inLocoId, int inCvId, byte inValue) { writeCv(&(mainRegs), inLocoId, inCvId, inValue); }
-		/** Set the functions states of the given decoder on the main line.
+		static inline void writeCvMain(int inCvId, byte inValue, int callBack = 100, int callBackSub = 200) { writeCv(&(mainRegs), inCvId, inValue, callBack, callBackSub); }
+		/** Set the functions states of the given decoder on the main track.
 		@param nReg	Register number. Avoid register 0, used for one shot commands like accessories or CV programming.
 		@param inLocoId	Decoder address in short or long format.
 		@param inStates	FunctionsState class with the wanted new status.
 		*/
 		static inline void setFunctionsMain(int nReg, int inLocoId, FunctionsState &inStates) { setFunctions(&(mainRegs), nReg, inLocoId, inStates); }
 
-		// Programming driving functions
+		// Programming track functions
 
-		/** For the given decoder id, set the speed and the direction on the programming line.
+		/** For the given decoder id, set the speed and the direction on the programming track.
 		@param nReg	Register number. Avoid register 0, used for one shot commands like accessories or CV programming.
 		@param inLocoId	Decoder address in short or long format.
 		@param inStepsNumber	According to the decoder configuration, set it to 14, 28 or 128 .
@@ -203,19 +205,26 @@ class DCCpp
 		@param inForward	True means forward move, false means backward.
 		*/
 		static inline bool setSpeedProg(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward) { return setThrottle(&(progRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inForward); }
-		/** For the given decoder id, read the given CV on the programming line.
-		@param inLocoId	Decoder address in short or long format.
-		@param inCvId	CV id from 0 to 255.
-		@return CV value.
+		/** Try to identify the address of a decoder on the programming track. Be sure there is only one loco on the track to call this function !
+		@return CV 1 value: the loco decoder Id or -1 if no decoder identified.
 		*/
-		static inline int readCvProg(int inLocoId, byte inCvId) { return readCv(&(progRegs), inLocoId, inCvId); }
-		/** For the given decoder id, write the given CV on the programming line.
-		@param inLocoId	Decoder address in short or long format.
+		static inline int identifyLocoIdProg() { return identifyLocoId(&(progRegs)); }
+		/** Try to read a CV from a decoder on the programming track.
+		Be sure there is only one loco on the track before calling this function !
+		@param inCvId	CV id from 0 to 255.
+		@param callBack		an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function. Default 100.
+		@param callBackSub	a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function. Default 200
+		@return CV value: the CV value if the value cannot be read.
+		*/
+		static inline int readCvProg(int inCvId, int callBack = 100, int callBackSub = 200) { return progRegs.readCV(inCvId, callBack, callBackSub); }
+		/** Write the given CV on the programming track.
 		@param inCvId	CV id from 0 to 255.
 		@param inValue	CV new value from 0 to 255.
+		@param callBack		an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function. Default 100.
+		@param callBackSub	a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function. Default 200
 		*/
-		static inline void writeCvProg(int inLocoId, int inCvId, byte inValue) { writeCv(&(progRegs), inLocoId, inCvId, inValue); }
-		/** Set the functions states of the given decoder on the programming line.
+		static inline void writeCvProg(int inCvId, byte inValue, int callBack = 100, int callBackSub = 200) { writeCv(&(progRegs), inCvId, inValue, callBack, callBackSub); }
+		/** Set the functions states of the given decoder on the programming track.
 		@param nReg	Register number. Avoid register 0, used for one shot commands like accessories or CV programming.
 		@param inLocoId	Decoder address in short or long format.
 		@param inStates	FunctionsState class with the wanted new status.

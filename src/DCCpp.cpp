@@ -718,9 +718,31 @@ void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId,
 #endif
 }
 
-void DCCpp::writeCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte inValue)
+int DCCpp::identifyLocoId(volatile RegisterList *inReg)
 {
-	inReg->writeCVByte(inCv, inValue, 100, 101);
+	int  id = -1;
+	int temp;
+	temp = readCv(inReg, 29);
+	if ((temp != -1) && (bitRead(temp, 5))) {
+		// long address : get CV#17 and CV#18
+		id = readCv(inReg, 18);
+		if (id != -1) {
+			temp = readCv(inReg, 17);
+			if (temp != -1) {
+				id = id + ((temp - 192) << 8);
+			}
+		}
+	}
+	else {
+		// short address: read only CV#1
+		id = readCv(inReg, 1);
+	}
+	return(id);
+}
+
+void DCCpp::writeCv(volatile RegisterList *inReg, int inCv, byte inValue, int callBack, int callBackSub)
+{
+	inReg->writeCVByte(inCv, inValue, callBack, callBackSub);
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("DCCpp WriteCv "));
@@ -728,11 +750,6 @@ void DCCpp::writeCv(volatile RegisterList *inReg, int inLocoId, int inCv, byte i
 	Serial.print(F(" : "));
 	Serial.println(inValue);
 #endif
-}
-
-int DCCpp::readCv(volatile RegisterList *inReg, int inLocoId, byte inCv)
-{
-	return inReg->readCVmain(1, 100+inCv, 100+inCv);
 }
 
 void DCCpp::setAccessory(int inAddress, byte inSubAddress, byte inActivate)

@@ -239,6 +239,15 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 08/01/2018 V1.2.0
+- Retrait de l'argument locoId des fonctions de lecture/écriture de CV : sans objet !
+- Ajout des arguments callback et callbacksub de passage d'information libre dans les fonctions readCv et writeCv. C'est une mise en conformité avec les fonctions originales.
+- Amélioration des fonctions identifyLocoIdMain et Prog pour lire aussi les adresses longues.
+_______________
+- Argument locoId removed from read and write CV functions : not used !
+- Arguments callback and callbacksub added to read/write CVs, to be conform to original functions.
+- Improvement of new functions identifyLocoIdMain and Prog to be able to get long addresses.
+
 \par 08/01/2018 V1.1.0
 - Correction de readCV(ints) et readCV(string) qui ne retournaient aucune valeur !
 - Correction d'un warning dans les exemples miniDcc et maxiDcc.
