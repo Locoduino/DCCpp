@@ -74,7 +74,7 @@ class DCCpp
 		static bool panicStopped;
 
 		static bool setThrottle(volatile RegisterList *inReg, int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward);
-		static int readCv(volatile RegisterList *inReg, byte inCvId, int callBack = 100, int callBackSub = 200) { return inReg->readCVmain(inCvId, callBack, callBackSub); }
+		//static int readCv(volatile RegisterList *inReg, byte inCvId, int callBack = 100, int callBackSub = 200) { return inReg->readCV(inCvId, callBack, callBackSub); }
 		static void writeCv(volatile RegisterList *inReg, int inCvId, byte inCvValue, int callBack = 100, int callBackSub = 200);
 		static int identifyLocoId(volatile RegisterList *inReg);
 		static void setFunctions(volatile RegisterList *inReg, int nReg, int inLocoId, FunctionsState &inStates);
@@ -128,31 +128,44 @@ class DCCpp
 
 		// DCCpp global functions
 
+		/** Checks if the given RegisterList is from the main track or not.
+		@param apRegs RegisterList to check.
+		@return true if the RegisterList is mainRegs, the one from the main track.
+		*/
+		static bool IsMainTrack(volatile RegisterList *apRegs) { return apRegs == &mainRegs; }
+		
 		/** Main loop function of the library.
 		*/
 		static void loop();
+
 		/** Stop/restore the power on all the tracks.
 		@param inStop If true, stop the power, otherwise restore the power.
 		*/
 		static void panicStop(bool inStop);
+
 		/** Stop the power on all the tracks.
 		*/
 		static void powerOn();
+
 		/** Restore the power on all the tracks.
 		*/
 		static void powerOff();
+
 		/** Set the maximum current value before an event 'too much current consumption detected !' for main track.
 		@param inMax	Maximum value between 0 and 1023. Default is 300.
 		*/
 		static inline void setCurrentSampleMaxMain(float inMax) { mainMonitor.currentSampleMax = inMax; }
+
 		/** Set the maximum current value before an event 'too much current consumption detected !' for programming track.
 		@param inMax	Maximum value between 0 and 1023. Default is 300.
 		*/
 		static inline void setCurrentSampleMaxProg(float inMax) { progMonitor.currentSampleMax = inMax; }
+
 		/** Get the actual analog level for the current detection pin for the main track.
 		@return Current value between 0 and 1023 using an exponential smoother...
 		*/
 		static inline float getCurrentMain() { return mainMonitor.pin == UNDEFINED_PIN ? 0 : mainMonitor.current; }
+
 		/** Get the actual analog level for the current detection pin for the programming track.
 		@return Current value between 0 and 1023.
 		*/
@@ -168,10 +181,12 @@ class DCCpp
 		@param inForward	True means forward move, false means backward.	
 		*/
 		static inline bool setSpeedMain(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward) { return setThrottle(&(mainRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inForward); }
+
 		/** Try to identify the address of a decoder on the main track. Be sure there is only one loco on the track to call this function !
 		@return CV 1 value: the loco decoder Id or -1 if no decoder identified.
 		*/
 		static inline int identifyLocoIdMain() { return identifyLocoId(&(mainRegs)); }
+
 		/** Try to read a CV from a decoder on the main track.
 		Be sure there is only one loco on the track before calling this function !
 		@param inCvId	CV id from 0 to 255.
@@ -180,6 +195,7 @@ class DCCpp
 		@return CV value: the CV value if the value cannot be read.
 		*/
 		static inline int readCvMain(int inCvId, int callBack = 100, int callBackSub = 200) { return mainRegs.readCVmain(inCvId, callBack, callBackSub); }
+
 		/** Write the given CV on the main track.
 		Be sure there is only one loco on the track before calling this function !
 		@param inCvId	CV id from 0 to 255.
@@ -188,6 +204,7 @@ class DCCpp
 		@param callBackSub	a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function. Default 200
 		*/
 		static inline void writeCvMain(int inCvId, byte inValue, int callBack = 100, int callBackSub = 200) { writeCv(&(mainRegs), inCvId, inValue, callBack, callBackSub); }
+
 		/** Set the functions states of the given decoder on the main track.
 		@param nReg	Register number. Avoid register 0, used for one shot commands like accessories or CV programming.
 		@param inLocoId	Decoder address in short or long format.
@@ -205,10 +222,12 @@ class DCCpp
 		@param inForward	True means forward move, false means backward.
 		*/
 		static inline bool setSpeedProg(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward) { return setThrottle(&(progRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inForward); }
+
 		/** Try to identify the address of a decoder on the programming track. Be sure there is only one loco on the track to call this function !
 		@return CV 1 value: the loco decoder Id or -1 if no decoder identified.
 		*/
 		static inline int identifyLocoIdProg() { return identifyLocoId(&(progRegs)); }
+
 		/** Try to read a CV from a decoder on the programming track.
 		Be sure there is only one loco on the track before calling this function !
 		@param inCvId	CV id from 0 to 255.
@@ -217,6 +236,7 @@ class DCCpp
 		@return CV value: the CV value if the value cannot be read.
 		*/
 		static inline int readCvProg(int inCvId, int callBack = 100, int callBackSub = 200) { return progRegs.readCV(inCvId, callBack, callBackSub); }
+
 		/** Write the given CV on the programming track.
 		@param inCvId	CV id from 0 to 255.
 		@param inValue	CV new value from 0 to 255.
@@ -224,6 +244,7 @@ class DCCpp
 		@param callBackSub	a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function. Default 200
 		*/
 		static inline void writeCvProg(int inCvId, byte inValue, int callBack = 100, int callBackSub = 200) { writeCv(&(progRegs), inCvId, inValue, callBack, callBackSub); }
+
 		/** Set the functions states of the given decoder on the programming track.
 		@param nReg	Register number. Avoid register 0, used for one shot commands like accessories or CV programming.
 		@param inLocoId	Decoder address in short or long format.

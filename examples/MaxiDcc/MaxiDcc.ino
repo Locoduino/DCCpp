@@ -140,6 +140,7 @@ void loop()
 		DCCpp::setFunctionsMain(2, locoId, locoFunctions);
 		break;
 
+	case DCCINT(100, 0):
 	case EVENT_TURNOUT1:
 		if (turn1.isActivated())
 			turn1.inactivate();
@@ -147,12 +148,15 @@ void loop()
 			turn1.activate();
 		break;
 
+	case DCCINT(20, 0):
 	case EVENT_TURNOUT2:
 		if (turn2.isActivated())
 			turn2.inactivate();
 		else
 			turn2.activate();
 		break;
+
+		
 	}
 }
 

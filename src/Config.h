@@ -10,7 +10,7 @@ Part of DCC++ BASE STATION for the Arduino
 #ifndef __config_h
 #define __config_h
 
-#include "arduino.h"
+#include "Arduino.h"
 
 /**	Use it as an argument to specify an unused pin. */
 #define UNDEFINED_PIN	255

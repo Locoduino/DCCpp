@@ -9,8 +9,8 @@
 DCC++ BASE STATION
 COPYRIGHT (c) 2013-2016 Gregg E. Berman
 
-Adapted in the library DCCpp by Thierry PARIS
-Copyright Locoduino 2017
+Adapted in this library DCCpp by Thierry PARIS
+Copyright Locoduino 2017-2018
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,9 +26,10 @@ Copyright Locoduino 2017
   along with this program.  If not, see http://www.gnu.org/licenses
 
 -------------------------------------------------------------------------------------------------------
+Original description of DCC++from Gregg, see below for complements for this library :
 
 DCC++ BASE STATION is a C++ program written for the Arduino Uno and Arduino Mega
-using the Arduino IDE 1.6.6, adapted to this library named DCCpp for IDE 1.8.4 .
+using the Arduino IDE 1.6.6.
 
 It allows a standard Arduino Uno or Mega with an Arduino Motor Shield (as well as others)
 to be used as a fully-functioning digital command and control (DCC) base station
@@ -177,6 +178,7 @@ Complement of the documentation for this library:
 This library is a free interpretation of the Gregg's work to adapt it to a library, and minimize
 the needs to modify the library sources to use it. The only configuration still needed in .h file is 
 to decide of the Ethernet interface model.
+It has been adapted to work also with Arduino Nano R3 on IDE 1.8.4 .
 
 \page commonPage Common Configuration Lines
 
@@ -239,6 +241,15 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 02/04/2018 V1.3.0
+- Ajout de IsMainTrack qui identifie la voie (principale/programmation) selon le RegisterList en argument.
+- Correction de identifyLocoId qui ne marchait que sur la voie principale.
+- Correction de arduino.h en Arduino.h
+_______________
+- Add of IsMainTrack to identify the track (main/prog) according to the given RegisterList.
+- Fix identifyLocoId which was only working on main track.
+- Change arduino.h in Arduino.h
+
 \par 08/01/2018 V1.2.0
 - Retrait de l'argument locoId des fonctions de lecture/écriture de CV : sans objet !
 - Ajout des arguments callback et callbacksub de passage d'information libre dans les fonctions readCv et writeCv. C'est une mise en conformité avec les fonctions originales.

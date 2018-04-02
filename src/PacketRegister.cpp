@@ -212,7 +212,6 @@ void RegisterList::setFunction(int nReg, int cab, int fByte, int eByte) volatile
 	https://www.nmra.org/sites/default/files/s-9.2.1_2012_07.pdf
 	*/
 	loadPacket(nReg, b, nB, 4, 1);
-	loadPacket(nReg, b, nB, 4, 1);
 } // RegisterList::setFunction(ints)
 
 #ifdef USE_TEXTCOMMAND
@@ -245,7 +244,7 @@ void RegisterList::setAccessory(int aAdd, int aNum, int activate) volatile
 {
 	byte b[3];                      // save space for checksum byte
 
-	b[0] = aAdd % 64 + 128;                                           // first byte is of the form 10AAAAAA, where AAAAAA represent 6 least signifcant bits of accessory address  
+	b[0] = aAdd % 64 + 128;         // first byte is of the form 10AAAAAA, where AAAAAA represent 6 least significant bits of accessory address  
 	b[1] = ((((aAdd / 64) % 8) << 4) + (aNum % 4 << 1) + activate % 2) ^ 0xF8;      // second byte is of the form 1AAACDDD, where C should be 1, and the least significant D represent activate/deactivate
 
 	loadPacket(0, b, 2, 4, 1);
@@ -305,15 +304,16 @@ void RegisterList::writeTextPacket(char *s) volatile
 
   ///////////////////////////////////////////////////////////////////////////////
 
-int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg) volatile
+int RegisterList::readCVraw(int cv, int callBack, int callBackSub) volatile
 {
 	byte bRead[4];
 	int bValue;
 	int c, d, base;
+
 	cv--;                              // actual CV addresses are cv-1 (0-1023)
 
 	byte MonitorPin = DCCppConfig::CurrentMonitorProg;
-	if (!FromProg)
+	if (DCCpp::IsMainTrack(this))
 		MonitorPin = DCCppConfig::CurrentMonitorMain;
 
 	if (MonitorPin == UNDEFINED_PIN)
@@ -398,9 +398,7 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub, bool FromProg
 
 int RegisterList::readCV(int cv, int callBack, int callBackSub) volatile 
 {
-	int bValue = RegisterList::readCVraw(cv, callBack, callBackSub, true);
-
-	return bValue;
+	return RegisterList::readCVraw(cv, callBack, callBackSub);
 } // RegisterList::readCV(ints)
 
 #ifdef USE_TEXTCOMMAND
@@ -422,7 +420,7 @@ int RegisterList::readCV(char *s) volatile
 
 int RegisterList::readCVmain(int cv, int callBack, int callBackSub) volatile
 {
-	return RegisterList::readCVraw(cv, callBack, callBackSub, false);
+	return RegisterList::readCVraw(cv, callBack, callBackSub);
 
 } // RegisterList::readCV_Main()
 

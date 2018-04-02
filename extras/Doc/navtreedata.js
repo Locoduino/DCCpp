@@ -40,7 +40,7 @@ var NAVTREE =
         [ "RegisterList", "structRegisterList.html", [
           [ "RegisterList", "structRegisterList.html#aee9073ff8a48cb7c3a05404b7bb771ac", null ],
           [ "loadPacket", "structRegisterList.html#ac54cd670362e9b4daf6b576618a6fc93", null ],
-          [ "readCVraw", "structRegisterList.html#a9e5cf02df96f3f3fb25981b8c11183c8", null ],
+          [ "readCVraw", "structRegisterList.html#a4464489236de39301663bf8aef34e2db", null ],
           [ "setThrottle", "structRegisterList.html#a4b8fb53caadb8d687f45164ae34a8d8b", null ],
           [ "setFunction", "structRegisterList.html#ad8a431c688063a462f2212d676002753", null ],
           [ "setAccessory", "structRegisterList.html#a5b5ebd3c6bff3c402d36cdaaa450a28d", null ],

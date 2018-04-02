@@ -57,7 +57,7 @@ struct RegisterList{
   void writeTextPacket(char *) volatile;
 #endif
 
-  int readCVraw(int cv, int callBack, int callBackSub, bool FromProg) volatile;
+  int readCVraw(int cv, int callBack, int callBackSub) volatile;
 
 #ifdef USE_TEXTCOMMAND
   int readCV(char *) volatile;

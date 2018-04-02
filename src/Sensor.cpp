@@ -125,17 +125,19 @@ void Sensor::check(){
     
     if(!tt->active && tt->signal<0.5){
       tt->active=true;
-#if defined(USE_ETHERNET)
 	  INTERFACE.print("<Q");
       INTERFACE.print(tt->data.snum);
       INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	  INTERFACE.println("");
 #endif
-    } else if(tt->active && tt->signal>0.9){
+	} else if(tt->active && tt->signal>0.9){
       tt->active=false;
-#if defined(USE_ETHERNET)
 	  INTERFACE.print("<q");
       INTERFACE.print(tt->data.snum);
       INTERFACE.print(">");
+#if !defined(USE_ETHERNET)
+	  INTERFACE.println("");
 #endif
 	}
   } // loop over all sensors

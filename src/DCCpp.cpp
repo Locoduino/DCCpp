@@ -5,7 +5,7 @@ description: <DCCpp class>
 *************************************************************/
 
 #include "DCCpp.h"
-#include "arduino.h"
+#include "Arduino.h"
 
 // NEXT DECLARE GLOBAL OBJECTS TO PROCESS AND STORE DCC PACKETS AND MONITOR TRACK CURRENTS.
 // NOTE REGISTER LISTS MUST BE DECLARED WITH "VOLATILE" QUALIFIER TO ENSURE THEY ARE PROPERLY UPDATED BY INTERRUPT ROUTINES
@@ -445,7 +445,7 @@ void DCCpp::showConfiguration()
 
 	Serial.print(F("VERSION DCC++:      "));
 	Serial.println(VERSION);
-	Serial.println(F("VERSION DCCpp library: 0.8.0"));
+	Serial.println(F("VERSION DCCpp library: 1.3.0"));
 	Serial.print(F("COMPILED:     "));
 	Serial.print(__DATE__);
 	Serial.print(F(" "));
@@ -722,12 +722,12 @@ int DCCpp::identifyLocoId(volatile RegisterList *inReg)
 {
 	int  id = -1;
 	int temp;
-	temp = readCv(inReg, 29);
+	temp = inReg->readCV(29, 100, 200);
 	if ((temp != -1) && (bitRead(temp, 5))) {
 		// long address : get CV#17 and CV#18
-		id = readCv(inReg, 18);
+		id = inReg->readCV(18, 100, 200);
 		if (id != -1) {
-			temp = readCv(inReg, 17);
+			temp = inReg->readCV(17, 100, 200);
 			if (temp != -1) {
 				id = id + ((temp - 192) << 8);
 			}
@@ -735,7 +735,7 @@ int DCCpp::identifyLocoId(volatile RegisterList *inReg)
 	}
 	else {
 		// short address: read only CV#1
-		id = readCv(inReg, 1);
+		id = inReg->readCV(1, 100, 200);
 	}
 	return(id);
 }
