@@ -312,4 +312,4 @@ Output *Output::firstOutput=NULL;
 
 #endif
 
-#endif USE_OUTPUT
+#endif //USE_OUTPUT

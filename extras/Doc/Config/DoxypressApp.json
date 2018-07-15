@@ -32,13 +32,13 @@
         "hide-friend-compounds": false,
         "hide-in-body-docs": false,
         "hide-navtree-members": false,
-        "hide-scope-names": true,
+        "hide-scope-names": false,
         "hide-undoc-classes": false,
         "hide-undoc-members": false,
         "idl-support": true,
-        "inherit-docs": false,
+        "inherit-docs": true,
         "inline-grouped-classes": false,
-        "inline-info": false,
+        "inline-info": true,
         "inline-inherited-member": false,
         "inline-simple-struct": false,
         "internal-docs": false,
@@ -59,18 +59,18 @@
         "repeat-brief": false,
         "separate-member-pages": false,
         "short-names": false,
-        "show-file-page": false,
+        "show-file-page": true,
         "show-grouped-members-inc": true,
         "show-include-files": true,
-        "show-namespace-page": false,
-        "show-used-files": false,
+        "show-namespace-page": true,
+        "show-used-files": true,
         "sip-support": false,
         "sort-brief-docs": false,
         "sort-by-scope-name": false,
         "sort-class-case-sensitive": false,
         "sort-constructors-first": false,
         "sort-group-names": false,
-        "sort-member-docs": false,
+        "sort-member-docs": true,
         "strict-sig-matching": false,
         "tcl-subst": [
             ""
@@ -165,7 +165,7 @@
         "strip-from-path": [
             ""
         ],
-        "tab-size": 4
+        "tab-size": 2
     },
     "index": {
         "alpha-index": true,
@@ -246,8 +246,7 @@
             "*.pyw",
             "*.qsf",
             "*.tcl",
-            "*.ucf",
-            "*.hdoc"
+            "*.ucf"
         ],
         "input-recursive": false,
         "input-source": [

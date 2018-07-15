@@ -241,6 +241,17 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 15/07/2018 V1.3.1
+- Correction du format de Keywords.txt
+- Création de LIBRARY_VERSION
+- Mise en conformité de la partie doc HTML avec DOXYGEN_SPECIFIC
+- Ajout du fichier LICENSE
+_______________
+- Fix Keywords.txt format.
+- LIBRARY_VERSION created
+- Update of DOXYGEN_SPECIFIC part for HTML documentation.
+- Add of LICENSE file
+
 \par 02/04/2018 V1.3.0
 - Ajout de IsMainTrack qui identifie la voie (principale/programmation) selon le RegisterList en argument.
 - Correction de identifyLocoId qui ne marchait que sur la voie principale.
@@ -329,8 +340,10 @@ _______________
 /** @file DCCpp.h
 Main include file of the library.*/
 
+#define LIBRARY_VERSION		"VERSION DCCpp library: 1.3.1"
+
 ////////////////////////////////////////////////////////
-// Add a '//' at the beginning of the line to be in release mode.
+// Add a '//' at the beginning of the line to be in production mode.
 //#define DCCPP_DEBUG_MODE
 
 ///////////////////////////////////////////////////////
@@ -342,30 +355,69 @@ Main include file of the library.*/
 ///////////////////////////////////////////////////////
 // The function DCCpp::printConfiguration()
 // is very heavy in program memory. So to avoid problems
-// you can make this function available by uncomment the next line.
+// you can make this function available by uncomment the next line, only when necessary.
 //#define DCCPP_PRINT_DCCPP
 
 //  Inclusion area
 //
 
-/**Comment this line to avoid using and compiling Turnout.*/
 //#define USE_TURNOUT
-/**Comment this line to avoid using and compiling EEPROM saving.*/
 //#define USE_EEPROM
-/**Comment this line to avoid using and compiling Outputs.*/
 //#define USE_OUTPUT
-/**Comment this line to avoid using and compiling Sensors.*/
 //#define USE_SENSOR
-/**Comment this line to avoid using and compiling Serial commands.*/
 #define USE_TEXTCOMMAND
-/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip (Arduino Shield v1).*/
 //#define USE_ETHERNET_WIZNET_5100
-/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip (Arduino Shield v2).*/
 //#define USE_ETHERNET_WIZNET_5500
-/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip (Seeed Studio).*/
 //#define USE_ETHERNET_WIZNET_5200
-/**Comment this line to avoid using and compiling Ethernet shield using ENC28J60 chip.*/
 //#define USE_ETHERNET_ENC28J60
+
+#ifdef DOXYGEN_SPECIFIC
+    // DO NOT CHANGE THESE LINES IN THIS BLOCK 'DOXYGEN_SPECIFIC' : Only here for documentation !
+
+    /**Comment this line to avoid using and compiling Turnout.*/
+    #define USE_TURNOUT
+    /**Comment this line to avoid using and compiling EEPROM saving.*/
+    #define USE_EEPROM
+    /**Comment this line to avoid using and compiling Outputs.*/
+    #define USE_OUTPUT
+    /**Comment this line to avoid using and compiling Sensors.*/
+    #define USE_SENSOR
+    /**Comment this line to avoid using and compiling Serial commands.*/
+    #define USE_TEXTCOMMAND
+    /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip (Arduino Shield v1).*/
+    #define USE_ETHERNET_WIZNET_5100
+    /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip (Arduino Shield v2).*/
+    #define USE_ETHERNET_WIZNET_5500
+    /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip (Seeed Studio).*/
+    #define USE_ETHERNET_WIZNET_5200
+    /**Comment this line to avoid using and compiling Ethernet shield using ENC28J60 chip.*/
+    #define USE_ETHERNET_ENC28J60
+
+    #undef USE_TURNOUT
+    #undef USE_EEPROM
+    #undef USE_OUTPUT
+    #undef USE_SENSOR
+    #undef USE_TEXTCOMMAND
+    #undef USE_ETHERNET_WIZNET_5100
+    #undef USE_ETHERNET_WIZNET_5500
+    #undef USE_ETHERNET_WIZNET_5200
+    #undef USE_ETHERNET_ENC28J60
+
+    /** If this is defined, the library will do many checks during setup and execution, and print errors, warnings and
+    information messages on console. These messages can take a lot of memory, so be careful about the free memory of
+    your program if you activate debug mode.*/
+    #define DCCPP_DEBUG_MODE
+    /** If this is defined, the Verbose mode lets you see all actions done by the  library, but with a real flood of
+    text to the console... It has no effect if DCCPP_DEBUG_MODE is not activated.*/
+    #define DCCPP_DEBUG_VERBOSE_MODE
+    /** If this is defined, the function DCCpp::showConfiguration() will become available. This is useful to try
+    to understand why something is not correctly defined.
+    This function uses a lot of memory, so activate it only if necessary, and be careful about your program's memory.
+    You can use the define PRINT_DCCPP() in your sketch instead of a call to DCCpp.showConfiguration().
+    If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you will not have a compilation error.*/
+    #define DCCPP_PRINT_DCCPP
+    #endif
+#endif
 
 #if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200) || defined(USE_ETHERNET_ENC28J60)
 #define USE_ETHERNET
@@ -396,24 +448,3 @@ Main include file of the library.*/
 #endif
 
 #include "DCCpp.hpp"
-
-#ifdef DOXYGEN_SPECIFIC
-// DO NOT CHANGE THE LINES IN THIS BLOCK 'DOXYGEN_SPECIFIC' : Only here for documentation !
-
-/** If this is defined, the library will do many checks during setup and execution, and print errors, warnings and
-information messages on console. These messages can take a lot of memory, so be careful about the free memory of
-your program if you activate debug mode.*/
-#define DCCPP_DEBUG_MODE
-/** If this is defined, the Verbose mode lets you see all actions done by the  library, but with a real flood of
-text to the console... It has no effect if DCCPP_DEBUG_MODE is not activated.*/
-#define DCCPP_DEBUG_VERBOSE_MODE
-/** If this is defined, the function Accessories::printAccessories() will become available. This is useful to try
-to understand why a port, or an accessory is not correctly defined.
-This function uses a lot of memory, so activate it only if necessary, and be careful about your program's memory.
-You can use the define PRINT_DCCPP() in your sketch instead of a call to DCCpp.showConfiguration().
-If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you will not have a compilation error.*/
-#define DCCPP_PRINT_DCCPP
-/** If this is defined, the state of all the library will not be saved to EEPROM.*/
-#endif
-
-#endif

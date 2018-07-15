@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['panicstop',['panicStop',['../classDCCpp.html#ad348e5fc03020deabd80c51de9b9c3ba',1,'DCCpp']]],
-  ['poweroff',['powerOff',['../classDCCpp.html#a2497dfe95d3876d598347df587b0ccc7',1,'DCCpp']]],
-  ['poweron',['powerOn',['../classDCCpp.html#a5d4144b4b65f8754cde6a9d06dcce521',1,'DCCpp']]]
+  ['panicstop',['panicStop',['../classDCCpp.html#ab40138e7681f9e36daf0ba5f7907f592',1,'DCCpp']]],
+  ['poweroff',['powerOff',['../classDCCpp.html#aa849c0e1095180cc3ce901dd3ab432f7',1,'DCCpp']]],
+  ['poweron',['powerOn',['../classDCCpp.html#a4f272d003980cb5fdc6db53a0371bc8b',1,'DCCpp']]]
 ];

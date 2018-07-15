@@ -156,10 +156,12 @@
     <ClCompile Include="..\..\Commanders\src\Commander.cpp" />
     <ClCompile Include="..\..\Commanders\src\Commanders.cpp" />
     <ClCompile Include="..\..\Commanders\src\DccCommander.cpp" />
+    <ClCompile Include="..\..\Commanders\src\EventsSequencer.cpp" />
     <ClCompile Include="..\..\Commanders\src\EventStack.cpp" />
     <ClCompile Include="..\..\Commanders\src\I2CCommander.cpp" />
     <ClCompile Include="..\..\Commanders\src\TextInterpreter.cpp" />
     <ClCompile Include="..\..\Commanders\VStudio\ButtonsCommanderKeyboard.cpp" />
+    <ClCompile Include="..\src\SignalGenerator_esp32.cpp" />
     <ClCompile Include="..\src\Turnout.cpp" />
     <ClCompile Include="..\src\CurrentMonitor.cpp" />
     <ClCompile Include="..\src\DCCpp.cpp" />
@@ -188,11 +190,13 @@
     <ClInclude Include="..\..\Commanders\src\Commanders.hpp" />
     <ClInclude Include="..\..\Commanders\src\DccCommander.hpp" />
     <ClInclude Include="..\..\Commanders\src\Events.h" />
+    <ClInclude Include="..\..\Commanders\src\EventsSequencer.hpp" />
     <ClInclude Include="..\..\Commanders\src\EventStack.hpp" />
     <ClInclude Include="..\..\Commanders\src\I2CCommander.hpp" />
     <ClInclude Include="..\..\Commanders\src\SerialCommander.hpp" />
     <ClInclude Include="..\..\Commanders\src\TextInterpreter.hpp" />
     <ClInclude Include="..\..\Commanders\VStudio\ButtonsCommanderKeyboard.hpp" />
+    <ClInclude Include="..\src\SignalGenerator_esp32.h" />
     <ClInclude Include="..\src\Turnout.h" />
     <ClInclude Include="..\src\Comm.h" />
     <ClInclude Include="..\src\Config.h" />

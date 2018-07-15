@@ -261,11 +261,16 @@ class DCCpp
 		*/
 		static void setAccessory(int inAddress, byte inSubAddress, byte inActivate);
 
+public:
 #ifdef DCCPP_PRINT_DCCPP
+	/** This define is empty if DCCPP_PRINT_DCCPP is not defined. */
+	#define PRINT_DCCPP	DCCpp::showConfiguration();
 		/** Print the list of activated functions.
-		@remark Only available if DCCPP_DEBUG_MODE is defined.
+		@remark Only available if DCCPP_PRINT_DCCPP is defined.
 		*/
 		static void showConfiguration();
+#else
+	#define PRINT_DCCPP
 #endif
 };
 

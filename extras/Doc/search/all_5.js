@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['getcurrentmain',['getCurrentMain',['../classDCCpp.html#a8536b268a9e69b58d17b16970b1ba949',1,'DCCpp']]],
-  ['getcurrentprog',['getCurrentProg',['../classDCCpp.html#a9e14e6eb86017ad7b80b7fa14b2a70b0',1,'DCCpp']]]
+  ['getcurrentmain',['getCurrentMain',['../classDCCpp.html#a886cd3d7991f40c558a04642eca5f75f',1,'DCCpp']]],
+  ['getcurrentprog',['getCurrentProg',['../classDCCpp.html#a8582f59a9d814ceb10e4381c0905df5b',1,'DCCpp']]]
 ];

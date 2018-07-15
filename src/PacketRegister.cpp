@@ -473,7 +473,7 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 		bWrite[0] = 0x74 + (highByte(cv) & 0x03);   // set-up to re-verify entire byte
 
 		loadPacket(0, resetPacket, 2, 3);          // NMRA recommends starting with 3 reset packets
-		loadPacket(0, bWrite, 3, 5);               // NMRA recommends 5 verfy packets
+		loadPacket(0, bWrite, 3, 5);               // NMRA recommends 5 verify packets
 		loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
 
 		for (int j = 0; j < ACK_SAMPLE_COUNT; j++) {

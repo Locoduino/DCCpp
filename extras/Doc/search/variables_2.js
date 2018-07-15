@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pin',['pin',['../structCurrentMonitor.html#aeabac9491522ec7f68102bfeab33d5c1',1,'CurrentMonitor']]]
+  ['pin',['pin',['../structCurrentMonitor.html#a75c7b76d3cbc8207f6f77ef2b6e35301',1,'CurrentMonitor']]]
 ];

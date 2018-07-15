@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['readcvmain',['readCvMain',['../classDCCpp.html#a630dd8484c05a680cc26f044f971bb82',1,'DCCpp']]],
-  ['readcvprog',['readCvProg',['../classDCCpp.html#ad6e7af8080cb3f8534660b2ee3514a94',1,'DCCpp']]],
+  ['readcvmain',['readCvMain',['../classDCCpp.html#a6f53379ea0c63686424afd1a80a7fd1f',1,'DCCpp']]],
+  ['readcvprog',['readCvProg',['../classDCCpp.html#a95589b2e46db74c8af90f1813f4a7851',1,'DCCpp']]],
   ['register',['Register',['../structRegister.html',1,'']]],
   ['registerlist',['RegisterList',['../structRegisterList.html',1,'']]],
   ['revision_20history',['Revision History',['../revPage.html',1,'']]]
