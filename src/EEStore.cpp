@@ -7,6 +7,9 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
+#include "Arduino.h"
+#ifdef ARDUINO_ARCH_AVR
+
 #include "EEStore.h"
 
 #ifdef USE_EEPROM
@@ -146,4 +149,5 @@ EEStoreData EEStore::data;
 
 int EEStore::eeAddress=0;
 
+#endif
 #endif

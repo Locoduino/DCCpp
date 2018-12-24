@@ -11,6 +11,7 @@ Part of DCC++ BASE STATION for the Arduino
 #define __config_h
 
 #include "Arduino.h"
+#ifdef ARDUINO_ARCH_AVR
 
 /**	Use it as an argument to specify an unused pin. */
 #define UNDEFINED_PIN	255
@@ -30,7 +31,9 @@ Part of DCC++ BASE STATION for the Arduino
 //
 
 #ifdef ARDUINO_AVR_MEGA                   // is using Mega 1280, define as Mega 2560 (pinouts and functionality are identical)
+#ifndef ARDUINO_AVR_MEGA2560
 #define ARDUINO_AVR_MEGA2560
+#endif
 #endif
 
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)      // Configuration for UNO or NANO
@@ -100,4 +103,5 @@ struct DCCppConfig
 
 /////////////////////////////////////////////////////////////////////////////////////
 
+#endif
 #endif

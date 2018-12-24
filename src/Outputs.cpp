@@ -6,9 +6,14 @@ COPYRIGHT (c) 2013-2016 Gregg E. Berman
 Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
-#include "Outputs.h"
+#include "Arduino.h"
+#ifdef ARDUINO_ARCH_AVR
+
+#include "DCCpp.h"
 
 #ifdef USE_TURNOUT
+#include "Outputs.h"
+
 #ifdef VISUALSTUDIO
 #include "string.h"
 #endif
@@ -222,7 +227,6 @@ void Output::parse(char *c){
       t=get(n);
       if(t!=NULL)
         t->activate(s);
-#ifdef USE_TEXTCOMMAND
 	  else
 	  {
 		  INTERFACE.print("<X>");
@@ -230,7 +234,6 @@ void Output::parse(char *c){
 		  INTERFACE.println("");
 #endif
 	  }
-#endif
       break;
 
     case 3:                     // argument is string with id number of output followed by a pin number and invert flag
@@ -255,11 +258,9 @@ Output *Output::create(int id, int pin, int iFlag){
 	Output *tt = new Output();
 
 	if (tt == NULL) {       // problem allocating memory
-#ifdef USE_TEXTCOMMAND
 		INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
 		INTERFACE.println("");
-#endif
 #endif
 		return(tt);
 	}
@@ -269,7 +270,7 @@ Output *Output::create(int id, int pin, int iFlag){
 	return(tt);
 }
 
-#endif USE_TEXTCOMMAND
+#endif
 
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
 #ifdef DCCPP_PRINT_DCCPP
@@ -313,3 +314,4 @@ Output *Output::firstOutput=NULL;
 #endif
 
 #endif //USE_OUTPUT
+#endif

@@ -241,6 +241,13 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 23/12/2018 V1.3.2
+- Correction de beginProgMotorShield() qui appelait beginMain au lieu de beginProg
+- Correction de beginProgPololu() qui appelait beginMain au lieu de beginProg
+_______________
+- definition of beginProgMotorShield() call now beginProg instead of beginMain
+- definition of beginProgPololu() call now beginProg instead of beginMain
+
 \par 15/07/2018 V1.3.1
 - Correction du format de Keywords.txt
 - Création de LIBRARY_VERSION
@@ -340,7 +347,7 @@ _______________
 /** @file DCCpp.h
 Main include file of the library.*/
 
-#define LIBRARY_VERSION		"VERSION DCCpp library: 1.3.1"
+#define LIBRARY_VERSION		"VERSION DCCpp library: 1.3.2"
 
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in production mode.
@@ -361,10 +368,10 @@ Main include file of the library.*/
 //  Inclusion area
 //
 
-//#define USE_TURNOUT
-//#define USE_EEPROM
-//#define USE_OUTPUT
-//#define USE_SENSOR
+#define USE_TURNOUT
+#define USE_EEPROM
+#define USE_OUTPUT
+#define USE_SENSOR
 #define USE_TEXTCOMMAND
 //#define USE_ETHERNET_WIZNET_5100
 //#define USE_ETHERNET_WIZNET_5500
@@ -416,7 +423,6 @@ Main include file of the library.*/
     You can use the define PRINT_DCCPP() in your sketch instead of a call to DCCpp.showConfiguration().
     If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you will not have a compilation error.*/
     #define DCCPP_PRINT_DCCPP
-    #endif
 #endif
 
 #if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200) || defined(USE_ETHERNET_ENC28J60)
@@ -425,12 +431,12 @@ Main include file of the library.*/
 
 /////////////////////////////////////
 
+#ifdef ARDUINO_ARCH_AVR
 #include "DCCpp_Uno.h"
 #include "PacketRegister.h"
 #include "CurrentMonitor.h"
 #include "Config.h"
 #include "Comm.h"
-
 #ifdef USE_TURNOUT
 #include "Turnout.h"
 #endif
@@ -446,5 +452,7 @@ Main include file of the library.*/
 #ifdef USE_TEXTCOMMAND
 #include "TextCommand.h"
 #endif
+#endif
 
 #include "DCCpp.hpp"
+#endif

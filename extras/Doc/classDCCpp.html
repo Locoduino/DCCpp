@@ -118,7 +118,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:ab9df9bd3050ef252b93dfceb67934dd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7d73378f7ac95e0f87a4be1352de19c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#ae7d73378f7ac95e0f87a4be1352de19c">beginProgPololu</a> ()</td></tr>
 <tr class="separator:ae7d73378f7ac95e0f87a4be1352de19c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34991dc288c87cd81f0bc024c52dcc52"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#a34991dc288c87cd81f0bc024c52dcc52">IsMainTrack</a> (volatile <a class="el" href="structRegisterList.html">RegisterList</a> *apRegs)</td></tr>
+<tr class="memitem:a34991dc288c87cd81f0bc024c52dcc52"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#a34991dc288c87cd81f0bc024c52dcc52">IsMainTrack</a> (volatile RegisterList *apRegs)</td></tr>
 <tr class="separator:a34991dc288c87cd81f0bc024c52dcc52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8061f7091ace39caa6742915ca728478"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDCCpp.html#a8061f7091ace39caa6742915ca728478">loop</a> ()</td></tr>
 <tr class="separator:a8061f7091ace39caa6742915ca728478"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,16 +162,16 @@ Static Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:abd9020b392843324d0be807ccd101438"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abd9020b392843324d0be807ccd101438"></a>
-static volatile <a class="el" href="structRegisterList.html">RegisterList</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mainRegs</b></td></tr>
+static volatile RegisterList&#160;</td><td class="memItemRight" valign="bottom"><b>mainRegs</b></td></tr>
 <tr class="separator:abd9020b392843324d0be807ccd101438"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62e7ee97cdca4a89b5130b5f7fe4f0b2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a62e7ee97cdca4a89b5130b5f7fe4f0b2"></a>
-static volatile <a class="el" href="structRegisterList.html">RegisterList</a>&#160;</td><td class="memItemRight" valign="bottom"><b>progRegs</b></td></tr>
+static volatile RegisterList&#160;</td><td class="memItemRight" valign="bottom"><b>progRegs</b></td></tr>
 <tr class="separator:a62e7ee97cdca4a89b5130b5f7fe4f0b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad595df8c82950d263b1ed8785352257c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad595df8c82950d263b1ed8785352257c"></a>
-static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mainMonitor</b></td></tr>
+static CurrentMonitor&#160;</td><td class="memItemRight" valign="bottom"><b>mainMonitor</b></td></tr>
 <tr class="separator:ad595df8c82950d263b1ed8785352257c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b7a21c602fec12a2bd242da20ab423c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4b7a21c602fec12a2bd242da20ab423c"></a>
-static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>progMonitor</b></td></tr>
+static CurrentMonitor&#160;</td><td class="memItemRight" valign="bottom"><b>progMonitor</b></td></tr>
 <tr class="separator:a4b7a21c602fec12a2bd242da20ab423c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -537,7 +537,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
         <tr>
           <td class="memname">static bool DCCpp::IsMainTrack </td>
           <td>(</td>
-          <td class="paramtype">volatile <a class="el" href="structRegisterList.html">RegisterList</a> *&#160;</td>
+          <td class="paramtype">volatile RegisterList *&#160;</td>
           <td class="paramname"><em>apRegs</em></td><td>)</td>
           <td></td>
         </tr>
@@ -548,13 +548,13 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Checks if the given <a class="el" href="structRegisterList.html">RegisterList</a> is from the main track or not. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Checks if the given RegisterList is from the main track or not. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">apRegs</td><td><a class="el" href="structRegisterList.html">RegisterList</a> to check. </td></tr>
+    <tr><td class="paramname">apRegs</td><td>RegisterList to check. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if the <a class="el" href="structRegisterList.html">RegisterList</a> is mainRegs, the one from the main track. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the RegisterList is mainRegs, the one from the main track. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="DCCpp_8hpp_source.html#l00135">135</a> of file <a class="el" href="DCCpp_8hpp_source.html">DCCpp.hpp</a>.</p>
 
@@ -925,7 +925,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 </div><div class="memdoc">
 <p>Set the functions states of the given decoder on the main track. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nReg</td><td><a class="el" href="structRegister.html">Register</a> number. Avoid register 0, used for one shot commands like accessories or CV programming. </td></tr>
+    <tr><td class="paramname">nReg</td><td>Register number. Avoid register 0, used for one shot commands like accessories or CV programming. </td></tr>
     <tr><td class="paramname">inLocoId</td><td>Decoder address in short or long format. </td></tr>
     <tr><td class="paramname">inStates</td><td><a class="el" href="classFunctionsState.html">FunctionsState</a> class with the wanted new status. </td></tr>
   </table>
@@ -975,7 +975,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 </div><div class="memdoc">
 <p>Set the functions states of the given decoder on the programming track. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nReg</td><td><a class="el" href="structRegister.html">Register</a> number. Avoid register 0, used for one shot commands like accessories or CV programming. </td></tr>
+    <tr><td class="paramname">nReg</td><td>Register number. Avoid register 0, used for one shot commands like accessories or CV programming. </td></tr>
     <tr><td class="paramname">inLocoId</td><td>Decoder address in short or long format. </td></tr>
     <tr><td class="paramname">inStates</td><td><a class="el" href="classFunctionsState.html">FunctionsState</a> class with the wanted new status. </td></tr>
   </table>
@@ -1037,7 +1037,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 </div><div class="memdoc">
 <p>For the given decoder id, set the speed and the direction on the main track. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nReg</td><td><a class="el" href="structRegister.html">Register</a> number. Avoid register 0, used for one shot commands like accessories or CV programming. </td></tr>
+    <tr><td class="paramname">nReg</td><td>Register number. Avoid register 0, used for one shot commands like accessories or CV programming. </td></tr>
     <tr><td class="paramname">inLocoId</td><td>Decoder address in short or long format. </td></tr>
     <tr><td class="paramname">inStepsNumber</td><td>According to the decoder configuration, set it to 14, 28 or 128 . </td></tr>
     <tr><td class="paramname">inNewSpeed</td><td>Speed of the loco, between 2 and the steps number - 1 (13, 27 or 127). 0 means normal complete stop. 1 means emergency stop. </td></tr>
@@ -1101,7 +1101,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 </div><div class="memdoc">
 <p>For the given decoder id, set the speed and the direction on the programming track. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nReg</td><td><a class="el" href="structRegister.html">Register</a> number. Avoid register 0, used for one shot commands like accessories or CV programming. </td></tr>
+    <tr><td class="paramname">nReg</td><td>Register number. Avoid register 0, used for one shot commands like accessories or CV programming. </td></tr>
     <tr><td class="paramname">inLocoId</td><td>Decoder address in short or long format. </td></tr>
     <tr><td class="paramname">inStepsNumber</td><td>According to the decoder configuration, set it to 14, 28 or 128 . </td></tr>
     <tr><td class="paramname">inNewSpeed</td><td>Speed of the loco, between 2 and the steps number - 1 (13, 27 or 127). 0 means normal complete stop. 1 means emergency stop. </td></tr>
@@ -1238,7 +1238,7 @@ static <a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>&#160;</
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classDCCpp.html">DCCpp</a></li>
-    <li class="footer">Generated on dim. juil. 15 2018 14:00:14 for DCCpp &nbsp; by
+    <li class="footer">Generated on dim. déc. 23 2018 21:00:54 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.2.10 </li>
   </ul>

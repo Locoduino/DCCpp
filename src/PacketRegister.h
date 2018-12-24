@@ -11,6 +11,7 @@ Part of DCC++ BASE STATION for the Arduino
 #define PacketRegister_h
 
 #include "Arduino.h"
+#ifdef ARDUINO_ARCH_AVR
 
 // Define constants used for reading CVs from the Programming Track
 
@@ -85,4 +86,5 @@ struct RegisterList{
 #endif
 };
 
+#endif
 #endif

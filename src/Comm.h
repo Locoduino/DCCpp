@@ -7,6 +7,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
+#ifdef ARDUINO_ARCH_AVR
 #include "Config.h"
 
 #ifdef USE_ETHERNET                 // Ethernet Shield Card Selected
@@ -31,3 +32,4 @@ Part of DCC++ BASE STATION for the Arduino
 
   extern EthernetServer INTERFACE;
 #endif  
+#endif

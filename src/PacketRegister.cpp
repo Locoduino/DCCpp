@@ -7,6 +7,9 @@ Adapted by Thierry PARIS
 Part of DCC++ BASE STATION for the Arduino
 **********************************************************************/
 
+#include "Arduino.h"
+#ifdef ARDUINO_ARCH_AVR
+
 #include "DCCpp.h"
 //#include "DCCpp_Uno.h"
 //#include "PacketRegister.h"
@@ -712,3 +715,4 @@ byte RegisterList::idlePacket[3]={0xFF,0x00,0};                 // always leave 
 byte RegisterList::resetPacket[3]={0x00,0x00,0};
 
 byte RegisterList::bitMask[]={0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};         // masks used in interrupt routine to speed the query of a single bit in a Packet
+#endif

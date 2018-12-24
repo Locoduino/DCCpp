@@ -6,6 +6,8 @@ COPYRIGHT (c) 2013-2016 Gregg E. Berman
 Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
+#include "Arduino.h"
+#ifdef ARDUINO_ARCH_AVR
 
 #include "DCCpp.h"
 
@@ -257,7 +259,7 @@ Turnout *Turnout::create(int id, int add, int subAdd) {
 	return(tt);
 }
 
-#endif USE_TEXTCOMMAND
+#endif //USE_TEXTCOMMAND
 
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
 #ifdef DCCPP_PRINT_DCCPP
@@ -299,5 +301,4 @@ Turnout *Turnout::firstTurnout = NULL;
 #endif
 
 #endif //USE_TURNOUT
-
-
+#endif

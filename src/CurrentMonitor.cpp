@@ -7,6 +7,10 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
+#include "Arduino.h"
+
+#ifdef ARDUINO_ARCH_AVR
+
 #include "DCCpp_Uno.h"
 #include "CurrentMonitor.h"
 #include "Comm.h"
@@ -53,3 +57,4 @@ void CurrentMonitor::check()
 
 long int CurrentMonitor::sampleTime=0;
 
+#endif

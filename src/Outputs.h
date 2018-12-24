@@ -10,10 +10,10 @@ Part of DCC++ BASE STATION for the Arduino
 #ifndef Outputs_h
 #define Outputs_h
 
-#include "DCCpp.h"
+#include "Arduino.h"
+#ifdef ARDUINO_ARCH_AVR
 
 #ifdef USE_OUTPUT
-#include "Arduino.h"
 
 /** Data associated to each Output.*/
 struct OutputData {
@@ -215,5 +215,4 @@ struct Output{
   
 #endif
 #endif
-
-
+#endif

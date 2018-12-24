@@ -8,6 +8,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
+#ifdef ARDUINO_ARCH_AVR
 #ifndef DCCpp_Uno_h
 #define DCCpp_Uno_h
 
@@ -57,5 +58,4 @@ Part of DCC++ BASE STATION for the Arduino
 /////////////////////////////////////////////////////////////////////////////////////
 
 #endif
-
-
+#endif

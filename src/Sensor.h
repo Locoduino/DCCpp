@@ -10,10 +10,11 @@ Part of DCC++ BASE STATION for the Arduino
 #ifndef Sensor_h
 #define Sensor_h
 
-#include "DCCpp.h"
-
-#ifdef USE_SENSOR
+#ifdef ARDUINO_ARCH_AVR
 #include "Arduino.h"
+
+#include "DCCpp.h"
+#ifdef USE_SENSOR
 
 #define  SENSOR_DECAY  0.03
 
@@ -198,4 +199,5 @@ struct Sensor{
 
 #endif
 
+#endif
 #endif

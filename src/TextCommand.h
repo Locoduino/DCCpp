@@ -7,6 +7,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
+#ifdef ARDUINO_ARCH_AVR
 #ifndef TextCommand_h
 #define TextCommand_h
 
@@ -35,7 +36,4 @@ struct TextCommand{
   
 #endif
 #endif
-
-
-
-
+#endif

@@ -10,11 +10,12 @@ Part of DCC++ BASE STATION for the Arduino
 #ifndef Turnout_h
 #define Turnout_h
 
+#ifdef ARDUINO_ARCH_AVR
+#include "Arduino.h"
+
 #include "DCCpp.h"
 
 #ifdef USE_TURNOUT
-#include "Arduino.h"
-
 /** Data associated to each Turnout.*/
 struct TurnoutData {
   byte tStatus;			/**< Current status of the turnout : 0 for Off, 1 for On.*/
@@ -205,5 +206,4 @@ struct Turnout{
   
 #endif
 #endif
-
-
+#endif

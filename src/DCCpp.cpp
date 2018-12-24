@@ -4,8 +4,8 @@ author: <Thierry PARIS>
 description: <DCCpp class>
 *************************************************************/
 
-#include "DCCpp.h"
 #include "Arduino.h"
+#include "DCCpp.h"
 
 // NEXT DECLARE GLOBAL OBJECTS TO PROCESS AND STORE DCC PACKETS AND MONITOR TRACK CURRENTS.
 // NOTE REGISTER LISTS MUST BE DECLARED WITH "VOLATILE" QUALIFIER TO ENSURE THEY ARE PROPERLY UPDATED BY INTERRUPT ROUTINES

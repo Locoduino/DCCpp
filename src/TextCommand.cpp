@@ -7,6 +7,8 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
+#include "Arduino.h"
+#ifdef ARDUINO_ARCH_AVR
 // See TextCommand::parse() below for defined text commands.
 
 #include "TextCommand.h"
@@ -768,4 +770,5 @@ void TextCommand::parse(char *com){
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#endif
 #endif
