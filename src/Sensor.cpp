@@ -28,7 +28,7 @@ Part of DCC++ BASE STATION for the Arduino
 void Sensor::begin(int snum, int pin, int pullUp) {
 #if defined(USE_EEPROM)	&& defined(DCCPP_DEBUG_MODE)
 	if (strncmp(EEStore::data.id, EESTORE_ID, sizeof(EESTORE_ID)) != 0) {    // check to see that eeStore contains valid DCC++ ID
-		INTERFACE.println(F("Sensor::begin() must be called BEFORE DCCpp.begin() !"));
+		DCCPP_INTERFACE.println(F("Sensor::begin() must be called BEFORE DCCpp.begin() !"));
 	}
 #endif
 
@@ -45,9 +45,9 @@ void Sensor::begin(int snum, int pin, int pullUp) {
 	this->set(snum, pin, pullUp);
 
 #ifdef USE_TEXTCOMMAND
-	INTERFACE.print("<O>");
+	DCCPP_INTERFACE.print("<O>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 }
@@ -61,11 +61,11 @@ void Sensor::set(int snum, int pin, int pullUp) {
 	this->active = false;
 	this->signal = 1;
 #ifdef VISUALSTUDIO
-	ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+	dontCheckNextPinAccess = true;
 #endif
 	digitalWrite(pin, pullUp);   // don't use Arduino's internal pull-up resistors for external infrared sensors --- each sensor must have its own 1K external pull-up resistor
 #ifdef VISUALSTUDIO
-	ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+	dontCheckNextPinAccess = true;
 #endif
 	pinMode(pin, INPUT);         // force mode to input
 }
@@ -82,13 +82,13 @@ Sensor* Sensor::get(int n) {
 void Sensor::remove(int n) {
 	Sensor *tt, *pp;
 
-	for (tt = firstSensor; tt != NULL && tt->data.snum != n; pp = tt, tt = tt->nextSensor);
+	for (tt = firstSensor, pp =  NULL; tt != NULL && tt->data.snum != n; pp = tt, tt = tt->nextSensor);
 
 	if (tt == NULL) {
 #ifdef USE_TEXTCOMMAND
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 #endif
 		return;
@@ -102,9 +102,9 @@ void Sensor::remove(int n) {
 	free(tt);
 
 #ifdef USE_TEXTCOMMAND
-	INTERFACE.print("<O>");
+	DCCPP_INTERFACE.print("<O>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 }
@@ -129,19 +129,19 @@ void Sensor::check(){
     
     if(!tt->active && tt->signal<0.5){
       tt->active=true;
-	  INTERFACE.print("<Q");
-      INTERFACE.print(tt->data.snum);
-      INTERFACE.print(">");
+	  DCCPP_INTERFACE.print("<Q");
+      DCCPP_INTERFACE.print(tt->data.snum);
+      DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	  INTERFACE.println("");
+	  DCCPP_INTERFACE.println("");
 #endif
 	} else if(tt->active && tt->signal>0.9){
       tt->active=false;
-	  INTERFACE.print("<q");
-      INTERFACE.print(tt->data.snum);
-      INTERFACE.print(">");
+	  DCCPP_INTERFACE.print("<q");
+      DCCPP_INTERFACE.print(tt->data.snum);
+      DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	  INTERFACE.println("");
+	  DCCPP_INTERFACE.println("");
 #endif
 	}
   } // loop over all sensors
@@ -155,23 +155,23 @@ void Sensor::show() {
 	Sensor *tt;
 
 	if (firstSensor == NULL) {
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 		return;
 	}
 
 	for (tt = firstSensor; tt != NULL; tt = tt->nextSensor) {
-		INTERFACE.print("<Q");
-		INTERFACE.print(tt->data.snum);
-		INTERFACE.print(" ");
-		INTERFACE.print(tt->data.pin);
-		INTERFACE.print(" ");
-		INTERFACE.print(tt->data.pullUp);
-		INTERFACE.print(">");
+		DCCPP_INTERFACE.print("<Q");
+		DCCPP_INTERFACE.print(tt->data.snum);
+		DCCPP_INTERFACE.print(" ");
+		DCCPP_INTERFACE.print(tt->data.pin);
+		DCCPP_INTERFACE.print(" ");
+		DCCPP_INTERFACE.print(tt->data.pullUp);
+		DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 	}
 }
@@ -182,19 +182,19 @@ void Sensor::status() {
 	Sensor *tt;
 
 	if (firstSensor == NULL) {
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 		return;
 	}
 
 	for (tt = firstSensor; tt != NULL; tt = tt->nextSensor) {
-		INTERFACE.print(tt->active ? "<Q" : "<q");
-		INTERFACE.print(tt->data.snum);
-		INTERFACE.print(">");
+		DCCPP_INTERFACE.print(tt->active ? "<Q" : "<q");
+		DCCPP_INTERFACE.print(tt->data.snum);
+		DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 	}
 }
@@ -220,7 +220,7 @@ void Sensor::load() {
 		tt = get(data.snum);
 #ifdef DCCPP_DEBUG_MODE
 		if (tt == NULL)
-			INTERFACE.println(F("Sensor::begin() must be called BEFORE Sensor::load() !"));
+			DCCPP_INTERFACE.println(F("Sensor::begin() must be called BEFORE Sensor::load() !"));
 		else
 #endif
 			tt->set(data.snum, data.pin, data.pullUp);
@@ -274,9 +274,9 @@ void Sensor::parse(char *c) {
 #endif
 #ifdef USE_TEXTCOMMAND
 	case 2:                     // invalid number of arguments
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 		break;
 #endif
@@ -290,9 +290,9 @@ Sensor *Sensor::create(int snum, int pin, int pullUp) {
 
 	if (tt == NULL) {       // problem allocating memory
 #ifdef USE_TEXTCOMMAND
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 #endif
 		return(tt);

@@ -445,7 +445,7 @@ void DCCpp::showConfiguration()
 
 	Serial.print(F("VERSION DCC++:      "));
 	Serial.println(VERSION);
-	Serial.println(F(LIBRARY_VERSION));
+	Serial.println(F(DCCPP_LIBRARY_VERSION));
 	Serial.print(F("COMPILED:     "));
 	Serial.print(__DATE__);
 	Serial.print(F(" "));
@@ -551,9 +551,9 @@ void DCCpp::powerOn()
 		digitalWrite(DCCppConfig::SignalEnablePinProg, HIGH);
 	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinMain, HIGH);
-	INTERFACE.print("<p1>");
+	DCCPP_INTERFACE.print("<p1>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 }
 
@@ -563,9 +563,9 @@ void DCCpp::powerOff()
 		digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
 	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
-	INTERFACE.print("<p0>");
+	DCCPP_INTERFACE.print("<p0>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 }
 

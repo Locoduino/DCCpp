@@ -26,13 +26,13 @@ Part of DCC++ BASE STATION for the Arduino
 
 #if defined(USE_ETHERNET)
 
-  #define INTERFACE eServer
+  #define DCCPP_INTERFACE eServer
   #define SDCARD_CS 4
   
 #else
 
-  // define INTERFACE as serial in all cases to be able at least to print diagnostic messages on console
-  #define INTERFACE Serial
+  // define DCCPP_INTERFACE as serial in all cases to be able at least to print diagnostic messages on console
+  #define DCCPP_INTERFACE Serial
 
 #endif
 

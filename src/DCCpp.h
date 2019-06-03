@@ -10,7 +10,7 @@ DCC++ BASE STATION
 COPYRIGHT (c) 2013-2016 Gregg E. Berman
 
 Adapted in this library DCCpp by Thierry PARIS
-Copyright Locoduino 2017-2018
+Copyright Locoduino 2017-2019
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -241,6 +241,15 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 03/06/2019 V1.3.3
+- Mise à jour de la partie Visual Studio pour le nouveau ArduiEmulatorWin
+- Remplacement de INTERFACE par DCCPP_INTERFACE pour éviter un conflit de nommage
+- Change LIBRARY_VERSION en DCCPP_LIBRARY_VERSION
+
+- Update to use the new ArduiEmulatorWin
+- Replace of INTERFACE by DCCPP_INTERFACE to avoid naming conflict.
+- Change LIBRARY_VERSION to DCCPP_LIBRARY_VERSION
+
 \par 23/12/2018 V1.3.2
 - Correction de beginProgMotorShield() qui appelait beginMain au lieu de beginProg
 - Correction de beginProgPololu() qui appelait beginMain au lieu de beginProg
@@ -347,7 +356,7 @@ _______________
 /** @file DCCpp.h
 Main include file of the library.*/
 
-#define LIBRARY_VERSION		"VERSION DCCpp library: 1.3.2"
+#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.3"
 
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in production mode.

@@ -48,9 +48,9 @@ void CurrentMonitor::check()
 	if (this->current > this->currentSampleMax && digitalRead(signalPin) == HIGH)
 	{
 		DCCpp::powerOff();
-		INTERFACE.print(this->msg);                                     // print corresponding error message
+		DCCPP_INTERFACE.print(this->msg);                                     // print corresponding error message
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 	}
 } // CurrentMonitor::check  

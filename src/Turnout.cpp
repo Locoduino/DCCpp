@@ -36,7 +36,7 @@ void Turnout::begin(int id, int add, int subAdd) {
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
 #if defined(USE_EEPROM)	&& defined(DCCPP_DEBUG_MODE)
 	if (strncmp(EEStore::data.id, EESTORE_ID, sizeof(EESTORE_ID)) != 0) {    // check to see that eeStore contains valid DCC++ ID
-		INTERFACE.println(F("Turnout::begin() must be called BEFORE DCCpp.begin() !"));
+		DCCPP_INTERFACE.println(F("Turnout::begin() must be called BEFORE DCCpp.begin() !"));
 	}
 #endif
 	if (firstTurnout == NULL) {
@@ -53,9 +53,9 @@ void Turnout::begin(int id, int add, int subAdd) {
 	this->set(id, add, subAdd);
 
 #ifdef USE_TEXTCOMMAND
-	INTERFACE.print("<O>");
+	DCCPP_INTERFACE.print("<O>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 }
@@ -83,14 +83,14 @@ void Turnout::activate(int s) {
 #endif
 #endif
 #ifdef USE_TEXTCOMMAND
-	INTERFACE.print("<H");
-	INTERFACE.print(data.id);
+	DCCPP_INTERFACE.print("<H");
+	DCCPP_INTERFACE.print(data.id);
 	if (data.tStatus == 0)
-		INTERFACE.print(" 0>");
+		DCCPP_INTERFACE.print(" 0>");
 	else
-		INTERFACE.print(" 1>");
+		DCCPP_INTERFACE.print(" 1>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 }
@@ -109,14 +109,14 @@ Turnout* Turnout::get(int id) {
 void Turnout::remove(int id) {
 	Turnout *tt, *pp;
 
-	for (tt = firstTurnout; tt != NULL && tt->data.id != id; pp = tt, tt = tt->nextTurnout)
+	for (tt = firstTurnout, pp = NULL; tt != NULL && tt->data.id != id; pp = tt, tt = tt->nextTurnout)
 		;
 
 	if (tt == NULL) {
 #ifdef USE_TEXTCOMMAND
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 #endif
 		return;
@@ -130,9 +130,9 @@ void Turnout::remove(int id) {
 	free(tt);
 
 #ifdef USE_TEXTCOMMAND
-	INTERFACE.print("<O>");
+	DCCPP_INTERFACE.print("<O>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 }
@@ -217,9 +217,9 @@ void Turnout::parse(char *c){
 #ifdef USE_TEXTCOMMAND
 	  else
 	  {
-		  INTERFACE.print("<X>");
+		  DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		  INTERFACE.println("");
+		  DCCPP_INTERFACE.println("");
 #endif
 	  }
 #endif
@@ -246,9 +246,9 @@ Turnout *Turnout::create(int id, int add, int subAdd) {
 
 	if (tt == NULL) {       // problem allocating memory
 #ifdef USE_TEXTCOMMAND
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 #endif
 		return(tt);
@@ -270,26 +270,26 @@ void Turnout::show() {
 	Turnout *tt;
 
 	if (firstTurnout == NULL) {
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 		return;
 	}
 
 	for (tt = firstTurnout; tt != NULL; tt = tt->nextTurnout) {
-		INTERFACE.print("<H");
-		INTERFACE.print(tt->data.id);
-		INTERFACE.print(" ");
-		INTERFACE.print(tt->data.address);
-		INTERFACE.print(" ");
-		INTERFACE.print(tt->data.subAddress);
+		DCCPP_INTERFACE.print("<H");
+		DCCPP_INTERFACE.print(tt->data.id);
+		DCCPP_INTERFACE.print(" ");
+		DCCPP_INTERFACE.print(tt->data.address);
+		DCCPP_INTERFACE.print(" ");
+		DCCPP_INTERFACE.print(tt->data.subAddress);
 		if (tt->data.tStatus == 0)
-			INTERFACE.print(" 0>");
+			DCCPP_INTERFACE.print(" 0>");
 		else
-			INTERFACE.print(" 1>");
+			DCCPP_INTERFACE.print(" 1>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 	}
 }

@@ -144,14 +144,14 @@ void RegisterList::setThrottle(int nReg, int cab, int tSpeed, int tDirection) vo
 	loadPacket(nReg, b, nB, 0, 1);
 
 #if defined(USE_TEXTCOMMAND)
-	INTERFACE.print("<T");
-	INTERFACE.print(nReg); INTERFACE.print(" ");
-	INTERFACE.print(cab); INTERFACE.print(" ");
-	INTERFACE.print(tSpeed); INTERFACE.print(" ");
-	INTERFACE.print(tDirection);
-	INTERFACE.print(">");
+	DCCPP_INTERFACE.print("<T");
+	DCCPP_INTERFACE.print(nReg); DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(cab); DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(tSpeed); DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(tDirection);
+	DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 	speedTable[nReg] = tDirection == 1 ? tSpeed : -tSpeed;
@@ -199,14 +199,14 @@ void RegisterList::setFunction(int nReg, int cab, int fByte, int eByte) volatile
 	}
 
 #if defined(USE_TEXTCOMMAND)
-	INTERFACE.print("<F");
-	INTERFACE.print(nReg); INTERFACE.print(" ");
-	INTERFACE.print(cab); INTERFACE.print(" ");
-	INTERFACE.print(fByte); INTERFACE.print(" ");
-	INTERFACE.print(eByte);
-	INTERFACE.print(">");
+	DCCPP_INTERFACE.print("<F");
+	DCCPP_INTERFACE.print(nReg); DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(cab); DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(fByte); DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(eByte);
+	DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 	/* NMRA DCC norm ask for two DCC packets instead of only one:
@@ -280,9 +280,9 @@ void RegisterList::writeTextPacket(int nReg, byte *b, int nBytes) volatile
 {
 
 	if (nBytes<2 || nBytes>5) {    // invalid valid packet
-		INTERFACE.print("<mInvalid Packet>");
+		DCCPP_INTERFACE.print("<mInvalid Packet>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 		return;
 	}
@@ -382,17 +382,17 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub) volatile
 		bValue = -1;
 
 #if defined(USE_TEXTCOMMAND)
-	INTERFACE.print("<r");
-	INTERFACE.print(callBack);
-	INTERFACE.print("|");
-	INTERFACE.print(callBackSub);
-	INTERFACE.print("|");
-	INTERFACE.print(cv + 1);
-	INTERFACE.print(" ");
-	INTERFACE.print(bValue);
-	INTERFACE.print(">");
+	DCCPP_INTERFACE.print("<r");
+	DCCPP_INTERFACE.print(callBack);
+	DCCPP_INTERFACE.print("|");
+	DCCPP_INTERFACE.print(callBackSub);
+	DCCPP_INTERFACE.print("|");
+	DCCPP_INTERFACE.print(cv + 1);
+	DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(bValue);
+	DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 
@@ -490,17 +490,17 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 	}
 
 #if defined(USE_TEXTCOMMAND)
-	INTERFACE.print("<r");
-	INTERFACE.print(callBack);
-	INTERFACE.print("|");
-	INTERFACE.print(callBackSub);
-	INTERFACE.print("|");
-	INTERFACE.print(cv + 1);
-	INTERFACE.print(" ");
-	INTERFACE.print(bValue);
-	INTERFACE.print(">");
+	DCCPP_INTERFACE.print("<r");
+	DCCPP_INTERFACE.print(callBack);
+	DCCPP_INTERFACE.print("|");
+	DCCPP_INTERFACE.print(callBackSub);
+	DCCPP_INTERFACE.print("|");
+	DCCPP_INTERFACE.print(cv + 1);
+	DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(bValue);
+	DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 } // RegisterList::writeCVByte(ints)
@@ -570,19 +570,19 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 	}
 
 #if defined(USE_TEXTCOMMAND)
-	INTERFACE.print("<r");
-	INTERFACE.print(callBack);
-	INTERFACE.print("|");
-	INTERFACE.print(callBackSub);
-	INTERFACE.print("|");
-	INTERFACE.print(cv + 1);
-	INTERFACE.print(" ");
-	INTERFACE.print(bNum);
-	INTERFACE.print(" ");
-	INTERFACE.print(bValue);
-	INTERFACE.print(">");
+	DCCPP_INTERFACE.print("<r");
+	DCCPP_INTERFACE.print(callBack);
+	DCCPP_INTERFACE.print("|");
+	DCCPP_INTERFACE.print(callBackSub);
+	DCCPP_INTERFACE.print("|");
+	DCCPP_INTERFACE.print(cv + 1);
+	DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(bNum);
+	DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(bValue);
+	DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 } // RegisterList::writeCVBit(ints)
@@ -693,18 +693,18 @@ void RegisterList::writeCVBitMain(char *s) volatile
 #ifdef DCCPP_DEBUG_MODE
 void RegisterList::printPacket(int nReg, byte *b, int nBytes, int nRepeat) volatile 
 {  
-  INTERFACE.print("<*");
-  INTERFACE.print(nReg);
-  INTERFACE.print(":");
+	DCCPP_INTERFACE.print("<*");
+	DCCPP_INTERFACE.print(nReg);
+	DCCPP_INTERFACE.print(":");
   for(int i=0;i<nBytes;i++){
-	INTERFACE.print(" ");
-	INTERFACE.print(b[i],HEX);
+	  DCCPP_INTERFACE.print(" ");
+	  DCCPP_INTERFACE.print(b[i],HEX);
   }
-  INTERFACE.print(" / ");
-  INTERFACE.print(nRepeat);
-  INTERFACE.print(">");
+  DCCPP_INTERFACE.print(" / ");
+  DCCPP_INTERFACE.print(nRepeat);
+  DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-  INTERFACE.println("");
+  DCCPP_INTERFACE.println("");
 #endif
 } // RegisterList::printPacket()
 #endif

@@ -66,8 +66,8 @@ void TextCommand::process(){
 
   #else  // SERIAL case
 
-	while (INTERFACE.available()>0) {    // while there is data on the serial line
-		c = INTERFACE.read();
+	while (DCCPP_INTERFACE.available()>0) {    // while there is data on the serial line
+		c = DCCPP_INTERFACE.read();
 		if (c == '<')                    // start of new command
 			commandString[0] = 0;
 		else if (c == '>')               // end of new command
@@ -434,11 +434,11 @@ void TextCommand::parse(char *com){
 		where CURRENT = 0-1024, based on exponentially-smoothed weighting scheme
 		*/
 
-	  INTERFACE.print("<a");
-	  INTERFACE.print(int(DCCpp::getCurrentMain()));
-	  INTERFACE.print(">");
+	  DCCPP_INTERFACE.print("<a");
+	  DCCPP_INTERFACE.print(int(DCCpp::getCurrentMain()));
+	  DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	  INTERFACE.println("");
+	  DCCPP_INTERFACE.println("");
 #endif
 	  break;
 
@@ -460,45 +460,45 @@ void TextCommand::parse(char *com){
 		*/
 
 	  if(digitalRead(DCCppConfig::SignalEnablePinProg)==LOW)      // could check either PROG or MAIN
-		INTERFACE.print("<p0>");
+		DCCPP_INTERFACE.print("<p0>");
 	  else
-		INTERFACE.print("<p1>");
+		DCCPP_INTERFACE.print("<p1>");
 #if !defined(USE_ETHERNET)
-	  INTERFACE.println("");
+	  DCCPP_INTERFACE.println("");
 #endif
 
 	  for(int i=1;i<=MAX_MAIN_REGISTERS;i++){
 		if(DCCpp::mainRegs.speedTable[i]==0)
 		  continue;
-		INTERFACE.print("<T");
-		INTERFACE.print(i); INTERFACE.print(" ");
+		DCCPP_INTERFACE.print("<T");
+		DCCPP_INTERFACE.print(i); DCCPP_INTERFACE.print(" ");
 		if(DCCpp::mainRegs.speedTable[i]>0){
-		  INTERFACE.print(DCCpp::mainRegs.speedTable[i]);
-		  INTERFACE.print(" 1>");
+		  DCCPP_INTERFACE.print(DCCpp::mainRegs.speedTable[i]);
+		  DCCPP_INTERFACE.print(" 1>");
 		} else{
-		  INTERFACE.print(- DCCpp::mainRegs.speedTable[i]);
-		  INTERFACE.print(" 0>");
+		  DCCPP_INTERFACE.print(- DCCpp::mainRegs.speedTable[i]);
+		  DCCPP_INTERFACE.print(" 0>");
 		}          
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 	  }
-	  INTERFACE.print("<iDCCpp LIBRARY BASE STATION FOR ARDUINO ");
+	  DCCPP_INTERFACE.print("<iDCCpp LIBRARY BASE STATION FOR ARDUINO ");
 	  //INTERFACE.print(ARDUINO_TYPE);
 	  //INTERFACE.print(" / ");
 	  //INTERFACE.print(MOTOR_SHIELD_NAME);
-	  INTERFACE.print(": V-");
-	  INTERFACE.print(VERSION);
-	  INTERFACE.print(" / ");
-	  INTERFACE.print(__DATE__);
-	  INTERFACE.print(" ");
-	  INTERFACE.print(__TIME__);
-	  INTERFACE.print(">");
+	  DCCPP_INTERFACE.print(": V-");
+	  DCCPP_INTERFACE.print(VERSION);
+	  DCCPP_INTERFACE.print(" / ");
+	  DCCPP_INTERFACE.print(__DATE__);
+	  DCCPP_INTERFACE.print(" ");
+	  DCCPP_INTERFACE.print(__TIME__);
+	  DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	  INTERFACE.println("");
+	  DCCPP_INTERFACE.println("");
 #endif
 
-	  INTERFACE.print("<N ");
+	  DCCPP_INTERFACE.print("<N ");
 #if defined(USE_ETHERNET)
 	  INTERFACE.print("ETHERNET :");
 	  INTERFACE.print(Ethernet.localIP());
@@ -507,7 +507,7 @@ void TextCommand::parse(char *com){
 	  INTERFACE.println("");
 #endif
 #else
-	  INTERFACE.println("SERIAL>");
+	  DCCPP_INTERFACE.println("SERIAL>");
 #endif
 
 #ifdef DCCPP_PRINT_DCCPP
@@ -541,15 +541,15 @@ void TextCommand::parse(char *com){
 		*/
 	 
 	EEStore::store();
-	INTERFACE.print("<e ");
-	INTERFACE.print(EEStore::data.nTurnouts);
-	INTERFACE.print(" ");
-	INTERFACE.print(EEStore::data.nSensors);
-	INTERFACE.print(" ");
-	INTERFACE.print(EEStore::data.nOutputs);
-	INTERFACE.print(">");
+	DCCPP_INTERFACE.print("<e ");
+	DCCPP_INTERFACE.print(EEStore::data.nTurnouts);
+	DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(EEStore::data.nSensors);
+	DCCPP_INTERFACE.print(" ");
+	DCCPP_INTERFACE.print(EEStore::data.nOutputs);
+	DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 	break;
 
@@ -570,9 +570,9 @@ void TextCommand::parse(char *com){
 		*/
 	 
 	EEStore::clear();
-	INTERFACE.print("<O>");
+	DCCPP_INTERFACE.print("<O>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 	break;
 #endif
@@ -593,7 +593,7 @@ void TextCommand::parse(char *com){
 		returns: a carriage return
 		*/
 
-	  INTERFACE.println("");
+	  DCCPP_INTERFACE.println("");
 	  break;  
 
 ///          
@@ -637,8 +637,8 @@ void TextCommand::parse(char *com){
 
 	#endif
 
-	CLKPR=0x80;           // THIS SLOWS DOWN SYSYEM CLOCK BY FACTOR OF 256
-	CLKPR=0x08;           // BOARD MUST BE RESET TO RESUME NORMAL OPERATIONS
+	CLKPR = 0x80;           // THIS SLOWS DOWN SYSYEM CLOCK BY FACTOR OF 256
+	CLKPR = 0x08;           // BOARD MUST BE RESET TO RESUME NORMAL OPERATIONS
 
 	break;
 
@@ -741,28 +741,28 @@ void TextCommand::parse(char *com){
 		FOR DIAGNOSTIC AND TESTING USE ONLY
 		*/
 
-	  INTERFACE.println("");
+	  DCCPP_INTERFACE.println("");
 	  for(Register *p = DCCpp::mainRegs.reg; p <= DCCpp::mainRegs.maxLoadedReg;p++){
-		INTERFACE.print("M"); INTERFACE.print((int)(p - DCCpp::mainRegs.reg)); INTERFACE.print(":\t");
-		INTERFACE.print((int)p); INTERFACE.print("\t");
-		INTERFACE.print((int)(p->activePacket)); INTERFACE.print("\t");
-		INTERFACE.print(p->activePacket->nBits); INTERFACE.print("\t");
+		DCCPP_INTERFACE.print("M"); DCCPP_INTERFACE.print((int)(p - DCCpp::mainRegs.reg)); DCCPP_INTERFACE.print(":\t");
+		DCCPP_INTERFACE.print((int)p); DCCPP_INTERFACE.print("\t");
+		DCCPP_INTERFACE.print((int)(p->activePacket)); DCCPP_INTERFACE.print("\t");
+		DCCPP_INTERFACE.print(p->activePacket->nBits); DCCPP_INTERFACE.print("\t");
 		for(int i=0;i<10;i++){
-		  INTERFACE.print(p->activePacket->buf[i],HEX); INTERFACE.print("\t");
+		  DCCPP_INTERFACE.print(p->activePacket->buf[i],HEX); DCCPP_INTERFACE.print("\t");
 		}
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 	  }
 	  for(Register *p = DCCpp::progRegs.reg; p <= DCCpp::progRegs.maxLoadedReg;p++){
-		INTERFACE.print("P"); INTERFACE.print((int)(p - DCCpp::progRegs.reg)); INTERFACE.print(":\t");
-		INTERFACE.print((int)p); INTERFACE.print("\t");
-		INTERFACE.print((int)p->activePacket); INTERFACE.print("\t");
-		INTERFACE.print(p->activePacket->nBits); INTERFACE.print("\t");
+		DCCPP_INTERFACE.print("P"); DCCPP_INTERFACE.print((int)(p - DCCpp::progRegs.reg)); DCCPP_INTERFACE.print(":\t");
+		DCCPP_INTERFACE.print((int)p); DCCPP_INTERFACE.print("\t");
+		DCCPP_INTERFACE.print((int)p->activePacket); DCCPP_INTERFACE.print("\t");
+		DCCPP_INTERFACE.print(p->activePacket->nBits); DCCPP_INTERFACE.print("\t");
 		for(int i=0;i<10;i++){
-		  INTERFACE.print(p->activePacket->buf[i],HEX); INTERFACE.print("\t");
+		  DCCPP_INTERFACE.print(p->activePacket->buf[i],HEX); DCCPP_INTERFACE.print("\t");
 		}
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 	  }
-	  INTERFACE.println("");
+	  DCCPP_INTERFACE.println("");
 	  break;
 
   } // switch

@@ -108,21 +108,21 @@ void setup()
 	s3.begin(300, 32, LOW);
 
 #ifdef VISUALSTUDIO
-	pinName(A0, "OK");
-	pinName(A1, "F0");
-	pinName(A2, "F1");
-	pinName(A3, "CANC");
-	pinName(A4, "STOP");
-	pinName(A5, "DCC");
-	pinName(20, "T1");
-	pinName(21, "T2");
-	pinName(22, "T3");
-	pinName(40, "O1");
-	pinName(41, "O2");
-	pinName(42, "O3");
-	pinName(30, "S1");
-	pinName(31, "S2");
-	pinName(32, "S3");
+	_pinName(A0, 0, "OK");
+	_pinName(A1, 0, "F0");
+	_pinName(A2, 0, "F1");
+	_pinName(A3, 0, "CANC");
+	_pinName(A4, 0, "STOP");
+	_pinName(A5, 0, "DCC");
+	_pinName(20, 0, "T1");
+	_pinName(21, 0, "T2");
+	_pinName(22, 0, "T3");
+	_pinName(40, 0, "O1");
+	_pinName(41, 0, "O2");
+	_pinName(42, 0, "O3");
+	_pinName(30, 0, "S1");
+	_pinName(31, 0, "S2");
+	_pinName(32, 0, "S3");
 #endif
 
 	Turnout::show();

@@ -31,7 +31,7 @@ void Output::begin(int id, int pin, int iFlag) {
 #if defined(USE_EEPROM)	|| defined(USE_TEXTCOMMAND)
 #if defined(USE_EEPROM)	&& defined(DCCPP_DEBUG_MODE)
 	if (strncmp(EEStore::data.id, EESTORE_ID, sizeof(EESTORE_ID)) != 0) {    // check to see that eeStore contains valid DCC++ ID
-		INTERFACE.println(F("Output::begin() must be called BEFORE DCCpp.begin() !"));
+		DCCPP_INTERFACE.println(F("Output::begin() must be called BEFORE DCCpp.begin() !"));
 	}
 #endif
 	if (firstOutput == NULL) {
@@ -48,9 +48,9 @@ void Output::begin(int id, int pin, int iFlag) {
 	this->set(id, pin, iFlag);
 
 #ifdef USE_TEXTCOMMAND
-	INTERFACE.print("<O>");
+	DCCPP_INTERFACE.print("<O>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
 }
@@ -66,11 +66,11 @@ void Output::set(int id, int pin, int iFlag) {
 	// sets status to 0 (INACTIVE) is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag  
 	this->data.oStatus = bitRead(this->data.iFlag, 1) ? bitRead(this->data.iFlag, 2) : 0;
 #ifdef VISUALSTUDIO
-	ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+	dontCheckNextPinAccess = true;
 #endif
 	digitalWrite(this->data.pin, this->data.oStatus ^ bitRead(this->data.iFlag, 0));
 #ifdef VISUALSTUDIO
-	ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+	dontCheckNextPinAccess = true;
 #endif
 	pinMode(this->data.pin, OUTPUT);
 }
@@ -89,14 +89,14 @@ void Output::activate(int s){
 #endif
 #endif
 #ifdef USE_TEXTCOMMAND
-  INTERFACE.print("<Y");
-  INTERFACE.print(data.id);
+  DCCPP_INTERFACE.print("<Y");
+  DCCPP_INTERFACE.print(data.id);
   if(data.oStatus==0)
-    INTERFACE.print(" 0>");
+    DCCPP_INTERFACE.print(" 0>");
   else
-    INTERFACE.print(" 1>"); 
+    DCCPP_INTERFACE.print(" 1>"); 
 #if !defined(USE_ETHERNET)
-  INTERFACE.println("");
+  DCCPP_INTERFACE.println("");
 #endif
 #endif
 }
@@ -114,13 +114,13 @@ Output* Output::get(int n){
 void Output::remove(int n){
   Output *tt,*pp;
   
-  for(tt=firstOutput;tt!=NULL && tt->data.id!=n;pp=tt,tt=tt->nextOutput);
+  for(tt=firstOutput, pp = NULL;tt!=NULL && tt->data.id!=n;pp=tt,tt=tt->nextOutput);
 
   if(tt==NULL){
 #ifdef USE_TEXTCOMMAND
-	INTERFACE.print("<X>");
+	DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-	INTERFACE.println("");
+	DCCPP_INTERFACE.println("");
 #endif
 #endif
     return;
@@ -134,9 +134,9 @@ void Output::remove(int n){
   free(tt);
 
 #ifdef USE_TEXTCOMMAND
-  INTERFACE.print("<O>");
+  DCCPP_INTERFACE.print("<O>");
 #if !defined(USE_ETHERNET)
-  INTERFACE.println("");
+  DCCPP_INTERFACE.println("");
 #endif
 #endif
 }
@@ -178,11 +178,11 @@ void Output::load() {
 
 		tt->data.oStatus = bitRead(tt->data.iFlag, 1) ? bitRead(tt->data.iFlag, 2) : data.oStatus;      // restore status to EEPROM value is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag
 #ifdef VISUALSTUDIO
-		ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+		dontCheckNextPinAccess = true;
 #endif
 		digitalWrite(tt->data.pin, tt->data.oStatus ^ bitRead(tt->data.iFlag, 0));
 #ifdef VISUALSTUDIO
-		ArduiEmulator::Arduino::dontCheckNextPinAccess = true;
+		dontCheckNextPinAccess = true;
 #endif
 		pinMode(tt->data.pin, OUTPUT);
 		tt->num = EEStore::pointer();
@@ -229,9 +229,9 @@ void Output::parse(char *c){
         t->activate(s);
 	  else
 	  {
-		  INTERFACE.print("<X>");
+		  DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		  INTERFACE.println("");
+		  DCCPP_INTERFACE.println("");
 #endif
 	  }
       break;
@@ -258,9 +258,9 @@ Output *Output::create(int id, int pin, int iFlag){
 	Output *tt = new Output();
 
 	if (tt == NULL) {       // problem allocating memory
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 		return(tt);
 	}
@@ -281,27 +281,27 @@ void Output::show() {
 	Output *tt;
 
 	if (firstOutput == NULL) {
-		INTERFACE.print("<X>");
+		DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 		return;
 	}
 
 	for (tt = firstOutput; tt != NULL; tt = tt->nextOutput) {
-		INTERFACE.print("<Y");
-		INTERFACE.print(tt->data.id);
-		INTERFACE.print(" ");
-		INTERFACE.print(tt->data.pin);
-		INTERFACE.print(" ");
-		INTERFACE.print(tt->data.iFlag);
+		DCCPP_INTERFACE.print("<Y");
+		DCCPP_INTERFACE.print(tt->data.id);
+		DCCPP_INTERFACE.print(" ");
+		DCCPP_INTERFACE.print(tt->data.pin);
+		DCCPP_INTERFACE.print(" ");
+		DCCPP_INTERFACE.print(tt->data.iFlag);
 
 		if (tt->data.oStatus == 0)
-			INTERFACE.print(" 0>");
+			DCCPP_INTERFACE.print(" 0>");
 		else
-			INTERFACE.print(" 1>");
+			DCCPP_INTERFACE.print(" 1>");
 #if !defined(USE_ETHERNET)
-		INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 	}
 }
