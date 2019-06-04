@@ -143,13 +143,17 @@ class DCCpp
 		*/
 		static void panicStop(bool inStop);
 
-		/** Stop the power on all the tracks.
+		/** Set the power on all the tracks by default, or on the chosen track according .
+		@param inMain If true, power on the main track.
+		@param inProg If true, power on the programmation track.
 		*/
-		static void powerOn();
+		static void powerOn(bool inMain = true, bool inProg = true);
 
-		/** Restore the power on all the tracks.
+		/** Stop the power on all the tracks by default, or on the chosen track according .
+		@param inMain If true, power off the main track.
+		@param inProg If true, power off the programmation track.
 		*/
-		static void powerOff();
+		static void powerOff(bool inMain = true, bool inProg = true);
 
 		/** Set the maximum current value before an event 'too much current consumption detected !' for main track.
 		@param inMax	Maximum value between 0 and 1023. Default is 300.

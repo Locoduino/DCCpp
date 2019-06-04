@@ -26,7 +26,7 @@ var NAVTREE =
       [ "File List", "files.html", [
         [ "src", "dir_d41d8cd98f00b204e9800998ecf8427e.html", [
           [ "DCCpp.h", "DCCpp_8h.html", [
-            [ "LIBRARY_VERSION", "DCCpp_8h.html#a8650e6793d46032c617bb7b824f90bfd", null ],
+            [ "DCCPP_LIBRARY_VERSION", "DCCpp_8h.html#a8d9814dec9adda6df580a7f8fbebfa01", null ],
             [ "USE_EEPROM", "DCCpp_8h.html#abd7d46fa3888b2e1bed34df076372b30", null ],
             [ "USE_OUTPUT", "DCCpp_8h.html#a6f8d193bd84df6f05773b458355e7bd8", null ],
             [ "USE_SENSOR", "DCCpp_8h.html#a22f58986dc11249373f6ee1d5fb50c0a", null ],

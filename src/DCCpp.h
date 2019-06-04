@@ -245,10 +245,16 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 - Mise à jour de la partie Visual Studio pour le nouveau ArduiEmulatorWin
 - Remplacement de INTERFACE par DCCPP_INTERFACE pour éviter un conflit de nommage
 - Change LIBRARY_VERSION en DCCPP_LIBRARY_VERSION
+- Correction de l'exemple EthernetDcc pour le numéro de pin à 11 au lieu de 3...
+- Retrait d'un fichier inutile dans les sources.
+- powerOn() et powerOff() peuvent maintenant couper/remettre le courant sur les deux voies indépendamment.
 
 - Update to use the new ArduiEmulatorWin
 - Replace of INTERFACE by DCCPP_INTERFACE to avoid naming conflict.
 - Change LIBRARY_VERSION to DCCPP_LIBRARY_VERSION
+- Fix pin number from 11 to 3 in sample EthernetDcc.ino
+- Removing of an unused file in src.
+- powerOn() and powerOff() can now stop/restore the current on each track independantly.
 
 \par 23/12/2018 V1.3.2
 - Correction de beginProgMotorShield() qui appelait beginMain au lieu de beginProg

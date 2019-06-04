@@ -545,11 +545,12 @@ void DCCpp::panicStop(bool inStop)
 		powerOn();
 }
 
-void DCCpp::powerOn()
+void DCCpp::powerOn(bool inMain, bool inProg)
 {
-	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
+	if (inProg && DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, HIGH);
-	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
+
+	if (inMain && DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinMain, HIGH);
 	DCCPP_INTERFACE.print("<p1>");
 #if !defined(USE_ETHERNET)
@@ -557,11 +558,11 @@ void DCCpp::powerOn()
 #endif
 }
 
-void DCCpp::powerOff()
+void DCCpp::powerOff(bool inMain, bool inProg)
 {
-	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
+	if (inProg && DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
-	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
+	if (inMain && DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 		digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
 	DCCPP_INTERFACE.print("<p0>");
 #if !defined(USE_ETHERNET)
