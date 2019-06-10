@@ -241,6 +241,13 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 10/06/2019 V1.3.4
+- Corrections d'INTERFACE en DCCPP_INTERFACE sur des parties non copilées par défaut qui avaient échappés à la tranformaition.
+- CurrentMonitor permet de mieux gérer les surcharges séparément entre la voie principale et la voie de programmation.
+_______________
+- Fix INTERFACE - DCCPP_INTERFACE mistakes on hiden parts of the code not always compiled...
+- CurrentMonitor can now handle separatly overloads on the main track and the prog track.
+
 \par 03/06/2019 V1.3.3
 - Mise à jour de la partie Visual Studio pour le nouveau ArduiEmulatorWin
 - Remplacement de INTERFACE par DCCPP_INTERFACE pour éviter un conflit de nommage
@@ -248,7 +255,7 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 - Correction de l'exemple EthernetDcc pour le numéro de pin à 11 au lieu de 3...
 - Retrait d'un fichier inutile dans les sources.
 - powerOn() et powerOff() peuvent maintenant couper/remettre le courant sur les deux voies indépendamment.
-
+_______________
 - Update to use the new ArduiEmulatorWin
 - Replace of INTERFACE by DCCPP_INTERFACE to avoid naming conflict.
 - Change LIBRARY_VERSION to DCCPP_LIBRARY_VERSION
@@ -362,7 +369,7 @@ _______________
 /** @file DCCpp.h
 Main include file of the library.*/
 
-#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.3"
+#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.4"
 
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in production mode.

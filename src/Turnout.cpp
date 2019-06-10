@@ -166,7 +166,7 @@ void Turnout::load() {
 		tt = get(data.id);
 #ifdef DCCPP_DEBUG_MODE
 		if (tt == NULL)
-			INTERFACE.println(F("Turnout::begin() must be called BEFORE Turnout::load() !"));
+			DCCPP_INTERFACE.println(F("Turnout::begin() must be called BEFORE Turnout::load() !"));
 		else
 #endif
 			tt->set(data.id, data.address, data.subAddress);

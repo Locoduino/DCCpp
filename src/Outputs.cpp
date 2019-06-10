@@ -170,7 +170,7 @@ void Output::load() {
 		tt = get(data.id);
 #ifdef DCCPP_DEBUG_MODE
 		if (tt == NULL)
-			INTERFACE.println(F("Output::begin() must be called BEFORE Output::load() !"));
+			DCCPP_INTERFACE.println(F("Output::begin() must be called BEFORE Output::load() !"));
 		else
 #endif
 			tt->set(data.id, data.pin, data.iFlag);

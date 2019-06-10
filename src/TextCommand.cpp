@@ -38,16 +38,16 @@ void TextCommand::process(){
 	
   #if defined(USE_ETHERNET)
 
-	EthernetClient client=INTERFACE.available();
+	EthernetClient client= DCCPP_INTERFACE.available();
 
 	if (client) {
 
 		if (DCCppConfig::Protocol == EthernetProtocol::HTTP) {
-			INTERFACE.println("HTTP/1.1 200 OK");
-			INTERFACE.println("Content-Type: text/html");
-			INTERFACE.println("Access-Control-Allow-Origin: *");
-			INTERFACE.println("Connection: close");
-			INTERFACE.println("");
+			DCCPP_INTERFACE.println("HTTP/1.1 200 OK");
+			DCCPP_INTERFACE.println("Content-Type: text/html");
+			DCCPP_INTERFACE.println("Access-Control-Allow-Origin: *");
+			DCCPP_INTERFACE.println("Connection: close");
+			DCCPP_INTERFACE.println("");
 		}
 
 		while (client.connected() && client.available()) {        // while there is data on the network
@@ -484,9 +484,9 @@ void TextCommand::parse(char *com){
 #endif
 	  }
 	  DCCPP_INTERFACE.print("<iDCCpp LIBRARY BASE STATION FOR ARDUINO ");
-	  //INTERFACE.print(ARDUINO_TYPE);
-	  //INTERFACE.print(" / ");
-	  //INTERFACE.print(MOTOR_SHIELD_NAME);
+	  //DCCPP_INTERFACE.print(ARDUINO_TYPE);
+	  //DCCPP_INTERFACE.print(" / ");
+	  //DCCPP_INTERFACE.print(MOTOR_SHIELD_NAME);
 	  DCCPP_INTERFACE.print(": V-");
 	  DCCPP_INTERFACE.print(VERSION);
 	  DCCPP_INTERFACE.print(" / ");
@@ -500,11 +500,11 @@ void TextCommand::parse(char *com){
 
 	  DCCPP_INTERFACE.print("<N ");
 #if defined(USE_ETHERNET)
-	  INTERFACE.print("ETHERNET :");
-	  INTERFACE.print(Ethernet.localIP());
-	  INTERFACE.print(">");
+		DCCPP_INTERFACE.print("ETHERNET :");
+		DCCPP_INTERFACE.print(Ethernet.localIP());
+		DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	  INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 #else
 	  DCCPP_INTERFACE.println("SERIAL>");
@@ -717,11 +717,11 @@ void TextCommand::parse(char *com){
 		*/
 
 	  int v; 
-	  INTERFACE.print("<f");
-	  INTERFACE.print((int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
-	  INTERFACE.print(">");
+		DCCPP_INTERFACE.print("<f");
+		DCCPP_INTERFACE.print((int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
+		DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	  INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
 	  break;
 #endif

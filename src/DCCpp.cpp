@@ -129,7 +129,7 @@ void DCCpp::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 		return;
 	}
 
-	mainMonitor.begin(DCCppConfig::CurrentMonitorMain, (char *) "<p2>");
+	mainMonitor.begin(DCCppConfig::CurrentMonitorMain, DCCppConfig::SignalEnablePinMain, (char *) "<p2>");
 
 	// CONFIGURE TIMER_1 TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC1B INTERRUPT PINS
 
@@ -194,7 +194,7 @@ void DCCpp::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 		return;
 	}
 
-	progMonitor.begin(DCCppConfig::CurrentMonitorProg, (char *) "<p3>");
+	progMonitor.begin(DCCppConfig::CurrentMonitorProg, DCCppConfig::SignalEnablePinProg, (char *) "<p3>");
 
 	// CONFIGURE EITHER TIMER_0 (UNO) OR TIMER_3 (MEGA) TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC0B (UNO) OR OC3B (MEGA) INTERRUPT PINS
 
@@ -304,8 +304,8 @@ void DCCpp::begin()
 	DCCppConfig::DirectionMotorA = UNDEFINED_PIN;
 	DCCppConfig::DirectionMotorB = UNDEFINED_PIN;
 
-	mainMonitor.begin(UNDEFINED_PIN, "");
-	progMonitor.begin(UNDEFINED_PIN, "");
+	mainMonitor.begin(UNDEFINED_PIN, UNDEFINED_PIN, "");
+	progMonitor.begin(UNDEFINED_PIN, UNDEFINED_PIN, "");
 
 #ifdef SDCARD_CS
 	pinMode(SDCARD_CS, OUTPUT);
@@ -342,7 +342,7 @@ void DCCpp::beginEthernet(uint8_t *inMac, uint8_t *inIp, EthernetProtocol inProt
 	else
 		Ethernet.begin(inMac, inIp);           // Start networking using STATIC IP Address
 
-	INTERFACE.begin();
+	DCCPP_INTERFACE.begin();
 #ifdef DCCPP_DEBUG_MODE
 	//pinMode(LED_BUILTIN, OUTPUT);
 	showConfiguration();

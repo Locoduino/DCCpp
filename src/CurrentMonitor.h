@@ -27,16 +27,18 @@ Part of DCC++ BASE STATION for the Arduino
 
 struct CurrentMonitor{
   static long int sampleTime; /**< time elapsed since last measurement. This delay is common to all monitors. */
-  int pin;	/**< Attached pin.*/
+	int pin;	/**< Attached check pin.*/
+	int signalPin;	/**< signal pin.*/
   float currentSampleMax;	/**< Value of the maximum current accepted without problem.*/
   float current; /**< Value of the last measured current.*/
   const char *msg;	/**< Message to send when excessive current is measured.*/
   /** begin function.
-  @param pin	Attached pin. UNEFINED_PIN to inactivate this monitor.
-  @param msg	Message to send to console when a smoothed current value grater than maximum is detected.
+	@param pin	Attached pin. UNEFINED_PIN to inactivate this monitor.
+	@param inSignalPin	Pin to set LOW if a shortcut is detectexd.
+  @param msg	Message to send to console when a smoothed current value greater than maximum is detected.
   @param inSampleMax	Maximum value of the current. Default is 300.
   */
-  void begin(int pin, const char *msg, float inSampleMax = 300);
+  void begin(int pin, int inSignalPin, const char *msg, float inSampleMax = 300);
   /** Checks if sufficient time has elapsed since last update. Common to all monitors.
   */
   static boolean checkTime();
