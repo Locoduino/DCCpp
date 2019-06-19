@@ -241,6 +241,11 @@ DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLO
 \endverbatim
 
 \page revPage Revision History
+\par 19/06/2019 V1.3.5
+- Correction de la transformation de INTERFACE en DCCPPINTERFACE si USE_ETHERNET_* .
+_______________
+- Fix INTERFACE to DCCPP_INTERFACE if compiled with USE_ETHERNET_*.
+
 \par 10/06/2019 V1.3.4
 - Corrections d'INTERFACE en DCCPP_INTERFACE sur des parties non copilées par défaut qui avaient échappés à la tranformaition.
 - CurrentMonitor permet de mieux gérer les surcharges séparément entre la voie principale et la voie de programmation.
@@ -369,7 +374,7 @@ _______________
 /** @file DCCpp.h
 Main include file of the library.*/
 
-#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.4"
+#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.5"
 
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in production mode.

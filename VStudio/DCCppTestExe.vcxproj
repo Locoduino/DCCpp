@@ -175,9 +175,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\Commanders\WhatsNew.TXT" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="ArduinoIno.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
