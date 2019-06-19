@@ -152,7 +152,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\SignalGenerator_esp32.h" />
     <ClInclude Include="..\src\Turnout.h" />
     <ClInclude Include="..\src\Comm.h" />
     <ClInclude Include="..\src\Config.h" />
@@ -175,7 +174,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\SignalGenerator_esp32.cpp" />
     <ClCompile Include="..\src\Turnout.cpp" />
     <ClCompile Include="..\src\CurrentMonitor.cpp" />
     <ClCompile Include="..\src\DCCpp.cpp" />
