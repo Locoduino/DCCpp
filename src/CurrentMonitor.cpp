@@ -28,9 +28,9 @@ void CurrentMonitor::begin(int pin, int inSignalPin, const char *msg, float inSa
   
 boolean CurrentMonitor::checkTime()
 {
-	if(millis( ) - sampleTime < CURRENT_SAMPLE_TIME)            // no need to check current yet
+	if(millis( ) - sampleTime < CURRENT_SAMPLE_TIME)   // no need to check current yet
 		return(false);
-	sampleTime = millis();                                   // note millis() uses TIMER-0.  For UNO, we change the scale on Timer-0.  For MEGA we do not.  This means CURENT_SAMPLE_TIME is different for UNO then MEGA
+	sampleTime = millis();  
 	return(true);  
 } // CurrentMonitor::checkTime
   
@@ -45,7 +45,7 @@ void CurrentMonitor::check()
 	if (this->current > this->currentSampleMax && digitalRead(this->signalPin) == HIGH)
 	{
 		digitalWrite(this->signalPin, LOW);
-		DCCPP_INTERFACE.print(this->msg);                                     // print corresponding error message
+		DCCPP_INTERFACE.print(this->msg);          // print corresponding error message
 #if !defined(USE_ETHERNET)
 		DCCPP_INTERFACE.println("");
 #endif

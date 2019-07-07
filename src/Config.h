@@ -90,15 +90,17 @@ struct DCCppConfig
 	static EthernetProtocol Protocol;
 #endif
 
+	static uint8_t SignalPortMaskMain;
+	static uint8_t SignalPortMaskProg;
+	static volatile uint8_t *SignalPortInMain;
+	static volatile uint8_t *SignalPortInProg;
+
 	static byte SignalEnablePinMain;	// PWM : *_SIGNAL_ENABLE_PIN_MAIN
 	static byte CurrentMonitorMain;		// Current sensor : *_CURRENT_MONITOR_PIN_MAIN
 
 	static byte SignalEnablePinProg;	// PWM : *_SIGNAL_ENABLE_PIN_PROG
 	static byte CurrentMonitorProg;		// Current sensor : *_CURRENT_MONITOR_PIN_PROG
 
-	// Only for shields : indirection of the signal from SignalPinMain to DirectionMotor of the shield
-	static byte DirectionMotorA;		// *_DIRECTION_MOTOR_CHANNEL_PIN_A
-	static byte DirectionMotorB;		// *_DIRECTION_MOTOR_CHANNEL_PIN_B
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
