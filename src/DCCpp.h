@@ -378,7 +378,7 @@ Main include file of the library.*/
 
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in production mode.
-#define DCCPP_DEBUG_MODE
+//#define DCCPP_DEBUG_MODE
 
 ///////////////////////////////////////////////////////
 // Verbose mode lets you see all actions done by the 
@@ -396,11 +396,11 @@ Main include file of the library.*/
 //
 
 #define USE_TURNOUT
-//#define USE_EEPROM
+#define USE_EEPROM
 #define USE_OUTPUT
 #define USE_SENSOR
 #define USE_TEXTCOMMAND
-//#define USE_ETHERNET_WIZNET_5100
+#define USE_ETHERNET_WIZNET_5100
 //#define USE_ETHERNET_WIZNET_5500
 //#define USE_ETHERNET_WIZNET_5200
 //#define USE_ETHERNET_ENC28J60
