@@ -180,7 +180,7 @@ the needs to modify the library sources to use it. The only configuration still 
 to decide of the Ethernet interface model.
 It has been adapted to work also with Arduino Nano R3 on IDE 1.8.4 .
 
-\page commonPage Common Configuration Lines
+\page commonPage Configuration Lines
 
 This is the 'begin' lines for some common configurations. Note that for LMD18200, the two final arguments must be adapted to your need...
 The wiring for these configurations is visible here : http://www.locoduino.org/spip.php?article187 . The text is in French, but schema can be understood !
@@ -240,7 +240,32 @@ DCCpp::beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, POLO
 DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG);
 \endverbatim
 
+\par Ethernet Usage
+
+To activate an Ethernet connection, one of the four ethernet defines must be activated :
+- USE_ETHERNET_WIZNET_5100 for Wiznet 5100 chip, present on the Arduino Ethernet Shield V1 and other shields.
+- USE_ETHERNET_WIZNET_5500 for Wiznet 5500 chip, present on the Arduino Ethernet Shield V2 and other shields.
+- USE_ETHERNET_WIZNET_5200 for Wiznet 5200 chip, present on the Arduino Ethernet Shield from Seeed and other shields.
+- USE_ETHERNET_ENC28J60  for cheap ENC28J60 chip, present on a lot of chinese Ethernet shields.
+
+If one of these defines is activated, a line must be present somewhere in your code, defining an Ethernet server :
+\verbatim
+EthernetServer DCCPP_INTERFACE(NumPort);                  // Create and instance of an EthernetServer
+\endverbatim
+where NumPort is a port number. 
+
+WARNING: if this line is not present, some errors will be raised during compilation, like "undefined reference to `eServer'" !
+
 \page revPage Revision History
+\par 02/08/2019 V1.3.6
+- Correction du calcul de la taille de l'entête EEPROM (Pull Request #5 de positron96).
+- Ajout d'une aide succinte à la configuration d'Ethernet dans la doc.
+- Retrait de SignalGenerator.*
+_______________
+- Fixes EEPROM not working correctly (Pull Request #5 by positron96).
+- Add a short config help for Ethernet in inline documentation.
+- Files SignalGenerator.* removed.
+
 \par 19/06/2019 V1.3.5
 - Correction de la transformation de INTERFACE en DCCPP_INTERFACE si USE_ETHERNET_* .
 _______________
@@ -374,7 +399,7 @@ _______________
 /** @file DCCpp.h
 Main include file of the library.*/
 
-#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.5"
+#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.6"
 
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in production mode.
@@ -395,12 +420,12 @@ Main include file of the library.*/
 //  Inclusion area
 //
 
-#define USE_TURNOUT
-#define USE_EEPROM
-#define USE_OUTPUT
-#define USE_SENSOR
-#define USE_TEXTCOMMAND
-#define USE_ETHERNET_WIZNET_5100
+//#define USE_TURNOUT
+//#define USE_EEPROM
+//#define USE_OUTPUT
+//#define USE_SENSOR
+//#define USE_TEXTCOMMAND
+//#define USE_ETHERNET_WIZNET_5100
 //#define USE_ETHERNET_WIZNET_5500
 //#define USE_ETHERNET_WIZNET_5200
 //#define USE_ETHERNET_ENC28J60

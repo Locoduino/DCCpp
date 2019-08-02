@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['common_20configuration_20lines',['Common Configuration Lines',['../commonPage.html',1,'']]]
+  ['configuration_20lines',['Configuration Lines',['../commonPage.html',1,'']]]
 ];

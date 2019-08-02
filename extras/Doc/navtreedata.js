@@ -1,7 +1,7 @@
 var NAVTREE =
 [
   [ "DCCpp", "index.html", [
-    [ "Common Configuration Lines", "commonPage.html", null ],
+    [ "Configuration Lines", "commonPage.html", null ],
     [ "Revision History", "revPage.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", [
@@ -26,12 +26,7 @@ var NAVTREE =
       [ "File List", "files.html", [
         [ "src", "dir_d41d8cd98f00b204e9800998ecf8427e.html", [
           [ "DCCpp.h", "DCCpp_8h.html", [
-            [ "DCCPP_LIBRARY_VERSION", "DCCpp_8h.html#a8d9814dec9adda6df580a7f8fbebfa01", null ],
-            [ "USE_EEPROM", "DCCpp_8h.html#abd7d46fa3888b2e1bed34df076372b30", null ],
-            [ "USE_OUTPUT", "DCCpp_8h.html#a6f8d193bd84df6f05773b458355e7bd8", null ],
-            [ "USE_SENSOR", "DCCpp_8h.html#a22f58986dc11249373f6ee1d5fb50c0a", null ],
-            [ "USE_TEXTCOMMAND", "DCCpp_8h.html#ad7034344270036501578d215e708bc82", null ],
-            [ "USE_TURNOUT", "DCCpp_8h.html#a62257f60a9be8ccb699ec6f902c30630", null ]
+            [ "DCCPP_LIBRARY_VERSION", "DCCpp_8h.html#a8d9814dec9adda6df580a7f8fbebfa01", null ]
           ] ]
         ] ]
       ] ]
@@ -54,8 +49,6 @@ var NAVTREE =
         [ "PacketRegister.h", "PacketRegister_8h_source.html", null ],
         [ "Sensor.cpp", "Sensor_8cpp_source.html", null ],
         [ "Sensor.h", "Sensor_8h_source.html", null ],
-        [ "SignalGenerator_esp32.cpp", "SignalGenerator__esp32_8cpp_source.html", null ],
-        [ "SignalGenerator_esp32.h", "SignalGenerator__esp32_8h_source.html", null ],
         [ "TextCommand.cpp", "TextCommand_8cpp_source.html", null ],
         [ "TextCommand.h", "TextCommand_8h_source.html", null ],
         [ "Turnout.cpp", "Turnout_8cpp_source.html", null ],
