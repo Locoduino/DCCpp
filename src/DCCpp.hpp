@@ -80,6 +80,7 @@ class DCCpp
 		static void setFunctions(volatile RegisterList *inReg, int nReg, int inLocoId, FunctionsState &inStates);
 
 	public:
+		static byte ackThreshold;
 		static volatile RegisterList mainRegs, progRegs;
 		static CurrentMonitor mainMonitor;
 		static CurrentMonitor progMonitor;
@@ -154,6 +155,12 @@ class DCCpp
 		@param inProg If true, power off the programmation track.
 		*/
 		static void powerOff(bool inMain = true, bool inProg = true);
+
+		/** Set the minimum threshold value to validate a CV reading or writing..
+		@param inNewValue	Maximum value between 0 and 1023. Default is 30. The threshold that the exponentially-smoothed analogRead samples (after subtracting the baseline current) must cross to establish ACKNOWLEDGEMENT.
+		@return Previous value.
+		*/
+		static byte setAckThreshold(byte inNewValue);
 
 		/** Set the maximum current value before an event 'too much current consumption detected !' for main track.
 		@param inMax	Maximum value between 0 and 1023. Default is 300.

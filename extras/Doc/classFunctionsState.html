@@ -117,6 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acf9daaff514da5fbf446fc40922baad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb99b656a8b7a02528e83aad2305d0fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionsState.html#abb99b656a8b7a02528e83aad2305d0fa">isActivationChanged</a> (byte inFunctionNumber)</td></tr>
 <tr class="separator:abb99b656a8b7a02528e83aad2305d0fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2193eef0b5ab4aef48423b910131836b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionsState.html#a2193eef0b5ab4aef48423b910131836b">printActivated</a> ()</td></tr>
+<tr class="separator:a2193eef0b5ab4aef48423b910131836b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This is a class to handle decoder functions. An instance of this class handle the status of the functions of one decoder. A function can be active or not. </p>
@@ -137,7 +139,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Initialize the instance. </p>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00024">24</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00025">25</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
 
 </div>
 </div>
@@ -162,7 +164,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00040">40</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00041">41</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
 
 </div>
 </div>
@@ -180,7 +182,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Reset all functions to inactive. </p>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00029">29</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00030">30</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
 
 </div>
 </div>
@@ -204,7 +206,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00045">45</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00046">46</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
 
 </div>
 </div>
@@ -229,7 +231,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the given function is activated. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00050">50</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00051">51</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
 
 </div>
 </div>
@@ -254,7 +256,25 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the given function activation flag is different between activFlags and sentActiveFlags. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00055">55</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00056">56</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2193eef0b5ab4aef48423b910131836b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FunctionsState::printActivated </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Print the list of activated functions. </p><dl class="section remark"><dt>Remarks</dt><dd>Only available if DCCPP_DEBUG_MODE is defined. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00068">68</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
 
 </div>
 </div>
@@ -272,7 +292,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Copy the current active flags into 'sent' active flags. </p>
 
-<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00060">60</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DCCpp_8cpp_source.html#l00061">61</a> of file <a class="el" href="DCCpp_8cpp_source.html">DCCpp.cpp</a>.</p>
 
 </div>
 </div>
@@ -286,7 +306,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classFunctionsState.html">FunctionsState</a></li>
-    <li class="footer">Generated on ven. août 2 2019 13:53:56 for DCCpp &nbsp; by
+    <li class="footer">Generated on mer. août 7 2019 16:39:57 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.2.10 </li>
   </ul>

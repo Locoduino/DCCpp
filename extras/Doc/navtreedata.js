@@ -13,6 +13,7 @@ var NAVTREE =
           [ "inactivate", "classFunctionsState.html#aeb80c35a553e068c7249a1f1ff1ebb53", null ],
           [ "isActivated", "classFunctionsState.html#ad70e6952bef3280ddb50ec5461bd1632", null ],
           [ "isActivationChanged", "classFunctionsState.html#abb99b656a8b7a02528e83aad2305d0fa", null ],
+          [ "printActivated", "classFunctionsState.html#a2193eef0b5ab4aef48423b910131836b", null ],
           [ "statesSent", "classFunctionsState.html#acf9daaff514da5fbf446fc40922baad8", null ]
         ] ]
       ] ],
@@ -26,6 +27,7 @@ var NAVTREE =
       [ "File List", "files.html", [
         [ "src", "dir_d41d8cd98f00b204e9800998ecf8427e.html", [
           [ "DCCpp.h", "DCCpp_8h.html", [
+            [ "DCCPP_DEBUG_MODE", "DCCpp_8h.html#a51f0718b05d5d1f9e04917713f4c6ff0", null ],
             [ "DCCPP_LIBRARY_VERSION", "DCCpp_8h.html#a8d9814dec9adda6df580a7f8fbebfa01", null ]
           ] ]
         ] ]

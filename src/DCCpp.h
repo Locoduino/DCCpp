@@ -257,6 +257,15 @@ where NumPort is a port number.
 WARNING: if this line is not present, some errors will be raised during compilation, like "undefined reference to `eServer'" !
 
 \page revPage Revision History
+\par 07/08/2019 V1.3.7
+- Ajout d'une nouvelle fonction à la classe DCCpp : setAckThreshold() pour fixer le seuil de reconnaissance de lecture/écriture de CV, par défaut à 30.
+- Correction de beginMain et beginProg qui refusaient que la 'enable pin' soit non définie.
+- Factorisation des fonctions d'acknowledge après une lecture/écriture de cv, ce qui permet de gagner de la mémoire.
+_______________
+- Added a new function to class DCCpp : setAckThreshold() to fix the acknowledge value for read/write of cvs. Default is 30, but can be too big for small scales and/or efficient motors...
+- Fix of beginMain and beginProg to truely allow that the 'enable pin' can be undefined.
+- Factorisation of acknowledgement functions after read/write of cvs. Win some program memory....
+
 \par 02/08/2019 V1.3.6
 - Correction du calcul de la taille de l'entête EEPROM (Pull Request #5 de positron96).
 - Ajout d'une aide succinte à la configuration d'Ethernet dans la doc.
@@ -399,7 +408,7 @@ _______________
 /** @file DCCpp.h
 Main include file of the library.*/
 
-#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.6"
+#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.7"
 
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in production mode.
@@ -424,7 +433,7 @@ Main include file of the library.*/
 //#define USE_EEPROM
 //#define USE_OUTPUT
 //#define USE_SENSOR
-//#define USE_TEXTCOMMAND
+#define USE_TEXTCOMMAND
 //#define USE_ETHERNET_WIZNET_5100
 //#define USE_ETHERNET_WIZNET_5500
 //#define USE_ETHERNET_WIZNET_5200

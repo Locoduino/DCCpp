@@ -459,10 +459,10 @@ void TextCommand::parse(char *com){
 		returns: series of status messages that can be read by an interface to determine status of DCC++ Base Station and important settings
 		*/
 
-	  if(digitalRead(DCCppConfig::SignalEnablePinProg)==LOW)      // could check either PROG or MAIN
-		DCCPP_INTERFACE.print("<p0>");
-	  else
-		DCCPP_INTERFACE.print("<p1>");
+	  if (DCCppConfig::SignalEnablePinMain == UNDEFINED_PIN || digitalRead(DCCppConfig::SignalEnablePinMain) == HIGH)
+			DCCPP_INTERFACE.print("<p0>");
+		if (DCCppConfig::SignalEnablePinProg == UNDEFINED_PIN || digitalRead(DCCppConfig::SignalEnablePinProg) == HIGH)
+			DCCPP_INTERFACE.print("<p1>");
 #if !defined(USE_ETHERNET)
 	  DCCPP_INTERFACE.println("");
 #endif

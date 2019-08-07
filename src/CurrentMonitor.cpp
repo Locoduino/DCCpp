@@ -36,7 +36,7 @@ boolean CurrentMonitor::checkTime()
   
 void CurrentMonitor::check()
 {
-	if (this->pin == UNDEFINED_PIN)
+	if (this->pin == UNDEFINED_PIN || this->signalPin == UNDEFINED_PIN)
 		return;
 
 	this->current = (float)(analogRead(this->pin) * CURRENT_SAMPLE_SMOOTHING + this->current * (1.0 - CURRENT_SAMPLE_SMOOTHING));      // compute new exponentially-smoothed current

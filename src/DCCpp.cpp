@@ -17,7 +17,8 @@ CurrentMonitor DCCpp::mainMonitor;  // create monitor for current on Main Track
 CurrentMonitor DCCpp::progMonitor;  // create monitor for current on Program Track
 
 bool DCCpp::programMode;
-bool DCCpp::panicStopped; 
+bool DCCpp::panicStopped;
+byte DCCpp::ackThreshold;
 
 // *********************************************************** FunctionsState
 
@@ -121,7 +122,7 @@ void DCCpp::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 	DCCppConfig::CurrentMonitorMain = inCurrentMonitor;
 
 	// If no main line, exit.
-	if (DCCppConfig::SignalEnablePinMain == UNDEFINED_PIN)
+	if (inSignalPin == UNDEFINED_PIN)
 	{
 #ifdef DCCPP_DEBUG_MODE
 		Serial.println("No main track");
@@ -167,12 +168,14 @@ void DCCpp::beginMain(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 	OCR1A = DCC_ONE_BIT_TOTAL_DURATION_TIMER1;
 	OCR1B = DCC_ONE_BIT_PULSE_DURATION_TIMER1;
 
-	pinMode(DCCppConfig::SignalEnablePinMain, OUTPUT);   // master enable for motor channel A
+	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
+		pinMode(DCCppConfig::SignalEnablePinMain, OUTPUT);   // master enable for motor channel A
 
 	mainRegs.loadPacket(1, RegisterList::idlePacket, 2, 0);    // load idle packet into register 1    
 
 	bitSet(TIMSK1, OCIE1B);    // enable interrupt vector for Timer 1 Output Compare B Match (OCR1B)    
-	digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
+	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
+		digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.println(F("beginMain achivied"));
@@ -186,7 +189,7 @@ void DCCpp::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 	DCCppConfig::CurrentMonitorProg = inCurrentMonitor;
 
 	// If no programming line, exit.
-	if (DCCppConfig::SignalEnablePinProg == UNDEFINED_PIN)
+	if (inSignalPin == UNDEFINED_PIN)
 	{
 #ifdef DCCPP_DEBUG_MODE
 		Serial.println("No prog track");
@@ -234,7 +237,8 @@ void DCCpp::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 	OCR0A = DCC_ONE_BIT_TOTAL_DURATION_TIMER0;
 	OCR0B = DCC_ONE_BIT_PULSE_DURATION_TIMER0;
 
-	pinMode(DCCppConfig::SignalEnablePinProg, OUTPUT);   // master enable for motor channel B
+	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
+		pinMode(DCCppConfig::SignalEnablePinProg, OUTPUT);   // master enable for motor channel B
 
 	progRegs.loadPacket(1, RegisterList::idlePacket, 2, 0);    // load idle packet into register 1    
 
@@ -276,14 +280,16 @@ void DCCpp::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 	OCR3A = DCC_ONE_BIT_TOTAL_DURATION_TIMER3;
 	OCR3B = DCC_ONE_BIT_PULSE_DURATION_TIMER3;
 
-	pinMode(DCCppConfig::SignalEnablePinProg, OUTPUT);   // master enable for motor channel B
+	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
+		pinMode(DCCppConfig::SignalEnablePinProg, OUTPUT);   // master enable for motor channel B
 
 	progRegs.loadPacket(1, RegisterList::idlePacket, 2, 0);    // load idle packet into register 1    
 
 	bitSet(TIMSK3, OCIE3B);    // enable interrupt vector for Timer 3 Output Compare B Match (OCR3B)    
 
 #endif
-	digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
+	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
+		digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.println(F("beginProg achivied"));
@@ -292,8 +298,9 @@ void DCCpp::beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uin
 
 void DCCpp::begin()
 {
-	programMode = false;
-	panicStopped = false;
+	DCCpp::programMode = false;
+	DCCpp::panicStopped = false;
+	DCCpp::ackThreshold = 30;
 
 	DCCppConfig::SignalEnablePinMain = UNDEFINED_PIN;
 	DCCppConfig::CurrentMonitorMain = UNDEFINED_PIN;
@@ -568,6 +575,13 @@ void DCCpp::powerOff(bool inMain, bool inProg)
 #if !defined(USE_ETHERNET)
 	DCCPP_INTERFACE.println("");
 #endif
+}
+
+byte DCCpp::setAckThreshold(byte inNewValue)
+{
+	byte old = DCCpp::ackThreshold;
+	DCCpp::ackThreshold = inNewValue;
+	return old;
 }
 
 /***************************** Driving functions */

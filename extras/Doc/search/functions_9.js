@@ -1,6 +1,7 @@
 var searchData=
 [
   ['setaccessory',['setAccessory',['../classDCCpp.html#a66e7b3c72d39e1c5eea17325e5b2602e',1,'DCCpp']]],
+  ['setackthreshold',['setAckThreshold',['../classDCCpp.html#a4f174359f968bcfa09d20a8185d01c9c',1,'DCCpp']]],
   ['setcurrentsamplemaxmain',['setCurrentSampleMaxMain',['../classDCCpp.html#a35c671e79920bd84e49796fa25c7f275',1,'DCCpp']]],
   ['setcurrentsamplemaxprog',['setCurrentSampleMaxProg',['../classDCCpp.html#aefbcac0d455055a312f53cec8c3e044c',1,'DCCpp']]],
   ['setfunctionsmain',['setFunctionsMain',['../classDCCpp.html#a7b97aefc896157cf1336a0fdfca8813a',1,'DCCpp']]],

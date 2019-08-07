@@ -37,6 +37,7 @@ beginMainMotorShield	KEYWORD2
 beginProgMotorShield	KEYWORD2
 beginMainPololu	KEYWORD2
 beginProgPololu	KEYWORD2
+setAckThreshold	KEYWORD2
 
 setSpeedMain	KEYWORD2
 identifyLocoIdMain	KEYWORD2
