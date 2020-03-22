@@ -7,7 +7,6 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
-#ifdef ARDUINO_ARCH_AVR
 #ifndef EEStore_h
 #define EEStore_h
 
@@ -64,6 +63,5 @@ struct EEStore{
   static void clear();	/**< Clears the content of the EEStoreData structure. This function does not change the EEPROM.*/
 };
   
-#endif
 #endif
 #endif

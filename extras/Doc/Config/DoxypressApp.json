@@ -1,4 +1,13 @@
 {
+    "clang": {
+        "clang-compilation-path": "",
+        "clang-dialect": "",
+        "clang-flags": [
+            ""
+        ],
+        "clang-parsing": false,
+        "clang-use-headers": false
+    },
     "configuration": {
         "allow-sub-grouping": true,
         "allow-unicode-names": false,
@@ -75,6 +84,7 @@
         "tcl-subst": [
             ""
         ],
+        "toc-include-headers": 0,
         "use-typedef-name": false
     },
     "dot": {
@@ -114,6 +124,7 @@
             ""
         ],
         "mscgen-path": "",
+        "plantuml-cfg-file": "",
         "plantuml-inc-path": [
             ""
         ],
@@ -123,7 +134,7 @@
         "uml-look": false
     },
     "doxypress-format": 1,
-    "doxypress-updated": "2015-Oct-15",
+    "doxypress-updated": "2018-Jun-30",
     "external": {
         "all-externals": false,
         "external-groups": true,
@@ -429,10 +440,6 @@
         "project-version": ""
     },
     "source": {
-        "clang-flags": [
-            ""
-        ],
-        "clang-parsing": false,
         "inline-source": false,
         "ref-by-relation": false,
         "ref-link-source": true,

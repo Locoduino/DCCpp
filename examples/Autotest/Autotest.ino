@@ -41,7 +41,7 @@ struct StateMachineItem
 		return curr;
 	}
 
-	StateMachineItem(int inDelay, char *inCommand, char *inComment)
+	StateMachineItem(int inDelay, const char *inCommand, const char *inComment)
 	{
 		this->delay = inDelay;
 		strcpy(this->command, inCommand);

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['functionsstate',['FunctionsState',['../classFunctionsState.html',1,'']]]
+  ['dccpp',['DCCpp',['../classDCCpp.html',1,'']]],
+  ['dccppconfig',['DCCppConfig',['../structDCCppConfig.html',1,'']]]
 ];

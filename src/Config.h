@@ -11,7 +11,6 @@ Part of DCC++ BASE STATION for the Arduino
 #define __config_h
 
 #include "Arduino.h"
-#ifdef ARDUINO_ARCH_AVR
 
 /**	Use it as an argument to specify an unused pin. */
 #define UNDEFINED_PIN	255
@@ -20,8 +19,23 @@ Part of DCC++ BASE STATION for the Arduino
 //
 // DEFINE NUMBER OF MAIN TRACK REGISTER
 
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)      // Configuration for UNO or NANO
+
 /** Number of track registers for the main line. 0 for transient orders, the others for continual orders. */
 #define MAX_MAIN_REGISTERS 12
+
+#elif defined(ARDUINO_AVR_MEGA2560)
+
+/** Number of track registers for the main line. 0 for transient orders, the others for continual orders. */
+#define MAX_MAIN_REGISTERS 21
+
+#elif defined(ARDUINO_ARCH_ESP32)
+
+/** Number of track registers for the main line. 0 for transient orders, the others for continual orders. */
+#define MAX_MAIN_REGISTERS 41
+
+#endif
+
 /** Number of track registers for the programming line. 0 for transient orders, the two others for continual orders for the only loco on this track. */
 #define MAX_PROG_REGISTERS 3
 
@@ -73,7 +87,7 @@ Part of DCC++ BASE STATION for the Arduino
 #define POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A 7
 #define POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B 8
 
-#ifdef USE_ETHERNET
+#if defined(USE_ETHERNET)
 enum EthernetProtocol
 {
 	HTTP,
@@ -83,11 +97,18 @@ enum EthernetProtocol
 
 struct DCCppConfig
 {
-#ifdef USE_ETHERNET
+#if defined(USE_ETHERNET)
 	static uint8_t EthernetIp[4];
 	static uint8_t EthernetMac[6];
 	static int EthernetPort;
 	static EthernetProtocol Protocol;
+#endif
+
+#ifdef USE_ONLY1_INTERRUPT
+	static uint8_t SignalPortMaskMain;
+	static uint8_t SignalPortMaskProg;
+	static volatile uint8_t *SignalPortInMain;
+	static volatile uint8_t *SignalPortInProg;
 #endif
 
 	static byte SignalEnablePinMain;	// PWM : *_SIGNAL_ENABLE_PIN_MAIN
@@ -96,12 +117,13 @@ struct DCCppConfig
 	static byte SignalEnablePinProg;	// PWM : *_SIGNAL_ENABLE_PIN_PROG
 	static byte CurrentMonitorProg;		// Current sensor : *_CURRENT_MONITOR_PIN_PROG
 
+#ifndef USE_ONLY1_INTERRUPT
 	// Only for shields : indirection of the signal from SignalPinMain to DirectionMotor of the shield
 	static byte DirectionMotorA;		// *_DIRECTION_MOTOR_CHANNEL_PIN_A
 	static byte DirectionMotorB;		// *_DIRECTION_MOTOR_CHANNEL_PIN_B
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-#endif
 #endif

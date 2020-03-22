@@ -7,7 +7,6 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 #include "Arduino.h"
-#ifdef ARDUINO_ARCH_AVR
 
 #include "DCCpp.h"
 
@@ -204,7 +203,7 @@ void Turnout::store() {
 #if defined(USE_TEXTCOMMAND)
 ///////////////////////////////////////////////////////////////////////////////
 
-void Turnout::parse(char *c){
+bool Turnout::parse(char *c){
   int n,s,m;
   Turnout *t;
   
@@ -212,33 +211,49 @@ void Turnout::parse(char *c){
     
     case 2:                     // argument is string with id number of turnout followed by zero (not thrown) or one (thrown)
       t=get(n);
-      if(t!=NULL)
-        t->activate(s);
-#ifdef USE_TEXTCOMMAND
-	  else
-	  {
-		  DCCPP_INTERFACE.print("<X>");
+			if (t != NULL)
+			{
+				if (s < 0)							// if second argument s is negative, just send the current state of the turnout.
+				{
+					DCCPP_INTERFACE.print("<H");
+					DCCPP_INTERFACE.print(n);
+					if (t->data.tStatus == 0)
+						DCCPP_INTERFACE.print(" 0>");
+					else
+						DCCPP_INTERFACE.print(" 1>");
 #if !defined(USE_ETHERNET)
-		  DCCPP_INTERFACE.println("");
+					DCCPP_INTERFACE.println("");
 #endif
-	  }
+				}
+				else
+					t->activate(s);
+			}
+#ifdef USE_TEXTCOMMAND
+			else
+			{
+			  DCCPP_INTERFACE.print("<X>");
+#if !defined(USE_ETHERNET)
+				DCCPP_INTERFACE.println("");
 #endif
-      break;
+			}
+#endif
+			return true;
 
     case 3:                     // argument is string with id number of turnout followed by an address and subAddress
       create(n,s,m);
-    break;
+			return true;
 
-    case 1:                     // argument is a string with id number only
-      remove(n);
-    break;
-    
+		case 1:                     // argument is a string with id number only
+			remove(n);
+			return true;
+
 #ifdef DCCPP_PRINT_DCCPP
 	case -1:                    // no arguments
       show();
-    break;
+			return true;
 #endif
   }
+	return false;
 }
 
 Turnout *Turnout::create(int id, int add, int subAdd) {
@@ -301,4 +316,3 @@ Turnout *Turnout::firstTurnout = NULL;
 #endif
 
 #endif //USE_TURNOUT
-#endif

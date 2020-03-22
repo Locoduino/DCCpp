@@ -7,7 +7,6 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
-#ifdef ARDUINO_ARCH_AVR
 #ifndef CurrentMonitor_h
 #define CurrentMonitor_h
 
@@ -47,5 +46,4 @@ struct CurrentMonitor{
   void check();
 };
 
-#endif
 #endif

@@ -7,7 +7,6 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 
-#ifdef ARDUINO_ARCH_AVR
 #ifndef TextCommand_h
 #define TextCommand_h
 
@@ -30,10 +29,9 @@ COMMAND AND THE FIRST PARAMETER IS ALSO NOT REQUIRED.*/
 struct TextCommand{
   static char commandString[MAX_COMMAND_LENGTH+1];
   static void init(volatile RegisterList *, volatile RegisterList *, CurrentMonitor *);
-  static void parse(char *);
+  static bool parse(char *);
   static void process();
 }; // TextCommand
   
-#endif
 #endif
 #endif

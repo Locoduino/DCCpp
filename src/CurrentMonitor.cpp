@@ -9,8 +9,6 @@ Part of DCC++ BASE STATION for the Arduino
 
 #include "Arduino.h"
 
-#ifdef ARDUINO_ARCH_AVR
-
 #include "DCCpp_Uno.h"
 #include "CurrentMonitor.h"
 #include "Comm.h"
@@ -36,7 +34,7 @@ boolean CurrentMonitor::checkTime()
   
 void CurrentMonitor::check()
 {
-	if (this->pin == UNDEFINED_PIN)
+	if (this->pin == UNDEFINED_PIN || this->signalPin == UNDEFINED_PIN)
 		return;
 
 	this->current = (float)(analogRead(this->pin) * CURRENT_SAMPLE_SMOOTHING + this->current * (1.0 - CURRENT_SAMPLE_SMOOTHING));      // compute new exponentially-smoothed current
@@ -53,5 +51,3 @@ void CurrentMonitor::check()
 } // CurrentMonitor::check  
 
 long int CurrentMonitor::sampleTime=0;
-
-#endif

@@ -11,7 +11,6 @@ Part of DCC++ BASE STATION for the Arduino
 #define Outputs_h
 
 #include "Arduino.h"
-#ifdef ARDUINO_ARCH_AVR
 
 #ifdef USE_OUTPUT
 
@@ -200,7 +199,7 @@ struct Output{
   @param c string to interpret... See syntax in class description.
   @remark Only available when USE_TEXTCOMMAND is defined.
   */
-  static void parse(char *c);
+  static bool parse(char *c);
   /** Creates a new output in the list..
   @param id	The numeric ID (0-32767) of the output.
   @param pin The arduino pin number to use for the output.
@@ -213,6 +212,5 @@ struct Output{
 
 }; // Output
   
-#endif
 #endif
 #endif

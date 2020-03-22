@@ -8,7 +8,6 @@ Part of DCC++ BASE STATION for the Arduino
 **********************************************************************/
 
 #include "Arduino.h"
-#ifdef ARDUINO_ARCH_AVR
 
 #include "Sensor.h"
 #ifdef USE_SENSOR
@@ -253,7 +252,7 @@ void Sensor::store() {
 #if defined(USE_TEXTCOMMAND)
 ///////////////////////////////////////////////////////////////////////////////
 
-void Sensor::parse(char *c) {
+bool Sensor::parse(char *c) {
 	int n, s, m;
 	//  Sensor *t;
 
@@ -261,16 +260,16 @@ void Sensor::parse(char *c) {
 
 	case 3:                     // argument is string with id number of sensor followed by a pin number and pullUp indicator (0=LOW/1=HIGH)
 		create(n, s, m);
-		break;
+		return true;
 
 	case 1:                     // argument is a string with id number only
 		remove(n);
-		break;
+		return true;
 
 #ifdef DCCPP_PRINT_DCCPP
 	case -1:                    // no arguments
 		show();
-		break;
+		return true;
 #endif
 #ifdef USE_TEXTCOMMAND
 	case 2:                     // invalid number of arguments
@@ -278,9 +277,10 @@ void Sensor::parse(char *c) {
 #if !defined(USE_ETHERNET)
 		DCCPP_INTERFACE.println("");
 #endif
-		break;
+		return true;
 #endif
 	}
+	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -309,5 +309,4 @@ Sensor *Sensor::create(int snum, int pin, int pullUp) {
 
 Sensor *Sensor::firstSensor=NULL;
 
-#endif
 #endif

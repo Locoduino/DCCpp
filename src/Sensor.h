@@ -10,7 +10,6 @@ Part of DCC++ BASE STATION for the Arduino
 #ifndef Sensor_h
 #define Sensor_h
 
-#ifdef ARDUINO_ARCH_AVR
 #include "Arduino.h"
 
 #include "DCCpp.h"
@@ -185,7 +184,7 @@ struct Sensor{
   @param c string to interpret... See syntax in class description.
   @remark Only available when USE_TEXTCOMMAND is defined.
   */
-  static void parse(char *c);
+  static bool parse(char *c);
   /** Creates a new sensor in the list..
   @param snum The numeric ID (0-32767) of the sensor.
   @param pin The arduino pin number to use for the sensor.
@@ -199,5 +198,4 @@ struct Sensor{
 
 #endif
 
-#endif
 #endif

@@ -80,6 +80,7 @@ class DCCpp
 		static void setFunctions(volatile RegisterList *inReg, int nReg, int inLocoId, FunctionsState &inStates);
 
 	public:
+		static byte ackThreshold;
 		static volatile RegisterList mainRegs, progRegs;
 		static CurrentMonitor mainMonitor;
 		static CurrentMonitor progMonitor;
@@ -89,6 +90,7 @@ class DCCpp
 		/** Begins the DCCpp library.
 		*/
 		static void begin();
+#ifndef USE_ONLY1_INTERRUPT
 		/** Initializes the main track.
 		@param inOptionalDirectionMotor	Pin for the rerouting of shields direction pin, set it to UNDEFINED_PIN if not used.
 		@param inSignalPin	Pin for the signal pin, the one driven by an interruption, set it to UNDEFINED_PIN if not used (but the line will be always down...).
@@ -104,6 +106,7 @@ class DCCpp
 		*/
 		static void beginProg(uint8_t inOptionalDirectionMotor, uint8_t inSignalPin, uint8_t inSignalEnablePin, uint8_t inCurrentMonitor);
 
+#ifdef ARDUINO_ARCH_AVR
 		/** Initializes the main track for an Arduino Motor Shield.
 		*/
 		static inline void beginMainMotorShield() { beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN); }
@@ -117,6 +120,54 @@ class DCCpp
 		/** Initializes the programming track for a Pololu MC33926 Motor Shield.
 		*/
 		static inline void beginProgPololu() { beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG); }
+#endif
+#else
+		/** Initializes the main track.
+		@param inOptionalDirectionMotor	Pin for the rerouting of shields direction pin, set it to UNDEFINED_PIN if not used.
+		@param inSignalPin	Pin for the signal pin, the one driven by an interruption, set it to UNDEFINED_PIN if not used (but the line will be always down...).
+		@param inSignalEnablePin	Pin for the enable/PWM pin, set it to UNDEFINED_PIN if not used.
+		@param inCurrentMonitor	Pin for the current monitor analog pin, set it to UNDEFINED_PIN if not used.
+		*/
+		static void beginMain(uint8_t inSignalPin, uint8_t inSignalEnablePin, uint8_t inCurrentMonitor);
+		/** Initializes the programming track.
+		@param inOptionalDirectionMotor	Pin for the rerouting of shields direction pin, set it to UNDEFINED_PIN if not used.
+		@param inSignalPin	Pin for the signal pin, the one driven by an interruption, set it to UNDEFINED_PIN if not used (but the line will be always down...).
+		@param inSignalEnablePin	Pin for the enable/PWM pin, set it to UNDEFINED_PIN if not used.
+		@param inCurrentMonitor	Pin for the current monitor analog pin, set it to UNDEFINED_PIN if not used.
+		*/
+		static void beginProg(uint8_t inSignalPin, uint8_t inSignalEnablePin, uint8_t inCurrentMonitor);
+
+#ifdef ARDUINO_ARCH_AVR
+		/** Initializes the main track for an Arduino Motor Shield.
+		*/
+		static inline void beginMainMotorShield() { beginMain(DCC_SIGNAL_PIN_MAIN, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_MAIN, MOTOR_SHIELD_CURRENT_MONITOR_PIN_MAIN); }
+		/** Initializes the programming track for an Arduino Motor Shield.
+		*/
+		static inline void beginProgMotorShield() { beginProg(DCC_SIGNAL_PIN_PROG, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG, MOTOR_SHIELD_CURRENT_MONITOR_PIN_PROG); }
+
+		/** Initializes the main track for a Pololu MC33926 Motor Shield.
+		*/
+		static inline void beginMainPololu() { beginMain(DCC_SIGNAL_PIN_MAIN, POLOLU_SIGNAL_ENABLE_PIN_MAIN, POLOLU_CURRENT_MONITOR_PIN_MAIN); }
+		/** Initializes the programming track for a Pololu MC33926 Motor Shield.
+		*/
+		static inline void beginProgPololu() { beginProg(DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG); }
+#endif
+#endif
+
+		// The next two functions are redefined for each kind of Arduino... See DccSignal*.cpp
+		/** Initializes the main track.
+		@param inSignalPin	Pin for the signal pin, the one driven by an interruption, set it to UNDEFINED_PIN if not used (but the line will be always down...).
+		*/
+		static void beginMainDccSignal(uint8_t inSignalPin);
+		/** Initializes the programming track.
+		@param inSignalPin	Pin for the signal pin, the one driven by an interruption, set it to UNDEFINED_PIN if not used (but the line will be always down...).
+		*/
+		static void beginProgDccSignal(uint8_t inSignalPin);
+		/** Set the tracks in slow 'debug' mode
+		only for tests.
+		*/
+		static void setDebugDccMode();
+
 #ifdef USE_ETHERNET
 		/** Initializes the Ethernet link.
 		@param inMac Mac address of this network element.
@@ -154,6 +205,12 @@ class DCCpp
 		@param inProg If true, power off the programmation track.
 		*/
 		static void powerOff(bool inMain = true, bool inProg = true);
+
+		/** Set the minimum threshold value to validate a CV reading or writing..
+		@param inNewValue	Maximum value between 0 and 1023. Default is 30. The threshold that the exponentially-smoothed analogRead samples (after subtracting the baseline current) must cross to establish ACKNOWLEDGEMENT.
+		@return Previous value.
+		*/
+		static byte setAckThreshold(byte inNewValue);
 
 		/** Set the maximum current value before an event 'too much current consumption detected !' for main track.
 		@param inMax	Maximum value between 0 and 1023. Default is 300.
@@ -266,6 +323,16 @@ class DCCpp
 		static void setAccessory(int inAddress, byte inSubAddress, byte inActivate);
 
 public:
+
+#ifdef DCCPP_DEBUG_MODE
+		/** BEFORE activating the DCC mode, this function will check for power connections by setting the voltage alternatively in one side and the other for the given delay.
+		If two leds are connected to the power module to check the DCC signal, they will go on alternatively.
+		@param aDirPin pin for the direction of the tension.
+		@param inDelay milliseconds to see the test.
+		*/
+		static void CheckPowerConnectionsWithLeds(uint8_t aDirPin, unsigned int inDelay);
+#endif
+
 #ifdef DCCPP_PRINT_DCCPP
 	/** This define is empty if DCCPP_PRINT_DCCPP is not defined. */
 	#define PRINT_DCCPP	DCCpp::showConfiguration();

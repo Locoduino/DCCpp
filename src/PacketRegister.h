@@ -11,14 +11,13 @@ Part of DCC++ BASE STATION for the Arduino
 #define PacketRegister_h
 
 #include "Arduino.h"
-#ifdef ARDUINO_ARCH_AVR
 
 // Define constants used for reading CVs from the Programming Track
 
 #define  ACK_BASE_COUNT            100      /**< Number of analogRead samples to take before each CV verify to establish a baseline current.*/
 #define  ACK_SAMPLE_COUNT          500      /**< Number of analogRead samples to take when monitoring current after a CV verify (bit or byte) has been sent.*/ 
 #define  ACK_SAMPLE_SMOOTHING      0.2      /**< Exponential smoothing to use in processing the analogRead samples after a CV verify (bit or byte) has been sent.*/
-#define  ACK_SAMPLE_THRESHOLD       30      /**< The threshold that the exponentially-smoothed analogRead samples (after subtracting the baseline current) must cross to establish ACKNOWLEDGEMENT.*/
+#define  ACK_SAMPLE_THRESHOLD      DCCpp::ackThreshold		/**< The threshold that the exponentially-smoothed analogRead samples (after subtracting the baseline current) must cross to establish ACKNOWLEDGEMENT.*/
 
 struct Packet{
   byte buf[10];
@@ -42,6 +41,14 @@ struct RegisterList{
   Register *maxLoadedReg;
   Register *nextReg;
   Packet  *tempPacket;
+  
+#ifdef USE_ONLY1_INTERRUPT
+  /* how many 58us periods needed for half-cycle (1 for "1", 2 for "0") */
+  byte timerPeriods;
+  /* how many 58us periods are left (at start, 2 for "1", 4 for "0"). */
+  byte timerPeriodsLeft;
+#endif
+
   byte currentBit;
   byte nRepeat;
   int *speedTable;
@@ -59,6 +66,8 @@ struct RegisterList{
 #endif
 
   int readCVraw(int cv, int callBack, int callBackSub) volatile;
+	int buildBaseAcknowlegde(int inMonitorPin) volatile;
+	int checkAcknowlegde(int inMonitorPin,  int inBase) volatile;
 
 #ifdef USE_TEXTCOMMAND
   int readCV(char *) volatile;
@@ -70,14 +79,16 @@ struct RegisterList{
   void writeCVBitMain(char *s) volatile;
 #endif
 
+	byte setAckThreshold(byte inNewValue);
+
   void setThrottle(int nReg, int cab, int tSpeed, int tDirection) volatile;
   void setFunction(int nReg, int cab, int fByte, int eByte) volatile;
   void setAccessory(int aAdd, int aNum, int activate) volatile;
   void writeTextPacket(int nReg, byte *b, int nBytes) volatile;
   int readCV(int cv, int callBack, int callBackSub) volatile;
   int readCVmain(int cv, int callBack, int callBackSub) volatile;
-  void writeCVByte(int cv, int bValue, int callBack, int callBackSub) volatile;
-  void writeCVBit(int cv, int bNum, int bValue, int callBack, int callBackSub) volatile;
+  void writeCVByte(int cv, int bValue, int callBack, int callBackSub) volatile;	// prog track
+  void writeCVBit(int cv, int bNum, int bValue, int callBack, int callBackSub) volatile;	// prog track
   void writeCVByteMain(int cab, int cv, int bvalue) volatile;
   void writeCVBitMain(int cab, int cv, int bNum, int bValue) volatile;
 
@@ -86,5 +97,4 @@ struct RegisterList{
 #endif
 };
 
-#endif
 #endif

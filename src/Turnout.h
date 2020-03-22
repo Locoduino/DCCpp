@@ -10,7 +10,6 @@ Part of DCC++ BASE STATION for the Arduino
 #ifndef Turnout_h
 #define Turnout_h
 
-#ifdef ARDUINO_ARCH_AVR
 #include "Arduino.h"
 
 #include "DCCpp.h"
@@ -191,7 +190,7 @@ struct Turnout{
 	@param c string to interpret... See syntax in class description.
 	@remark Only available when USE_TEXTCOMMAND is defined.
 	*/
-	static void parse(char *c);
+	static bool parse(char *c);
 	/** Creates a new turnout in the list..
 	@param id The numeric ID (0-32767) of the sensor.
 	@param add	The primary address of the decoder controlling this turnout (0-511).
@@ -204,6 +203,5 @@ struct Turnout{
 
 }; // Turnout
   
-#endif
 #endif
 #endif

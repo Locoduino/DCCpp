@@ -10,7 +10,7 @@ DCC++ BASE STATION
 COPYRIGHT (c) 2013-2016 Gregg E. Berman
 
 Adapted in this library DCCpp by Thierry PARIS
-Copyright Locoduino 2017-2019
+Copyright Locoduino 2017-2020
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -180,7 +180,7 @@ the needs to modify the library sources to use it. The only configuration still 
 to decide of the Ethernet interface model.
 It has been adapted to work also with Arduino Nano R3 on IDE 1.8.4 .
 
-\page commonPage Common Configuration Lines
+\page commonPage Configuration Lines
 
 This is the 'begin' lines for some common configurations. Note that for LMD18200, the two final arguments must be adapted to your need...
 The wiring for these configurations is visible here : http://www.locoduino.org/spip.php?article187 . The text is in French, but schema can be understood !
@@ -240,7 +240,55 @@ DCCpp::beginMain(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN, POLO
 DCCpp::beginProg(POLOLU_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, POLOLU_SIGNAL_ENABLE_PIN_PROG, POLOLU_CURRENT_MONITOR_PIN_PROG);
 \endverbatim
 
+\par Ethernet Usage
+
+To activate an Ethernet connection, one of the four ethernet defines must be activated :
+- USE_ETHERNET_WIZNET_5100 for Wiznet 5100 chip, present on the Arduino Ethernet Shield V1 and other shields.
+- USE_ETHERNET_WIZNET_5500 for Wiznet 5500 chip, present on the Arduino Ethernet Shield V2 and other shields.
+- USE_ETHERNET_WIZNET_5200 for Wiznet 5200 chip, present on the Arduino Ethernet Shield from Seeed and other shields.
+- USE_ETHERNET_ENC28J60  for cheap ENC28J60 chip, present on a lot of chinese Ethernet shields.
+
+If one of these defines is activated, a line must be present somewhere in your code, defining an Ethernet server :
+\verbatim
+EthernetServer DCCPP_INTERFACE(NumPort);                  // Create and instance of an EthernetServer
+\endverbatim
+where NumPort is a port number. 
+
+WARNING: if this line is not present, some errors will be raised during compilation, like "undefined reference to `eServer'" !
+
 \page revPage Revision History
+\par 04/03/2020 V1.4.0
+- Ajout de la compatibilité ESP32. Seul la partie DCC a été portée, le reste (turnout, sensor et outputs) est exclu parce que pas testé...
+- En architecture AVR, un mode USE_ONLY1_INTERRUPT a été ajouté pour n'utiliser qu'une seule interruption pour les deux voies.
+- Nombre de registres disponibles passé à 21 pour un Mega, et à 41 pour un ESP32.
+- Ajout d'une nouvelle fonction à la classe DCCpp : setAckThreshold() pour fixer le seuil de reconnaissance de lecture/écriture de CV, par défaut à 30.
+- Correction de beginMain et beginProg qui refusaient que la 'enable pin' soit non définie.
+- Factorisation des fonctions d'acknowledge après une lecture/écriture de cv, ce qui permet de gagner de la mémoire.
+- Correction de Outputs.cpp qui était exclu de la compilation si USE_TURNOUT (?) n'était pas activé...
+- Toutes les fonctions Parse() qui analysent une syntaxe texte de commande retournent maintenant true si la commande a été traitée. Un message d'erreur s'affiche sur la console dans le cas contraire.
+- La syntaxe texte pour fixer une fonction a été étendue : 'f cab fbyte' et 'f cab fbyte ebyte' sont toujours présentes, mais 'f 0 reg cab fbyte' et 'f 0 reg cab fbyte ebyte' ont été ajoutées pour pouvoir fixer le registre à charger.
+- powerOn() et powerOff() qui exécutent les ordres <1> et <0> ne renvoient plus rien si elles ne font rien à cause de broches Enable indefinies.
+_______________
+- ESP32 mode added. Only the part DCC has been ported, the classes Turnout, Outputs and Sensor have been excluded because of lack of tests...
+- On AVR achitecture, a new mode USE_ONLY1_INTERRUPT has been added to only use one interrupt for the two tracks.
+- On mega the register number is now of 21, and 41 on ESP32.
+- Added a new function to class DCCpp : setAckThreshold() to fix the acknowledge value for read/write of cvs. Default is 30, but can be too big for small scales and/or efficient motors...
+- Fix of beginMain and beginProg to truely allow that the 'enable pin' can be undefined.
+- Factorisation of acknowledgement functions after read/write of cvs. Win some program memory....
+- Fix of Outputs.cpp which was ecluded from compilation if USE_TURNOUT undefined !
+- All Parse() functions now return a boolean. It is true if the command analyzed by the parse function is correct. Otherwise an error message is shown on console.
+- The syntax of function commands has been extended : 'f cab fbyte' and 'f cab fbyte ebyte' still exist, but 'f 0 reg cab fbyte' and 'f 0 reg cab fbyte ebyte' have been added to be able to fix the register number.
+- powerOn() and powerOff() (commands <1> and <0>) functions do not return aknowledge on serial line if they do nothing because of Enable pins undefined.
+
+\par 02/08/2019 V1.3.6
+- Correction du calcul de la taille de l'entête EEPROM (Pull Request #5 de positron96).
+- Ajout d'une aide succinte à la configuration d'Ethernet dans la doc.
+- Retrait de SignalGenerator.*
+_______________
+- Fixes EEPROM not working correctly (Pull Request #5 by positron96).
+- Add a short config help for Ethernet in inline documentation.
+- Files SignalGenerator.* removed.
+
 \par 19/06/2019 V1.3.5
 - Correction de la transformation de INTERFACE en DCCPP_INTERFACE si USE_ETHERNET_* .
 _______________
@@ -374,7 +422,7 @@ _______________
 /** @file DCCpp.h
 Main include file of the library.*/
 
-#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.3.5"
+#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.4.0"
 
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in production mode.
@@ -387,20 +435,30 @@ Main include file of the library.*/
 //#define DCCPP_DEBUG_VERBOSE_MODE
 
 ///////////////////////////////////////////////////////
-// The function DCCpp::printConfiguration()
+// The function DCCpp::showConfiguration()
 // is very heavy in program memory. So to avoid problems
 // you can make this function available by uncomment the next line, only when necessary.
 //#define DCCPP_PRINT_DCCPP
 
+///////////////////////////////////////////////////////
+// This define gets rid of 2 timers and uses only Timer2 to tick every 58us and change logic levels on both tracks. 
+// Zero bit is changed every 2 ticks, "one" bit changes every tick; this makes timings roughly equal to DCC specs.
+// This frees one timer and 2 pins to be used for something else, though PWM pins controlled by Timer2 
+// cannot be used for hardware - PWM(they can, however, be used to output DCC signal using proposed method since 
+// it is effectively a software - PWM).Jumpers for shields are not needed anymore. This is done at the RAM cost of 
+// 2 bytes per RegisterList and 2 extra pointers in DCCppConfig (pointers might not be needed, they are used for 
+// direct IO port manipulation to bypass arduino's digitalWrite).
+//#define USE_ONLY1_INTERRUPT
+
 //  Inclusion area
 //
 
-#define USE_TURNOUT
-#define USE_EEPROM
-#define USE_OUTPUT
-#define USE_SENSOR
-#define USE_TEXTCOMMAND
-#define USE_ETHERNET_WIZNET_5100
+//#define USE_TURNOUT
+//#define USE_EEPROM
+//#define USE_OUTPUT
+//#define USE_SENSOR
+//#define USE_TEXTCOMMAND
+//#define USE_ETHERNET_WIZNET_5100
 //#define USE_ETHERNET_WIZNET_5500
 //#define USE_ETHERNET_WIZNET_5200
 //#define USE_ETHERNET_ENC28J60
@@ -416,22 +474,22 @@ Main include file of the library.*/
     #define USE_OUTPUT
     /**Comment this line to avoid using and compiling Sensors.*/
     #define USE_SENSOR
-    /**Comment this line to avoid using and compiling Serial commands.*/
-    #define USE_TEXTCOMMAND
-    /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip (Arduino Shield v1).*/
-    #define USE_ETHERNET_WIZNET_5100
-    /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip (Arduino Shield v2).*/
-    #define USE_ETHERNET_WIZNET_5500
-    /**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip (Seeed Studio).*/
-    #define USE_ETHERNET_WIZNET_5200
-    /**Comment this line to avoid using and compiling Ethernet shield using ENC28J60 chip.*/
-    #define USE_ETHERNET_ENC28J60
+		/**Comment this line to avoid using and compiling Serial commands.*/
+		#define USE_TEXTCOMMAND
+		/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5100 chip (Arduino Shield v1).*/
+		#define USE_ETHERNET_WIZNET_5100
+		/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5500 chip (Arduino Shield v2).*/
+		#define USE_ETHERNET_WIZNET_5500
+		/**Comment this line to avoid using and compiling Ethernet shield using Wiznet 5200 chip (Seeed Studio).*/
+		#define USE_ETHERNET_WIZNET_5200
+		/**Comment this line to avoid using and compiling Ethernet shield using ENC28J60 chip.*/
+		#define USE_ETHERNET_ENC28J60
 
     #undef USE_TURNOUT
     #undef USE_EEPROM
     #undef USE_OUTPUT
     #undef USE_SENSOR
-    #undef USE_TEXTCOMMAND
+		#undef USE_TEXTCOMMAND
     #undef USE_ETHERNET_WIZNET_5100
     #undef USE_ETHERNET_WIZNET_5500
     #undef USE_ETHERNET_WIZNET_5200
@@ -450,6 +508,14 @@ Main include file of the library.*/
     You can use the define PRINT_DCCPP() in your sketch instead of a call to DCCpp.showConfiguration().
     If DCCPP_PRINT_DCCPP is not defined, PRINT_DCCPP is defined as empty, so you will not have a compilation error.*/
     #define DCCPP_PRINT_DCCPP
+		/** This define gets rid of 2 timers and uses only Timer2 to tick every 58us and change logic levels on both tracks. 
+		Zero bit is changed every 2 ticks, "one" bit changes every tick; this makes timings roughly equal to DCC specs.
+		This frees one timer and 2 pins to be used for something else, though PWM pins controlled by Timer2 
+		cannot be used for hardware - PWM(they can, however, be used to output DCC signal using proposed method since 
+		it is effectively a software - PWM).Jumpers for shields are not needed anymore. This is done at the RAM cost of 
+		2 bytes per RegisterList and 2 extra pointers in DCCppConfig (pointers might not be needed, they are used for 
+		direct IO port manipulation to bypass arduino's digitalWrite).*/
+		#define USE_ONLY1_INTERRUPT
 #endif
 
 #if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200) || defined(USE_ETHERNET_ENC28J60)
@@ -458,7 +524,6 @@ Main include file of the library.*/
 
 /////////////////////////////////////
 
-#ifdef ARDUINO_ARCH_AVR
 #include "DCCpp_Uno.h"
 #include "PacketRegister.h"
 #include "CurrentMonitor.h"
@@ -478,7 +543,6 @@ Main include file of the library.*/
 #endif
 #ifdef USE_TEXTCOMMAND
 #include "TextCommand.h"
-#endif
 #endif
 
 #include "DCCpp.hpp"

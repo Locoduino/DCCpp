@@ -8,7 +8,7 @@ Part of DCC++ BASE STATION for the Arduino
 **********************************************************************/
 
 #include "Arduino.h"
-#ifdef ARDUINO_ARCH_AVR
+
 // See TextCommand::parse() below for defined text commands.
 
 #include "TextCommand.h"
@@ -16,6 +16,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 #ifdef VISUALSTUDIO
 #include "string.h"
+#include "iostream"
 #else
 extern unsigned int __heap_start;
 extern void *__brkval;
@@ -55,7 +56,14 @@ void TextCommand::process(){
 			if (c == '<')                    // start of new command
 				commandString[0] = 0;
 			else if (c == '>')               // end of new command
-				parse(commandString);
+			{
+				if (parse(commandString) == false)
+				{
+#if defined(DCCPP_DEBUG_MODE)
+					Serial.println("invalid command !");
+#endif
+				}
+			}
 			else if (strlen(commandString) < MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from network
 				sprintf(commandString, "%s%c", commandString, c);     // otherwise, character is ignored (but continue to look for '<' or '>')
 		} // while
@@ -63,31 +71,33 @@ void TextCommand::process(){
 		if (DCCppConfig::Protocol == EthernetProtocol::HTTP)
 			client.stop();
 	}
+	
+	#else  // SERIAL case
 
-  #else  // SERIAL case
-
-	while (DCCPP_INTERFACE.available()>0) {    // while there is data on the serial line
-		c = DCCPP_INTERFACE.read();
-		if (c == '<')                    // start of new command
-			commandString[0] = 0;
-		else if (c == '>')               // end of new command
-			parse(commandString);
-		else if (strlen(commandString) < MAX_COMMAND_LENGTH)	// if commandString still has space, append character just read from serial line
-			sprintf(commandString, "%s%c", commandString, c);	// otherwise, character is ignored (but continue to look for '<' or '>')
-	} // while
+		while (DCCPP_INTERFACE.available()>0) {    // while there is data on the serial line
+			c = DCCPP_INTERFACE.read();
+			if (c == '<')                    // start of new command
+				commandString[0] = 0;
+			else if (c == '>')               // end of new command
+				parse(commandString);
+			else if (strlen(commandString) < MAX_COMMAND_LENGTH)	// if commandString still has space, append character just read from serial line
+				sprintf(commandString, "%s%c", commandString, c);	// otherwise, character is ignored (but continue to look for '<' or '>')
+		} // while
   
-  #endif
-
+	#endif
 } // TextCommand:process
    
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextCommand::parse(char *com){
+bool TextCommand::parse(char *com){
 
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(com[0]);
 	Serial.println(F(" command"));
+#ifdef VISUALSTUDIO
+	std::cout << com <<  " command received" << std::endl; 
+#endif
 #endif
 
   switch(com[0]){
@@ -114,7 +124,7 @@ void TextCommand::parse(char *com){
 	   */
 
 	  DCCpp::mainRegs.setThrottle(com+1);
-	  break;
+		return true;
 
 	case 'f':       
 		/**	\addtogroup commandsGroup
@@ -125,11 +135,15 @@ void TextCommand::parse(char *com){
 		\verbatim
 		<f CAB BYTE1 [BYTE2]>
 		\endverbatim
+		\verbatim
+		<f -1 REGISTER CAB BYTE1 [BYTE2]>
+		\endverbatim
 		</b>
 
 		turns on and off engine decoder functions F0-F28 (F0 is sometimes called FL)  
 		NOTE: setting requests transmitted directly to mobile engine decoder --- current state of engine functions is not stored by this program
    
+		- <b>REGISTE%R</b>: an internal register number, from 1 through MAX_MAIN_REGISTERS (inclusive), to store the DCC packet used to control these functions. REGISTER is only used if the first argument is -1.
 		- <b>CAB</b>:  the short (1-127) or long (128-10293) address of the engine decoder
    
 		To set functions F0-F4 on (=1) or off (=0):
@@ -160,9 +174,8 @@ void TextCommand::parse(char *com){
 		returns: NONE
 		*/
 
-
-	  DCCpp::mainRegs.setFunction(com+1);
-	  break;
+		DCCpp::mainRegs.setFunction(com+1);
+	  return true;
 
 	case 'a':       
 		/**	\addtogroup commandsGroup
@@ -201,7 +214,7 @@ void TextCommand::parse(char *com){
 		*/
 
 	  DCCpp::mainRegs.setAccessory(com+1);
-	  break;
+		return true;
 
 #ifdef USE_TURNOUT
 	case 'T':
@@ -210,8 +223,7 @@ void TextCommand::parse(char *com){
 * USED TO CREATE/EDIT/REMOVE/SHOW TURNOUT DEFINITIONS
 */
 
-	  Turnout::parse(com+1);
-	  break;
+	  return Turnout::parse(com+1);
 #endif
 
 #ifdef USE_OUTPUT
@@ -221,8 +233,7 @@ void TextCommand::parse(char *com){
 *   USED TO CREATE / EDIT / REMOVE / SHOW OUTPUT DEFINITIONS
 */
 
-	  Output::parse(com+1);
-	  break;
+	  return Output::parse(com+1);
 #endif
 
 #ifdef USE_SENSOR
@@ -232,8 +243,7 @@ void TextCommand::parse(char *com){
  *   *** SEE SENSOR.CPP FOR COMPLETE INFO ON THE DIFFERENT VARIATIONS OF THE "S" COMMAND
  *   USED TO CREATE/EDIT/REMOVE/SHOW SENSOR DEFINITIONS
  */
-	  Sensor::parse(com+1);
-	  break;
+	  return Sensor::parse(com+1);	  
 
 #ifdef DCCPP_PRINT_DCCPP
 	case 'Q':
@@ -251,7 +261,7 @@ void TextCommand::parse(char *com){
 		*/
 
 	  Sensor::status();
-	  break;
+		return true;
 #endif
 #endif
 
@@ -277,7 +287,7 @@ void TextCommand::parse(char *com){
 		*/    
 
 	  DCCpp::mainRegs.writeCVByteMain(com+1);
-	  break;      
+		return true;
 
 
 	case 'b':      
@@ -302,7 +312,7 @@ void TextCommand::parse(char *com){
 		*/        
 
 	  DCCpp::mainRegs.writeCVBitMain(com+1);
-	  break;      
+		return true;
 
 	case 'W':      
 		/**	\addtogroup commandsGroup
@@ -327,7 +337,7 @@ void TextCommand::parse(char *com){
 		*/    
 
 	  DCCpp::progRegs.writeCVByte(com+1);
-	  break;      
+		return true;
 
 	case 'B':      
 		/**	\addtogroup commandsGroup
@@ -353,7 +363,7 @@ void TextCommand::parse(char *com){
 		*/
 
 	  DCCpp::progRegs.writeCVBit(com+1);
-	  break;      
+		return true;
 
 	case 'R':     
 		/**	\addtogroup commandsGroup
@@ -377,7 +387,7 @@ void TextCommand::parse(char *com){
 		*/
 
 	  DCCpp::progRegs.readCV(com+1);
-	  break;
+		return true;
 
 	case '1':      
 		/**	\addtogroup commandsGroup
@@ -396,7 +406,7 @@ void TextCommand::parse(char *com){
 		*/    
 
 	  DCCpp::powerOn();
-	  break;
+		return true;
 		  
 	case '0':     
 		/**	\addtogroup commandsGroup
@@ -415,7 +425,7 @@ void TextCommand::parse(char *com){
 		*/
 
 		DCCpp::powerOff();
-		break;
+		return true;
 
 	case 'c':     
 		/**	\addtogroup commandsGroup
@@ -440,7 +450,7 @@ void TextCommand::parse(char *com){
 #if !defined(USE_ETHERNET)
 	  DCCPP_INTERFACE.println("");
 #endif
-	  break;
+		return true;
 
 	case 's':
 		/**	\addtogroup commandsGroup
@@ -459,10 +469,10 @@ void TextCommand::parse(char *com){
 		returns: series of status messages that can be read by an interface to determine status of DCC++ Base Station and important settings
 		*/
 
-	  if(digitalRead(DCCppConfig::SignalEnablePinProg)==LOW)      // could check either PROG or MAIN
-		DCCPP_INTERFACE.print("<p0>");
-	  else
-		DCCPP_INTERFACE.print("<p1>");
+	  if (DCCppConfig::SignalEnablePinMain == UNDEFINED_PIN || digitalRead(DCCppConfig::SignalEnablePinMain) == HIGH)
+			DCCPP_INTERFACE.print("<p0>");
+		if (DCCppConfig::SignalEnablePinProg == UNDEFINED_PIN || digitalRead(DCCppConfig::SignalEnablePinProg) == HIGH)
+			DCCPP_INTERFACE.print("<p1>");
 #if !defined(USE_ETHERNET)
 	  DCCPP_INTERFACE.println("");
 #endif
@@ -521,7 +531,7 @@ void TextCommand::parse(char *com){
 	  Sensor::show();
 #endif
 #endif
-	  break;
+		return true;
 
 #ifdef USE_EEPROM
 	case 'E':     
@@ -540,18 +550,18 @@ void TextCommand::parse(char *com){
 		returns: <b>\<e nTurnouts nSensors\></b>
 		*/
 	 
-	EEStore::store();
-	DCCPP_INTERFACE.print("<e ");
-	DCCPP_INTERFACE.print(EEStore::data.nTurnouts);
-	DCCPP_INTERFACE.print(" ");
-	DCCPP_INTERFACE.print(EEStore::data.nSensors);
-	DCCPP_INTERFACE.print(" ");
-	DCCPP_INTERFACE.print(EEStore::data.nOutputs);
-	DCCPP_INTERFACE.print(">");
+		EEStore::store();
+		DCCPP_INTERFACE.print("<e ");
+		DCCPP_INTERFACE.print(EEStore::data.nTurnouts);
+		DCCPP_INTERFACE.print(" ");
+		DCCPP_INTERFACE.print(EEStore::data.nSensors);
+		DCCPP_INTERFACE.print(" ");
+		DCCPP_INTERFACE.print(EEStore::data.nOutputs);
+		DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
-	DCCPP_INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
-	break;
+		return true;
 
 	case 'e':     
 		/**	\addtogroup commandsGroup
@@ -569,12 +579,12 @@ void TextCommand::parse(char *com){
 		returns: <b>\<O\></b>
 		*/
 	 
-	EEStore::clear();
-	DCCPP_INTERFACE.print("<O>");
+		EEStore::clear();
+		DCCPP_INTERFACE.print("<O>");
 #if !defined(USE_ETHERNET)
-	DCCPP_INTERFACE.println("");
+		DCCPP_INTERFACE.println("");
 #endif
-	break;
+		return true;
 #endif
 
 	case ' ':
@@ -594,7 +604,7 @@ void TextCommand::parse(char *com){
 		*/
 
 	  DCCPP_INTERFACE.println("");
-	  break;  
+		return true;
 
 ///          
 /// THE FOLLOWING COMMANDS ARE NOT NEEDED FOR NORMAL OPERATIONS AND ARE ONLY USED FOR TESTING AND DEBUGGING PURPOSES
@@ -616,31 +626,12 @@ void TextCommand::parse(char *com){
 		SERIAL COMMUNICATION WILL BE INTERUPTED ONCE THIS COMMAND IS ISSUED - MUST RESET BOARD OR RE-OPEN SERIAL WINDOW TO RE-ESTABLISH COMMS
 		*/
 
-	Serial.println("\nEntering Diagnostic Mode...");
-	delay(1000);
-	
-	bitClear(TCCR1B,CS12);    // set Timer 1 prescale=8 - SLOWS NORMAL SPEED BY FACTOR OF 8
-	bitSet(TCCR1B,CS11);
-	bitClear(TCCR1B,CS10);
+		Serial.println("\nEntering Diagnostic Mode...");
+		delay(1000);
 
-	#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)      // Configuration for UNO
+		DCCpp::setDebugDccMode();
 
-	  bitSet(TCCR0B,CS02);    // set Timer 0 prescale=256 - SLOWS NORMAL SPEED BY A FACTOR OF 4
-	  bitClear(TCCR0B,CS01);
-	  bitClear(TCCR0B,CS00);
-	  
-	#else                     // Configuration for MEGA
-
-	  bitClear(TCCR3B,CS32);    // set Timer 3 prescale=8 - SLOWS NORMAL SPEED BY A FACTOR OF 8
-	  bitSet(TCCR3B,CS31);
-	  bitClear(TCCR3B,CS30);
-
-	#endif
-
-	CLKPR = 0x80;           // THIS SLOWS DOWN SYSYEM CLOCK BY FACTOR OF 256
-	CLKPR = 0x08;           // BOARD MUST BE RESET TO RESUME NORMAL OPERATIONS
-
-	break;
+		return true;
 
 	case 'M':       
 		/**	\addtogroup commandsGroup
@@ -667,7 +658,7 @@ void TextCommand::parse(char *com){
 		*/
 
 	  DCCpp::mainRegs.writeTextPacket(com+1);
-	  break;
+		return true;
 
 	case 'P':       
 		/**	\addtogroup commandsGroup
@@ -694,7 +685,7 @@ void TextCommand::parse(char *com){
 		*/
 
 	  DCCpp::progRegs.writeTextPacket(com+1);
-	  break;
+		return true;
 			
 #ifndef VISUALSTUDIO
 	case 'F':     
@@ -718,12 +709,14 @@ void TextCommand::parse(char *com){
 
 	  int v; 
 		DCCPP_INTERFACE.print("<f");
+#ifdef ARDUINO_ARCH_AVR
 		DCCPP_INTERFACE.print((int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
+#endif
 		DCCPP_INTERFACE.print(">");
 #if !defined(USE_ETHERNET)
 		DCCPP_INTERFACE.println("");
 #endif
-	  break;
+		return true;
 #endif
 
 	case 'L':     
@@ -763,12 +756,12 @@ void TextCommand::parse(char *com){
 		DCCPP_INTERFACE.println("");
 	  }
 	  DCCPP_INTERFACE.println("");
-	  break;
+		return true;
+	} // switch
 
-  } // switch
+	return false;
 }; // SerialCommand::parse
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif
 #endif

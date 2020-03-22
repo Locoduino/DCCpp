@@ -147,6 +147,10 @@ void loop()
 {
 	DCCpp::loop();
 
+	char* buffer = externalCommand.received();
+	if (buffer != NULL)
+		Serial.println(buffer);
+
 	unsigned long event = Commanders::loop();
 	int s = 0;
 

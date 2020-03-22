@@ -7,11 +7,10 @@ Part of DCC++ BASE STATION for the Arduino
 
 **********************************************************************/
 #include "Arduino.h"
-#ifdef ARDUINO_ARCH_AVR
 
 #include "DCCpp.h"
 
-#ifdef USE_TURNOUT
+#ifdef USE_OUTPUT
 #include "Outputs.h"
 
 #ifdef VISUALSTUDIO
@@ -217,7 +216,7 @@ void Output::store() {
 #if defined(USE_TEXTCOMMAND)
 ///////////////////////////////////////////////////////////////////////////////
 
-void Output::parse(char *c){
+bool Output::parse(char *c){
   int n,s,m;
   Output *t;
   
@@ -227,29 +226,30 @@ void Output::parse(char *c){
       t=get(n);
       if(t!=NULL)
         t->activate(s);
-	  else
-	  {
-		  DCCPP_INTERFACE.print("<X>");
+			else
+			{
+			  DCCPP_INTERFACE.print("<X>");
 #if !defined(USE_ETHERNET)
-		  DCCPP_INTERFACE.println("");
+				DCCPP_INTERFACE.println("");
 #endif
-	  }
-      break;
+			}
+			return true;
 
     case 3:                     // argument is string with id number of output followed by a pin number and invert flag
       create(n,s,m);
-    break;
+			return true;
 
     case 1:                     // argument is a string with id number only
       remove(n);
-    break;
+			return true;
     
 #ifdef DCCPP_PRINT_DCCPP
 	case -1:                    // no arguments
       show();                  // verbose show
 #endif
-    break;
+			return true;
   }
+	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -314,4 +314,3 @@ Output *Output::firstOutput=NULL;
 #endif
 
 #endif //USE_OUTPUT
-#endif
