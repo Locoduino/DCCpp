@@ -257,6 +257,11 @@ where NumPort is a port number.
 WARNING: if this line is not present, some errors will be raised during compilation, like "undefined reference to `eServer'" !
 
 \page revPage Revision History
+\par 02/04/2020 V1.4.1
+- Correction des pinMode qui n'étaient pas faits en ESP32.
+_______________
+- Fix on pinMode() not done in ESP32.
+
 \par 04/03/2020 V1.4.0
 - Ajout de la compatibilité ESP32. Seul la partie DCC a été portée, le reste (turnout, sensor et outputs) est exclu parce que pas testé...
 - En architecture AVR, un mode USE_ONLY1_INTERRUPT a été ajouté pour n'utiliser qu'une seule interruption pour les deux voies.

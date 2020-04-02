@@ -231,6 +231,15 @@ void DCCpp::beginMainDccSignal(uint8_t inSignalPin)
 	pMainSignal->pRegisters = &DCCpp::mainRegs;
 	pMainSignal->configureSignal(inSignalPin);
 
+	if (DCCppConfig::DirectionMotorA != UNDEFINED_PIN)
+	{
+		pinMode(DCCppConfig::DirectionMotorA, INPUT);      // ensure this pin is not active! Direction will be controlled by DCC SIGNAL instead (below)
+		digitalWrite(DCCppConfig::DirectionMotorA, LOW);
+	}
+
+	if (DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
+		pinMode(DCCppConfig::SignalEnablePinMain, OUTPUT);
+
 #ifdef DCCPP_DEBUG_MODE
 	Serial.println("Main track DCC ESP32 started.");
 #endif
@@ -243,6 +252,15 @@ void DCCpp::beginProgDccSignal(uint8_t inSignalPin)
 	pProgSignal = new SignalGenerator(1);
 	pProgSignal->pRegisters = &DCCpp::progRegs;
 	pProgSignal->configureSignal(inSignalPin);
+
+	if (DCCppConfig::DirectionMotorB != UNDEFINED_PIN)
+	{
+		pinMode(DCCppConfig::DirectionMotorB, INPUT);      // ensure this pin is not active! Direction will be controlled by DCC SIGNAL instead (below)
+		digitalWrite(DCCppConfig::DirectionMotorB, LOW);
+	}
+
+	if (DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN)
+		pinMode(DCCppConfig::SignalEnablePinProg, OUTPUT);
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.println("Prog track DCC ESP32 started.");
