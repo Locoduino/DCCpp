@@ -94,7 +94,19 @@ $(document).ready(function(){initNavTree('revPage.html','');});
   <div class="clear-floats"></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><dl class="section user"><dt>02/04/2020 V1.4.1</dt><dd><ul>
+<div class="textblock"><dl class="section user"><dt>08/11/2020 V1.4.2</dt><dd><ul>
+<li>Adaptation de la mesure de courant �� l'ESP32.</li>
+<li>L'��criture de CV sur la voie de programmation retourne un booleen �� false si l'��criture n'a pas ��t�� v��rifi��e.</li>
+<li>Am��lioration de la proc��dure de lecture/��criture de CV, en Avr, et aussi en ESP32 (Merci �� DCC++ Classic de l'��quipe DCC++Ex (www.dcc-ex.com) ).</li>
+<li>Nouvelle commande texte 'r' pour lire une CV sur la voie principale. <hr/>
+</li>
+<li>Current monitor adapted for ESP32</li>
+<li>The CV write functions on prog track now return a bool at false if the writing has not been confirmed.</li>
+<li>The procedure for writing and reading a Cv has been improved. Thanks to DCC++ Classic from www.dcc-ex.com team.</li>
+<li>New text command 'r' to read a Cv from the main track.</li>
+</ul>
+</dd></dl>
+<dl class="section user"><dt>02/04/2020 V1.4.1</dt><dd><ul>
 <li>Correction des pinMode qui n'��taient pas faits en ESP32. <hr/>
 </li>
 <li>Fix on pinMode() not done in ESP32.</li>
@@ -112,7 +124,7 @@ $(document).ready(function(){initNavTree('revPage.html','');});
 <li>La syntaxe texte pour fixer une fonction a ��t�� ��tendue : 'f cab fbyte' et 'f cab fbyte ebyte' sont toujours pr��sentes, mais 'f 0 reg cab fbyte' et 'f 0 reg cab fbyte ebyte' ont ��t�� ajout��es pour pouvoir fixer le registre �� charger.</li>
 <li>powerOn() et powerOff() qui ex��cutent les ordres &lt;1&gt; et &lt;0&gt; ne renvoient plus rien si elles ne font rien �� cause de broches Enable indefinies. <hr/>
 </li>
-<li>ESP32 mode added. Only the part DCC has been ported, the classes Turnout, Outputs and Sensor have been excluded because of lack of tests...</li>
+<li>ESP32 mode added. Only the part DCC has been ported, the classes <a class="el" href="structTurnout.html">Turnout</a>, Outputs and <a class="el" href="structSensor.html">Sensor</a> have been excluded because of lack of tests...</li>
 <li>On AVR achitecture, a new mode USE_ONLY1_INTERRUPT has been added to only use one interrupt for the two tracks.</li>
 <li>On mega the register number is now of 21, and 41 on ESP32.</li>
 <li>Added a new function to class <a class="el" href="classDCCpp.html">DCCpp</a> : setAckThreshold() to fix the acknowledge value for read/write of cvs. Default is 30, but can be too big for small scales and/or efficient motors...</li>
@@ -224,10 +236,10 @@ $(document).ready(function(){initNavTree('revPage.html','');});
 </dd></dl>
 <dl class="section user"><dt>27/12/2017 V1.0.0</dt><dd><ul>
 <li>Pour se conformer �� la norme DCC, la commande DCC de fonction est doubl��e.</li>
-<li>Correction de Sensor dont le 'check' provoquait une grande quantit�� de lignes vides sur la console. <hr/>
+<li>Correction de <a class="el" href="structSensor.html">Sensor</a> dont le 'check' provoquait une grande quantit�� de lignes vides sur la console. <hr/>
 </li>
 <li>To be closer of the DCC norm, the function DCC orders will be send twice.</li>
-<li>Fix Sensor::check(). A lot of empty lines was sent to the Serial console...</li>
+<li>Fix <a class="el" href="structSensor.html#a668f2a9097ee273020077efa6681d246">Sensor::check()</a>. A lot of empty lines was sent to the Serial console...</li>
 </ul>
 </dd></dl>
 <dl class="section user"><dt>22/12/2017 V0.9.0</dt><dd><ul>
@@ -243,13 +255,13 @@ $(document).ready(function(){initNavTree('revPage.html','');});
 <li><a class="el" href="classDCCpp.html">DCCpp</a> classe pass��e en statique</li>
 <li>Ajout d'un test de num��ro de registre sur setFunctions()</li>
 <li>les variables 'ToLeft' ont ��t�� chang��es pour 'Forward', pour mieux coller �� la norme DCC.</li>
-<li>Correction de EEStore.store() <hr/>
+<li>Correction de <a class="el" href="structEEStore.html#a5e20e540d6cb1737e1b76ef7139de0f5">EEStore.store()</a> <hr/>
 </li>
 <li>End of documentation</li>
 <li><a class="el" href="classDCCpp.html">DCCpp</a> class goes to static.</li>
 <li>setFunctions() now checks for register number in debug mode.</li>
 <li>'ToLeft' variables have been changed to 'Forward', closer from DCC norm.</li>
-<li>Fix EEStore.store()</li>
+<li>Fix <a class="el" href="structEEStore.html#a5e20e540d6cb1737e1b76ef7139de0f5">EEStore.store()</a></li>
 </ul>
 </dd></dl>
 <dl class="section user"><dt>27/11/2017 V0.7.0</dt><dd><ul>
@@ -266,10 +278,10 @@ $(document).ready(function(){initNavTree('revPage.html','');});
 </dd></dl>
 <dl class="section user"><dt>25/11/2017 V0.6.0</dt><dd><ul>
 <li>Retour des chaines de validation de commande renvoy��es �� l'interface...</li>
-<li>Corrections de Turnout et Output quand EEPROM utilis��e. <hr/>
+<li>Corrections de <a class="el" href="structTurnout.html">Turnout</a> et Output quand EEPROM utilis��e. <hr/>
 </li>
 <li>Acknowledgment strings are back.</li>
-<li>Fixes for Turnout and Output when EEPROM is used.</li>
+<li>Fixes for <a class="el" href="structTurnout.html">Turnout</a> and Output when EEPROM is used.</li>
 </ul>
 </dd></dl>
 <dl class="section user"><dt>25/08/2017 V0 Initial Release</dt><dd><ul>
@@ -283,7 +295,7 @@ $(document).ready(function(){initNavTree('revPage.html','');});
 <!-- Generated by DoxyPress 1.3.6 -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on sam. avr. 4 2020 13:37:48 for DCCpp &nbsp; by
+    <li class="footer">Generated on dim. nov. 8 2020 16:11:48 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.3.6 </li>
   </ul>

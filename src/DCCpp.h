@@ -55,7 +55,7 @@ This version of DCC++ BASE STATION supports:
 DCC++ BASE STATION is controlled with simple text commands received via
 the Arduino's serial interface.  Users can type these commands directly
 into the Arduino IDE Serial Monitor, or can send such commands from another
-device or computer program.	A DCCpp class can also send orders through methods without any text.
+device or computer program.
 
 When compiled for the Arduino Mega, an Ethernet Shield can be used for network
 communications instead of using serial communications.
@@ -178,7 +178,8 @@ Complement of the documentation for this library:
 This library is a free interpretation of the Gregg's work to adapt it to a library, and minimize
 the needs to modify the library sources to use it. The only configuration still needed in .h file is 
 to decide of the Ethernet interface model.
-It has been adapted to work also with Arduino Nano R3 on IDE 1.8.4 .
+It has been adapted to work also with Arduino Nano R3 and ESP32 on IDE 1.8.4 .
+Aside from text commands, a DCCpp class can also send orders through methods without any text.
 
 \page commonPage Configuration Lines
 
@@ -190,33 +191,33 @@ If a track is not connected, main or programming, the signalPin should stay to d
 For H bridge connected directly to the pins, like LMD18200, signalPin and Direction motor should have the same pin number,
 or directions can be set to UNDEFINED_PIN.
 
-\par Arduino Uno + LMD18200 + MAX471
+\par Arduino Uno + LMD18200 + MAX471, only main track
 
 \verbatim
 DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
 \endverbatim
 
-\par Arduino Uno + 2 LMD18200 + 2 MAX471
+\par Arduino Uno + 2 LMD18200 + 2 MAX471, both main and programming tracks
 
 \verbatim
 DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
 DCCpp::beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 5, A1);
 \endverbatim
 
-\par Arduino Mega2560 + LMD18200 + MAX471
+\par Arduino Mega2560 + LMD18200 + MAX471, only main track
 
 \verbatim
 DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
 \endverbatim
 
-\par Arduino Mega2560 + 2 LMD18200 + 2 MAX471
+\par Arduino Mega2560 + 2 LMD18200 + 2 MAX471, both main and programming tracks
 
 \verbatim
 DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 3, A0);
 DCCpp::beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 11, A1);
 \endverbatim
 
-\par Arduino Uno or Mega2560 + Arduino Motor Shield
+\par Arduino Uno or Mega2560 + Arduino Motor Shield, both main and programming tracks
 
 \verbatim
 DCCpp::beginMainMotorShield();
@@ -228,7 +229,7 @@ DCCpp::beginMain(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_A, DCC_SIGNAL_PIN_MAIN
 DCCpp::beginProg(MOTOR_SHIELD_DIRECTION_MOTOR_CHANNEL_PIN_B, DCC_SIGNAL_PIN_PROG, MOTOR_SHIELD_SIGNAL_ENABLE_PIN_PROG, MOTOR_SHIELD_CURRENT_MONITOR_PIN_PROG);
 \endverbatim
 
-\par Arduino Uno or Mega2560 + Pololu MC33926 Motor Shield
+\par Arduino Uno or Mega2560 + Pololu MC33926 Motor Shield, both main and programming tracks
 
 \verbatim
 DCCpp::beginMainPololu();
@@ -257,6 +258,17 @@ where NumPort is a port number.
 WARNING: if this line is not present, some errors will be raised during compilation, like "undefined reference to `eServer'" !
 
 \page revPage Revision History
+\par 08/11/2020 V1.4.2
+- Adaptation de la mesure de courant à l'ESP32.
+- L'écriture de CV sur la voie de programmation retourne un booleen à false si l'écriture n'a pas été vérifiée.
+- Amélioration de la procédure de lecture/écriture de CV, en Avr, et aussi en ESP32 (Merci à DCC++ Classic de l'équipe DCC++Ex (www.dcc-ex.com) ).
+- Nouvelle commande texte 'r' pour lire une CV sur la voie principale.
+_______________
+- Current monitor adapted for ESP32
+- The CV write functions on prog track now return a bool at false if the writing has not been confirmed.
+- The procedure for writing and reading a Cv has been improved. Thanks to DCC++ Classic from www.dcc-ex.com team.
+- New text command 'r' to read a Cv from the main track.
+
 \par 02/04/2020 V1.4.1
 - Correction des pinMode qui n'étaient pas faits en ESP32.
 _______________
@@ -427,8 +439,11 @@ _______________
 /** @file DCCpp.h
 Main include file of the library.*/
 
-#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.4.1"
+#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.4.2"
 
+#ifdef VISUALSTUDIO
+#pragma warning (disable : 4005)
+#endif
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in production mode.
 //#define DCCPP_DEBUG_MODE
@@ -443,7 +458,11 @@ Main include file of the library.*/
 // The function DCCpp::showConfiguration()
 // is very heavy in program memory. So to avoid problems
 // you can make this function available by uncomment the next line, only when necessary.
-//#define DCCPP_PRINT_DCCPP
+#define DCCPP_PRINT_DCCPP
+
+#ifdef VISUALSTUDIO
+#pragma warning (default : 4005)
+#endif
 
 ///////////////////////////////////////////////////////
 // This define gets rid of 2 timers and uses only Timer2 to tick every 58us and change logic levels on both tracks. 
@@ -458,11 +477,11 @@ Main include file of the library.*/
 //  Inclusion area
 //
 
-//#define USE_TURNOUT
-//#define USE_EEPROM
-//#define USE_OUTPUT
-//#define USE_SENSOR
-//#define USE_TEXTCOMMAND
+#define USE_TURNOUT
+#define USE_EEPROM
+#define USE_OUTPUT
+#define USE_SENSOR
+#define USE_TEXTCOMMAND
 //#define USE_ETHERNET_WIZNET_5100
 //#define USE_ETHERNET_WIZNET_5500
 //#define USE_ETHERNET_WIZNET_5200
@@ -490,15 +509,15 @@ Main include file of the library.*/
 		/**Comment this line to avoid using and compiling Ethernet shield using ENC28J60 chip.*/
 		#define USE_ETHERNET_ENC28J60
 
-    #undef USE_TURNOUT
-    #undef USE_EEPROM
-    #undef USE_OUTPUT
-    #undef USE_SENSOR
+		#undef USE_TURNOUT
+		#undef USE_EEPROM
+		#undef USE_OUTPUT
+		#undef USE_SENSOR
 		#undef USE_TEXTCOMMAND
-    #undef USE_ETHERNET_WIZNET_5100
-    #undef USE_ETHERNET_WIZNET_5500
-    #undef USE_ETHERNET_WIZNET_5200
-    #undef USE_ETHERNET_ENC28J60
+		#undef USE_ETHERNET_WIZNET_5100
+		#undef USE_ETHERNET_WIZNET_5500
+		#undef USE_ETHERNET_WIZNET_5200
+		#undef USE_ETHERNET_ENC28J60
 
     /** If this is defined, the library will do many checks during setup and execution, and print errors, warnings and
     information messages on console. These messages can take a lot of memory, so be careful about the free memory of

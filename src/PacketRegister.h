@@ -59,24 +59,24 @@ struct RegisterList{
   void loadPacket(int, byte *, int, int, int=0) volatile;
 
 #ifdef USE_TEXTCOMMAND
-  void setThrottle(char *) volatile;
-  void setFunction(char *) volatile;
-  void setAccessory(char *) volatile;
-  void writeTextPacket(char *) volatile;
+  void setThrottle(const char *) volatile;
+  void setFunction(const char *) volatile;
+  void setAccessory(const char *) volatile;
+  void writeTextPacket(const char *) volatile;
 #endif
 
   int readCVraw(int cv, int callBack, int callBackSub) volatile;
 	int buildBaseAcknowlegde(int inMonitorPin) volatile;
-	int checkAcknowlegde(int inMonitorPin,  int inBase) volatile;
+	bool checkAcknowlegde(int inMonitorPin,  int inBase) volatile;
 
 #ifdef USE_TEXTCOMMAND
-  int readCV(char *) volatile;
-  void writeCVByte(char *) volatile;
-  void writeCVBit(char *) volatile;
+  int readCV(const char *) volatile;
+  bool writeCVByte(const char *) volatile;
+  bool writeCVBit(const char *) volatile;
 
-  int readCVmain(char *) volatile;
-  void writeCVByteMain(char *) volatile;
-  void writeCVBitMain(char *s) volatile;
+  int readCVmain(const char *) volatile;
+  void writeCVByteMain(const char *) volatile;
+  void writeCVBitMain(const char *s) volatile;
 #endif
 
 	byte setAckThreshold(byte inNewValue);
@@ -87,8 +87,8 @@ struct RegisterList{
   void writeTextPacket(int nReg, byte *b, int nBytes) volatile;
   int readCV(int cv, int callBack, int callBackSub) volatile;
   int readCVmain(int cv, int callBack, int callBackSub) volatile;
-  void writeCVByte(int cv, int bValue, int callBack, int callBackSub) volatile;	// prog track
-  void writeCVBit(int cv, int bNum, int bValue, int callBack, int callBackSub) volatile;	// prog track
+  bool writeCVByte(int cv, int bValue, int callBack, int callBackSub) volatile;	// prog track
+  bool writeCVBit(int cv, int bNum, int bValue, int callBack, int callBackSub) volatile;	// prog track
   void writeCVByteMain(int cab, int cv, int bvalue) volatile;
   void writeCVBitMain(int cab, int cv, int bNum, int bValue) volatile;
 

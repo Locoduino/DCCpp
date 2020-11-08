@@ -389,6 +389,30 @@ bool TextCommand::parse(char *com){
 	  DCCpp::progRegs.readCV(com+1);
 		return true;
 
+	case 'r':
+		/**	\addtogroup commandsGroup
+		READ CONFIGURATION VARIABLE BYTE FROM ENGINE DECODER ON MAIN TRACK
+		-------------------------------------------------------------------------
+
+		<b>
+		\verbatim
+		<r CV CALLBACKNUM CALLBACKSUB>
+		\endverbatim
+		</b>
+
+		reads a Configuration Variable from the decoder of an engine on the main track
+
+		- <b>CV</b>: the number of the Configuration Variable memory location in the decoder to read from (1-1024)
+		- <b>CALLBACKNUM</b>: an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function
+		- <b>CALLBACKSUB</b>: a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function
+
+		returns: <b>\<r CALLBACKNUM|CALLBACKSUB|CV VALUE\></b>
+		where VALUE is a number from 0-255 as read from the requested CV, or -1 if read could not be verified
+		*/
+
+		DCCpp::mainRegs.readCV(com + 1);
+		break;
+
 	case '1':      
 		/**	\addtogroup commandsGroup
 		TURN ON POWER FROM MOTOR SHIELD TO TRACKS
@@ -716,6 +740,7 @@ bool TextCommand::parse(char *com){
 #if !defined(USE_ETHERNET)
 		DCCPP_INTERFACE.println("");
 #endif
+		v++;			// not used. This line is just here to avoid a warning by the compiler !
 		return true;
 #endif
 

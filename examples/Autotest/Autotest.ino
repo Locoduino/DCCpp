@@ -57,7 +57,7 @@ struct StateMachineItem
 StateMachineItem *StateMachineItem::first = NULL;
 
 StateMachineItem *currentItem = NULL;
-unsigned long time = 0;
+unsigned long currentTime = 0;
 
 void setup()
 {
@@ -82,15 +82,19 @@ void setup()
 	new StateMachineItem(500, "f 3 128", "Light off");		// Light off
 
 	DCCpp::begin();
-	// Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
-	DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
+  // Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
+#if defined(ARDUINO_ARCH_ESP32)
+  DCCpp::beginMain(UNDEFINED_PIN, 33, 32, 36);
+#else
+  DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
+#endif
 
 	DCCpp::powerOn();
 
 	// Start on first item
 	// Start timer too.
 	currentItem = StateMachineItem::first;
-	time = millis();
+	currentTime = millis();
 
 	TextCommand::parse(currentItem->command);
 }
@@ -100,7 +104,7 @@ void loop()
 {
 	DCCpp::loop();
 
-	if ((int)(millis() - time) >= currentItem->delay)
+	if ((int)(millis() - currentTime) >= currentItem->delay)
 	{
 		currentItem = currentItem->next;
 		if (currentItem == NULL)
@@ -109,7 +113,7 @@ void loop()
 			Serial.println("Restart");
 		}
 
-		time = millis();
+		currentTime = millis();
 		TextCommand::parse(currentItem->command);
 		Serial.println(currentItem->comment);
 	}

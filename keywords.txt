@@ -51,6 +51,11 @@ readCvProg	KEYWORD2
 writeCvProg	KEYWORD2
 setFunctionsProg	KEYWORD2
 
+IsMainTrack	KEYWORD2
+IsMainTrackDeclared	KEYWORD2
+IsProgTrackDeclared	KEYWORD2
+
+panicStop	KEYWORD2
 powerOn	KEYWORD2
 powerOff	KEYWORD2
 setAccessory	KEYWORD2

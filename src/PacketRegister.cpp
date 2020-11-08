@@ -9,7 +9,7 @@ Part of DCC++ BASE STATION for the Arduino
 
 #include "Arduino.h"
 
-static byte ackThreshold = 30;
+//static byte ackThreshold = 30;
 
 #include "DCCpp.h"
 //#include "DCCpp_Uno.h"
@@ -125,8 +125,10 @@ void RegisterList::loadPacket(int nReg, byte *b, int nBytes, int nRepeat, int pr
   maxLoadedReg=max(maxLoadedReg,nextReg);
   
 #ifdef DCCPP_DEBUG_MODE
+#ifdef DCCPP_DEBUG_VERBOSE_MODE
   if(printFlag)       // for debugging purposes
 		printPacket(nReg,b,nBytes,nRepeat);  
+#endif
 #endif
 
 } // RegisterList::loadPacket
@@ -168,7 +170,7 @@ void RegisterList::setThrottle(int nReg, int cab, int tSpeed, int tDirection) vo
 } // RegisterList::setThrottle(ints)
 
 #ifdef USE_TEXTCOMMAND
-void RegisterList::setThrottle(char *s) volatile
+void RegisterList::setThrottle(const char *s) volatile
 {
   int nReg;
   int cab;
@@ -227,7 +229,7 @@ void RegisterList::setFunction(int nReg, int cab, int fByte, int eByte) volatile
 } // RegisterList::setFunction(ints)
 
 #ifdef USE_TEXTCOMMAND
-void RegisterList::setFunction(char *s) volatile
+void RegisterList::setFunction(const char *s) volatile
 {
 	int reg, cab;
 	int fByte, eByte;
@@ -288,7 +290,7 @@ void RegisterList::setAccessory(int aAdd, int aNum, int activate) volatile
 } // RegisterList::setAccessory(ints)
 
 #ifdef USE_TEXTCOMMAND
-void RegisterList::setAccessory(char *s) volatile
+void RegisterList::setAccessory(const char *s) volatile
 {
 	int aAdd;                       // the accessory address (0-511 = 9 bits) 
 	int aNum;                       // the accessory number within that address (0-3)
@@ -325,7 +327,7 @@ void RegisterList::writeTextPacket(int nReg, byte *b, int nBytes) volatile
 } // RegisterList::writeTextPacket(bytes)
 
 #ifdef USE_TEXTCOMMAND
-void RegisterList::writeTextPacket(char *s) volatile
+void RegisterList::writeTextPacket(const char *s) volatile
 {
 	int nReg;
 	byte b[6];
@@ -352,34 +354,45 @@ int RegisterList::buildBaseAcknowlegde(int inMonitorPin) volatile
 	return base / ACK_BASE_COUNT;
 }
 
-int RegisterList::checkAcknowlegde(int inMonitorPin, int inBase) volatile
+bool RegisterList::checkAcknowlegde(int inMonitorPin, int inBase) volatile
 {
 	int c = 0;
-#ifdef DCCPP_DEBUG_MODE
 	int max = 0;
+
+#if defined(ARDUINO_ARCH_ESP32)
+	int loopMax = 20;
+#else
+	int loopMax = 1;
 #endif
 
-	for (int j = 0; j < ACK_SAMPLE_COUNT; j++)
-	{
-		int val = (int)analogRead(inMonitorPin);
-		c = (int)((val - inBase) * ACK_SAMPLE_SMOOTHING + c * (1.0 - ACK_SAMPLE_SMOOTHING));
 #ifdef DCCPP_DEBUG_MODE
-		if (c > max)
-			max = c;
+	int loop = 0;
 #endif
-		if (c > ACK_SAMPLE_THRESHOLD)
-			return 1;
+	for (int a = 0; a < loopMax; a++)
+	{
+		c = 0;
+		for (int j = 0; j < ACK_SAMPLE_COUNT; j++)
+		{
+			int val = (int)analogRead(inMonitorPin);
+			c = (int)((val - inBase) * ACK_SAMPLE_SMOOTHING + c * (1.0 - ACK_SAMPLE_SMOOTHING));
+			if (c > max)
+			{
+				max = c;
+#ifdef DCCPP_DEBUG_MODE
+				loop = a;
+#endif
+			}
+		}
 	}
 
 #ifdef DCCPP_DEBUG_MODE
-	if (max > ACK_SAMPLE_THRESHOLD / 2)
-	{
-		// Only show closest values...
-		Serial.print(F("Max acknowledge value : "));
-		Serial.println(max);
-	}
+	Serial.print(F(" iter : "));
+	Serial.print(loop);
+	Serial.print(", max : ");
+	Serial.println(max);
 #endif
-	return 0;
+
+	return (max > ACK_SAMPLE_THRESHOLD);
 }
 
 int RegisterList::readCVraw(int cv, int callBack, int callBackSub) volatile
@@ -400,7 +413,7 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub) volatile
 
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("readCVraw : start reading cv "));
-	Serial.println(cv);
+	Serial.println(cv+1);
 #endif
 
 	bRead[0] = 0x78 + (highByte(cv) & 0x03);   // any CV>1023 will become modulus(1024) due to bit-mask of 0x03
@@ -412,25 +425,47 @@ int RegisterList::readCVraw(int cv, int callBack, int callBackSub) volatile
 
 		base = RegisterList::buildBaseAcknowlegde(MonitorPin);
 
+#if defined(ARDUINO_ARCH_ESP32)
+		delay(10);
+#endif
+
 		bRead[2] = 0xE8 + i;
 
 		loadPacket(0, resetPacket, 2, 3);          // NMRA recommends starting with 3 reset packets
 		loadPacket(0, bRead, 3, 5);                // NMRA recommends 5 verify packets
-		loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
+//		loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
+		loadPacket(0, idlePacket, 2, 6);          // NMRA recommends 6 idle or reset packets for decoder recovery time
+
+#if defined(ARDUINO_ARCH_ESP32)
+		delay(2);
+#endif
 
 		ret = RegisterList::checkAcknowlegde(MonitorPin, base);
 
 		bitWrite(bValue, i, ret);
 	}
 
+#if defined(ARDUINO_ARCH_ESP32)
+		delay(10);
+#endif
+
 	base = RegisterList::buildBaseAcknowlegde(MonitorPin);
+
+#if defined(ARDUINO_ARCH_ESP32)
+		delay(10);
+#endif
 
 	bRead[0] = 0x74 + (highByte(cv) & 0x03);   // set-up to re-verify entire byte
 	bRead[2] = bValue;
 
-	loadPacket(0, resetPacket, 2, 3);          // NMRA recommends starting with 3 reset packets
-	loadPacket(0, bRead, 3, 5);                // NMRA recommends 5 verify packets
-	loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
+	loadPacket(0, resetPacket, 2, 3);       // NMRA recommends starting with 3 reset packets
+	loadPacket(0, bRead, 3, 5);             // NMRA recommends 5 verify packets
+	//loadPacket(0, resetPacket, 2, 1);     // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
+	loadPacket(0, idlePacket, 2, 6);				// NMRA recommends 6 idle or reset packets for decoder recovery time
+
+#if defined(ARDUINO_ARCH_ESP32)
+		delay(2);
+#endif
 
 	ret = RegisterList::checkAcknowlegde(MonitorPin, base);
 
@@ -464,7 +499,7 @@ int RegisterList::readCV(int cv, int callBack, int callBackSub) volatile
 } // RegisterList::readCV(ints)
 
 #ifdef USE_TEXTCOMMAND
-int RegisterList::readCV(char *s) volatile
+int RegisterList::readCV(const char *s) volatile
 {
 	int cv, callBack, callBackSub;
 
@@ -487,7 +522,7 @@ int RegisterList::readCVmain(int cv, int callBack, int callBackSub) volatile
 } // RegisterList::readCV_Main()
 
 #ifdef USE_TEXTCOMMAND
-int RegisterList::readCVmain(char *s) volatile
+int RegisterList::readCVmain(const char *s) volatile
 {
 	int cv, callBack, callBackSub;
 
@@ -505,9 +540,10 @@ int RegisterList::readCVmain(char *s) volatile
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub) volatile 
+bool RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub) volatile 
 {
 	byte bWrite[4];
+	bool ok = false;
 	int ret, base;
 
 	cv--;                              // actual CV addresses are cv-1 (0-1023)
@@ -516,10 +552,14 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 	bWrite[1] = lowByte(cv);
 	bWrite[2] = bValue;
 
-	loadPacket(0, resetPacket, 2, 1);
+	loadPacket(0, resetPacket, 2, 3);        // NMRA recommends starting with 3 reset packets
+	loadPacket(0, bWrite, 3, 5);             // NMRA recommends 5 verify packets
+	loadPacket(0, bWrite, 3, 6);             // NMRA recommends 6 write or reset packets for decoder recovery time
+
+	/*loadPacket(0, resetPacket, 2, 1);
 	loadPacket(0, bWrite, 3, 4);
 	loadPacket(0, resetPacket, 2, 1);
-	loadPacket(0, idlePacket, 2, 10);
+	loadPacket(0, idlePacket, 2, 10);*/
 
 	// If monitor pin undefined, write cv without any confirmation...
 	if (DCCppConfig::CurrentMonitorProg != UNDEFINED_PIN)
@@ -530,12 +570,15 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 
 		loadPacket(0, resetPacket, 2, 3);          // NMRA recommends starting with 3 reset packets
 		loadPacket(0, bWrite, 3, 5);               // NMRA recommends 5 verify packets
-		loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
+		//loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
+		loadPacket(0, bWrite, 3, 6);               // NMRA recommends 6 write or reset packets for decoder recovery time
 
 		ret = RegisterList::checkAcknowlegde(DCCppConfig::CurrentMonitorProg, base);
 
-		if (ret == 0)    // verify unsuccessful
-			bValue = -1;
+		loadPacket(0, resetPacket, 2, 1);        // Final reset packet (and decoder begins to respond)
+
+		if (ret != 0)    // verify successful
+			ok = true;
 	}
 
 #if defined(USE_TEXTCOMMAND)
@@ -552,10 +595,11 @@ void RegisterList::writeCVByte(int cv, int bValue, int callBack, int callBackSub
 	DCCPP_INTERFACE.println("");
 #endif
 #endif
+	return ok;
 } // RegisterList::writeCVByte(ints)
 
 #ifdef USE_TEXTCOMMAND
-void RegisterList::writeCVByte(char *s) volatile
+bool RegisterList::writeCVByte(const char *s) volatile
 {
 	int bValue, cv, callBack, callBackSub;
 
@@ -564,18 +608,19 @@ void RegisterList::writeCVByte(char *s) volatile
 #ifdef DCCPP_DEBUG_MODE
 		Serial.println(F("W Syntax error"));
 #endif
-		return;
+		return false;
 	}
 
-	this->writeCVByte(cv, bValue, callBack, callBackSub);
+	return this->writeCVByte(cv, bValue, callBack, callBackSub);
 } // RegisterList::writeCVByte(string)
 #endif
 
   ///////////////////////////////////////////////////////////////////////////////
 
-void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int callBackSub) volatile 
+bool RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int callBackSub) volatile 
 {
 	byte bWrite[4];
+	bool ok = false;
 	int ret, base;
 
 	cv--;                              // actual CV addresses are cv-1 (0-1023)
@@ -586,10 +631,14 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 	bWrite[1] = lowByte(cv);
 	bWrite[2] = 0xF0 + bValue * 8 + bNum;
 
-	loadPacket(0, resetPacket, 2, 1);
+	/*loadPacket(0, resetPacket, 2, 1);
 	loadPacket(0, bWrite, 3, 4);
 	loadPacket(0, resetPacket, 2, 1);
-	loadPacket(0, idlePacket, 2, 10);
+	loadPacket(0, idlePacket, 2, 10);*/
+
+	loadPacket(0, resetPacket, 2, 3);        // NMRA recommends starting with 3 reset packets
+	loadPacket(0, bWrite, 3, 5);             // NMRA recommends 5 verify packets
+	loadPacket(0, bWrite, 3, 6);             // NMRA recommends 6 write or reset packets for decoder recovery time
 
 	// If monitor pin undefined, write cv without any confirmation...
 	if (DCCppConfig::CurrentMonitorProg != UNDEFINED_PIN)
@@ -600,12 +649,15 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 
 		loadPacket(0, resetPacket, 2, 3);          // NMRA recommends starting with 3 reset packets
 		loadPacket(0, bWrite, 3, 5);               // NMRA recommends 5 verfy packets
-		loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
+		//loadPacket(0, resetPacket, 2, 1);          // forces code to wait until all repeats of bRead are completed (and decoder begins to respond)
+		loadPacket(0, bWrite, 3, 6);           // NMRA recommends 6 write or reset packets for decoder recovery time
 
 		ret = RegisterList::checkAcknowlegde(DCCppConfig::CurrentMonitorProg, base);
 
-		if (ret == 0)    // verify unsuccessful
-			bValue = -1;
+		loadPacket(0, resetPacket, 2, 1);      // Final reset packetcompleted (and decoder begins to respond)
+
+		if (ret != 0)    // verify successful
+			ok = true;
 	}
 
 #if defined(USE_TEXTCOMMAND)
@@ -624,10 +676,11 @@ void RegisterList::writeCVBit(int cv, int bNum, int bValue, int callBack, int ca
 	DCCPP_INTERFACE.println("");
 #endif
 #endif
+	return ok;
 } // RegisterList::writeCVBit(ints)
 
 #ifdef USE_TEXTCOMMAND
-void RegisterList::writeCVBit(char *s) volatile
+bool RegisterList::writeCVBit(const char *s) volatile
 {
   int bNum, bValue, cv, callBack, callBackSub;
 
@@ -636,10 +689,10 @@ void RegisterList::writeCVBit(char *s) volatile
 #ifdef DCCPP_DEBUG_MODE
 	  Serial.println(F("W Syntax error"));
 #endif
-	  return;
+	  return false;
   }
 
-  this->writeCVBit(cv, bNum, bValue, callBack, callBackSub);
+  return this->writeCVBit(cv, bNum, bValue, callBack, callBackSub);
 } // RegisterList::writeCVBit(string)
 #endif
 
@@ -665,7 +718,7 @@ void RegisterList::writeCVByteMain(int cab, int cv, int bValue) volatile
 } // RegisterList::writeCVByteMain(ints)
 
 #ifdef USE_TEXTCOMMAND
-void RegisterList::writeCVByteMain(char *s) volatile
+void RegisterList::writeCVByteMain(const char *s) volatile
 {
 	int cab;
 	int cv;
@@ -708,7 +761,7 @@ void RegisterList::writeCVBitMain(int cab, int cv, int bNum, int bValue) volatil
 } // RegisterList::writeCVBitMain(ints)
 
 #ifdef USE_TEXTCOMMAND
-void RegisterList::writeCVBitMain(char *s) volatile
+void RegisterList::writeCVBitMain(const char *s) volatile
 {
 	int cab;
 	int cv;

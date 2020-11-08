@@ -1,0 +1,57 @@
+//-------------------------------------------------------------------
+#ifndef __DCCpp_H__
+#define __DCCpp_H__
+//-------------------------------------------------------------------
+
+/** @file DCCpp.h
+Main include file of the library.*/
+
+#define DCCPP_LIBRARY_VERSION		"VERSION DCCpp library: 1.4.1"
+
+#pragma warning (disable : 4005)
+//#define DCCPP_DEBUG_MODE
+//#define DCCPP_DEBUG_VERBOSE_MODE
+#define DCCPP_PRINT_DCCPP
+#pragma warning (default : 4005)
+
+//#define USE_ONLY1_INTERRUPT
+//#define USE_TURNOUT
+//#define USE_EEPROM
+//#define USE_OUTPUT
+//#define USE_SENSOR
+#define USE_TEXTCOMMAND
+#define USE_ETHERNET_WIZNET_5100
+//#define USE_ETHERNET_WIZNET_5500
+//#define USE_ETHERNET_WIZNET_5200
+//#define USE_ETHERNET_ENC28J60
+
+
+#if defined(USE_ETHERNET_WIZNET_5100) || defined(USE_ETHERNET_WIZNET_5500) || defined(USE_ETHERNET_WIZNET_5200) || defined(USE_ETHERNET_ENC28J60)
+#define USE_ETHERNET
+#endif
+
+/////////////////////////////////////
+
+#include "DCCpp_Uno.h"
+#include "PacketRegister.h"
+#include "CurrentMonitor.h"
+#include "Config.h"
+#include "Comm.h"
+#ifdef USE_TURNOUT
+#include "Turnout.h"
+#endif
+#ifdef USE_EEPROM
+#include "EEStore.h"
+#endif
+#ifdef USE_OUTPUT
+#include "Outputs.h"
+#endif
+#ifdef USE_SENSOR
+#include "Sensor.h"
+#endif
+#ifdef USE_TEXTCOMMAND
+#include "TextCommand.h"
+#endif
+
+#include "DCCpp.hpp"
+#endif

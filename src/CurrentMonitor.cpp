@@ -37,7 +37,17 @@ void CurrentMonitor::check()
 	if (this->pin == UNDEFINED_PIN || this->signalPin == UNDEFINED_PIN)
 		return;
 
+	#if defined(ARDUINO_ARCH_ESP32)
+	// Compute an average value of 50 read.
+  int base = 0;
+	for (int j = 0; j < 50; j++)
+	{
+		base += analogRead(this->pin);
+	}
+	this->current = (float) ((base / 50.0)  * 0.9) - 100;
+  #else
 	this->current = (float)(analogRead(this->pin) * CURRENT_SAMPLE_SMOOTHING + this->current * (1.0 - CURRENT_SAMPLE_SMOOTHING));      // compute new exponentially-smoothed current
+	#endif
 
 	// current overload and Signal is on
 	if (this->current > this->currentSampleMax && digitalRead(this->signalPin) == HIGH)

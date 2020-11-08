@@ -116,7 +116,7 @@ Programming on the Programming Track
   - write configuration variable bytes
   - set/clear specific configuration variable bits
   - read configuration variable bytes
-</pre><p>DCC++ BASE STATION is controlled with simple text commands received via the Arduino's serial interface. Users can type these commands directly into the Arduino IDE Serial Monitor, or can send such commands from another device or computer program. A <a class="el" href="classDCCpp.html">DCCpp</a> class can also send orders through methods without any text.</p>
+</pre><p>DCC++ BASE STATION is controlled with simple text commands received via the Arduino's serial interface. Users can type these commands directly into the Arduino IDE Serial Monitor, or can send such commands from another device or computer program.</p>
 <p>When compiled for the Arduino Mega, an Ethernet Shield can be used for network communications instead of using serial communications.</p>
 <p>DCC++ CONTROLLER, available separately under a similar open-source license, is a Java program written using the Processing library and Processing IDE that provides a complete and configurable graphic interface to control model train layouts via the DCC++ BASE STATION.</p>
 <p>With the exception of a standard 15V power supply that can be purchased in any electronics store, no additional hardware is required.</p>
@@ -142,21 +142,21 @@ Programming on the Programming Track
 <p>When configured as such, the CHANNEL A and CHANNEL B outputs of the Motor Shield may be connected directly to the tracks. This software assumes CHANNEL A is connected to the Main Operations Track, and CHANNEL B is connected to the Programming Track.</p>
 <p>DCC++ BASE STATION in split into multiple modules, each with its own header file:</p>
 <p>DCCpp_Uno: declares required global objects and contains initial Arduino setup() and Arduino loop() functions, as well as interrupt code for OC0B and OC1B. Also includes declarations of optional array of Turn-Outs and optional array of Sensors.</p>
-<p>TextCommand: contains methods to read and interpret text commands from the serial/Ethernet line, process those instructions, and, if necessary call appropriate <a class="el" href="structPacket.html">Packet</a> <a class="el" href="structRegisterList.html">RegisterList</a> methods to update either the Main Track or Programming Track <a class="el" href="structPacket.html">Packet</a> Registers. (old name SerialCommand).</p>
+<p><a class="el" href="structTextCommand.html">TextCommand</a>: contains methods to read and interpret text commands from the serial/Ethernet line, process those instructions, and, if necessary call appropriate <a class="el" href="structPacket.html">Packet</a> <a class="el" href="structRegisterList.html">RegisterList</a> methods to update either the Main Track or Programming Track <a class="el" href="structPacket.html">Packet</a> Registers. (old name SerialCommand).</p>
 <p>PacketRegister: contains methods to load, store, and update <a class="el" href="structPacket.html">Packet</a> Registers with DCC instructions.</p>
 <p><a class="el" href="structCurrentMonitor.html">CurrentMonitor</a>: contains methods to separately monitor and report the current drawn from CHANNEL A and CHANNEL B of the Arduino Motor Shield's, and shut down power if a short-circuit overload is detected.</p>
-<p>Turnout: contains methods to operate and store the status of any optionally-defined turnouts controlled by a DCC stationary accessory decoder. (old name Accessories).</p>
-<p>Sensor: contains methods to monitor and report on the status of optionally-defined infrared sensors embedded in the Main Track and connected to various pins on the Arduino Uno.</p>
+<p><a class="el" href="structTurnout.html">Turnout</a>: contains methods to operate and store the status of any optionally-defined turnouts controlled by a DCC stationary accessory decoder. (old name Accessories).</p>
+<p><a class="el" href="structSensor.html">Sensor</a>: contains methods to monitor and report on the status of optionally-defined infrared sensors embedded in the Main Track and connected to various pins on the Arduino Uno.</p>
 <p>Output: contains methods to configure one or more Arduino pins as an output for your own custom use.</p>
-<p>EEStore: contains methods to store, update, and load various DCC settings and status (e.g. the states of all defined turnouts) in the EEPROM for recall after power-up. </p><hr/>
+<p><a class="el" href="structEEStore.html">EEStore</a>: contains methods to store, update, and load various DCC settings and status (e.g. the states of all defined turnouts) in the EEPROM for recall after power-up. </p><hr/>
 <p>Complement of the documentation for this library:</p>
-<p>This library is a free interpretation of the Gregg's work to adapt it to a library, and minimize the needs to modify the library sources to use it. The only configuration still needed in .h file is to decide of the Ethernet interface model. It has been adapted to work also with Arduino Nano R3 on IDE 1.8.4 . </p>
+<p>This library is a free interpretation of the Gregg's work to adapt it to a library, and minimize the needs to modify the library sources to use it. The only configuration still needed in .h file is to decide of the Ethernet interface model. It has been adapted to work also with Arduino Nano R3 and ESP32 on IDE 1.8.4 . Aside from text commands, a <a class="el" href="classDCCpp.html">DCCpp</a> class can also send orders through methods without any text. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- Generated by DoxyPress 1.3.6 -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on sam. avr. 4 2020 13:37:48 for DCCpp &nbsp; by
+    <li class="footer">Generated on dim. nov. 8 2020 16:11:48 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.3.6 </li>
   </ul>

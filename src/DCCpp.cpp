@@ -18,6 +18,8 @@ CurrentMonitor DCCpp::progMonitor;  // create monitor for current on Program Tra
 
 bool DCCpp::programMode;
 bool DCCpp::panicStopped;
+bool DCCpp::IsPowerOnMain = false;
+bool DCCpp::IsPowerOnProg = false;
 byte DCCpp::ackThreshold = 0;
 
 // *********************************************************** FunctionsState
@@ -259,8 +261,8 @@ void DCCpp::showConfiguration()
 {
 	Serial.println(F("*** DCCpp LIBRARY ***"));
 
-	Serial.print(F("VERSION DCC++:      "));
-	Serial.println(VERSION);
+//	Serial.print(F("VERSION DCCpp:      "));
+//	Serial.println(VERSION);
 	Serial.println(F(DCCPP_LIBRARY_VERSION));
 	Serial.print(F("COMPILED:     "));
 	Serial.print(__DATE__);
@@ -393,13 +395,15 @@ void DCCpp::powerOn(bool inMain, bool inProg)
 	{
 		digitalWrite(DCCppConfig::SignalEnablePinProg, HIGH);
 		done = true;
+    IsPowerOnProg = true;
 	}
 
 	if (inMain && DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 	{
 		digitalWrite(DCCppConfig::SignalEnablePinMain, HIGH);
 		done = true;
-	}
+    IsPowerOnMain = true;
+  }
 
 	if (done)
 	{
@@ -417,11 +421,13 @@ void DCCpp::powerOff(bool inMain, bool inProg)
 	{
 		digitalWrite(DCCppConfig::SignalEnablePinProg, LOW);
 		done = true;
+    IsPowerOnProg = false;
 	}
 	if (inMain && DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN)
 	{
 		digitalWrite(DCCppConfig::SignalEnablePinMain, LOW);
 		done = true;
+    IsPowerOnMain = false;
 	}
 
 	if (done)
@@ -444,25 +450,17 @@ byte DCCpp::setAckThreshold(byte inNewValue)
 
 bool DCCpp::setThrottle(volatile RegisterList *inpRegs, int nReg,  int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward)
 {
-	int val = 0;
-
-	if (panicStopped)
-		val = 1;
-	else
-		if (inNewSpeed > 0)
-			val = map(inNewSpeed, 0, inStepsNumber, 2, 127);
-
 #ifdef DCCPP_DEBUG_MODE
-	Serial.print(F("DCCpp SetSpeed "));
-	Serial.print(inForward?inNewSpeed:-inNewSpeed);
-	Serial.print(F("/"));
-	Serial.print(inStepsNumber);
-	Serial.print(F(" (in Dcc "));
-	Serial.print(val);
-	Serial.println(F(" )"));
+  Serial.print(F("DCCpp SetSpeed for loco "));
+  Serial.print(inLocoId);
+  Serial.print(F(" : "));
+  Serial.print(inForward ? inNewSpeed : -inNewSpeed);
+  Serial.print(F("/"));
+  Serial.print(inStepsNumber);
+  Serial.println(F(" )"));
 #endif
 
-	inpRegs->setThrottle(nReg, inLocoId, val, inForward);
+	inpRegs->setThrottle(nReg, inLocoId, inNewSpeed, inForward);
 
 	return true;
 }
@@ -568,16 +566,26 @@ void DCCpp::setFunctions(volatile RegisterList *inpRegs, int nReg, int inLocoId,
 		}
 	}
 
-	if (flags & 1)
-		inpRegs->setFunction(nReg, inLocoId, oneByte1, -1);
-	if (flags & 2)
-		inpRegs->setFunction(nReg, inLocoId, twoByte1, -1);
-	if (flags & 4)
-		inpRegs->setFunction(nReg, inLocoId, threeByte1, -1);
-	if (flags & 8)
-		inpRegs->setFunction(nReg, inLocoId, 222, fourByte2);
-	if (flags & 16)
-		inpRegs->setFunction(nReg, inLocoId, 223, fiveByte2);
+  int b1 = 0, b2 = -1;
+
+  if (flags & 1)
+    b1 = oneByte1;
+  if (flags & 2)
+    b1 = twoByte1;
+  if (flags & 4)
+    b1 = threeByte1;
+  if (flags & 8)
+  {
+    b1 = 222;
+    b2 = fourByte2;
+  }
+  if (flags & 16)
+  {
+    b1 = 223;
+    b2 = fiveByte2;
+  }
+
+  inpRegs->setFunction(nReg, inLocoId, b1, b2);
 
 	inStates.statesSent();
 
@@ -611,22 +619,20 @@ int DCCpp::identifyLocoId(volatile RegisterList *inReg)
 	return(id);
 }
 
-void DCCpp::writeCv(volatile RegisterList *inReg, int inCv, byte inValue, int callBack, int callBackSub)
+bool DCCpp::writeCv(volatile RegisterList *inReg, int inCv, byte inValue, int callBack, int callBackSub)
 {
-	inReg->writeCVByte(inCv, inValue, callBack, callBackSub);
-
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("DCCpp WriteCv "));
 	Serial.print(inCv);
 	Serial.print(F(" : "));
 	Serial.println(inValue);
 #endif
+
+	return inReg->writeCVByte(inCv, inValue, callBack, callBackSub);
 }
 
 void DCCpp::setAccessory(int inAddress, byte inSubAddress, byte inActivate)
 {
-	mainRegs.setAccessory(inAddress, inSubAddress, inActivate);
-
 #ifdef DCCPP_DEBUG_MODE
 	Serial.print(F("DCCpp AccessoryOperation "));
 	Serial.print(inAddress);
@@ -635,6 +641,8 @@ void DCCpp::setAccessory(int inAddress, byte inSubAddress, byte inActivate)
 	Serial.print(F(" : "));
 	Serial.println(inActivate);
 #endif
+
+	mainRegs.setAccessory(inAddress, inSubAddress, inActivate);
 }
 
 #ifdef DCCPP_DEBUG_MODE

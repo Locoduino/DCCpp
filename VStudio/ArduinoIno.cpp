@@ -8,9 +8,9 @@
 //#include "../examples/Autotest/Autotest.ino"
 //#include "../examples/EthernetDcc/EthernetDcc.ino"
 //#include "../examples/EthernetDcc/WiFiDcc.ino"
-//#include "../examples/MaxiDcc/MaxiDcc.ino"
+#include "../examples/MaxiDcc/MaxiDcc.ino"
 //#include "../examples/MiniDcc/MiniDcc.ino"
-#include "../examples/SerialDcc/SerialDcc.ino"
+//#include "../examples/SerialDcc/SerialDcc.ino"
 //#include "../../..//TPC/DCC/DCC.ino"
 
 //#include "TestExe.ino"

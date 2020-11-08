@@ -35,9 +35,14 @@ struct CurrentMonitor{
 	@param pin	Attached pin. UNEFINED_PIN to inactivate this monitor.
 	@param inSignalPin	Pin to set LOW if a shortcut is detectexd.
   @param msg	Message to send to console when a smoothed current value greater than maximum is detected.
-  @param inSampleMax	Maximum value of the current. Default is 300.
+  @param inSampleMax	Maximum value of the current. Default is 300 for AVR, 800 for ESP32.
   */
-  void begin(int pin, int inSignalPin, const char *msg, float inSampleMax = 300);
+  void begin(int pin, int inSignalPin, const char *msg, float inSampleMax 
+	#if defined(ARDUINO_ARCH_ESP32)
+  	= 800);
+  #else
+  	= 300);
+	#endif
   /** Checks if sufficient time has elapsed since last update. Common to all monitors.
   */
   static boolean checkTime();

@@ -3,7 +3,9 @@ var NAVTREE =
   [ "DCCpp", "index.html", [
     [ "Configuration Lines", "commonPage.html", null ],
     [ "Revision History", "revPage.html", null ],
-    [ "Modules", "modules.html", null ],
+    [ "Modules", "modules.html", [
+      [ "Text Commands Syntax", "group__commandsGroup.html", null ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", [
         [ "CurrentMonitor", "structCurrentMonitor.html", [
@@ -17,6 +19,13 @@ var NAVTREE =
         ] ],
         [ "DCCpp", "classDCCpp.html", null ],
         [ "DCCppConfig", "structDCCppConfig.html", null ],
+        [ "EEStore", "structEEStore.html", null ],
+        [ "EEStoreData", "structEEStoreData.html", [
+          [ "id", "structEEStoreData.html#a516dfd28f9c5d3cd77951987315cbcb0", null ],
+          [ "nOutputs", "structEEStoreData.html#ac3b033a0ed58d0d3be8dbcadc7c9fd6e", null ],
+          [ "nSensors", "structEEStoreData.html#a1b65880b2aefcb0023ceeeff3be95188", null ],
+          [ "nTurnouts", "structEEStoreData.html#a9401ce4adea47949d4a3435f729c06fb", null ]
+        ] ],
         [ "FunctionsState", "classFunctionsState.html", [
           [ "FunctionsState", "classFunctionsState.html#add4c8d7abcd0f86a4cb923f4fab5bb8f", null ],
           [ "activate", "classFunctionsState.html#a46032879bee0942e4f93540db1d8a9f2", null ],
@@ -39,7 +48,7 @@ var NAVTREE =
         [ "RegisterList", "structRegisterList.html", [
           [ "RegisterList", "structRegisterList.html#add47b62e4420e83443e03dadb63f5445", null ],
           [ "buildBaseAcknowlegde", "structRegisterList.html#a8ae95645ad217c1ac99fa980cd530da1", null ],
-          [ "checkAcknowlegde", "structRegisterList.html#a28d79af27a2e6a84a13d034e2f76168c", null ],
+          [ "checkAcknowlegde", "structRegisterList.html#a6fafff00304576ee5aa366aa4474d57e", null ],
           [ "loadPacket", "structRegisterList.html#a40bf1ca556108987eb30fe99f19886a4", null ],
           [ "readCV", "structRegisterList.html#a9f2cc42535ed6909954651033ee28144", null ],
           [ "readCVmain", "structRegisterList.html#ab3895b85aeb0f01628dd96cfb486331b", null ],
@@ -48,9 +57,9 @@ var NAVTREE =
           [ "setAckThreshold", "structRegisterList.html#a968ee76cb89b4aff9f164b8f8da6ee0e", null ],
           [ "setFunction", "structRegisterList.html#a6783d019c914041fe4c8b8a911273773", null ],
           [ "setThrottle", "structRegisterList.html#ad2938b4410fb6746c9c8633092848a32", null ],
-          [ "writeCVBit", "structRegisterList.html#a12985892e0f3733e6f8fbc88d769e286", null ],
+          [ "writeCVBit", "structRegisterList.html#a41d22d89cf99e64cb740393e2f9810e2", null ],
           [ "writeCVBitMain", "structRegisterList.html#a260b8ea53c6667c7e3ac2d70aabd055a", null ],
-          [ "writeCVByte", "structRegisterList.html#a2429ef740892e49326bc70b8e32ab371", null ],
+          [ "writeCVByte", "structRegisterList.html#a70d2fe522578e3bc2c13ea3ff1b9cada", null ],
           [ "writeCVByteMain", "structRegisterList.html#a0a7f04d6c410d2c2bd10ccb135ecf6ad", null ],
           [ "writeTextPacket", "structRegisterList.html#a68f768bed1e99f774d8a1931ed4d27e1", null ],
           [ "currentBit", "structRegisterList.html#ac5be57bc687e293cee5f0e9e58c50843", null ],
@@ -63,6 +72,37 @@ var NAVTREE =
           [ "regMap", "structRegisterList.html#a34fb7f658b4b1f4c11f05e2bea0adb42", null ],
           [ "speedTable", "structRegisterList.html#a62f3bcf15062a981e6dc9fea9890f4d3", null ],
           [ "tempPacket", "structRegisterList.html#a6a87974dadffdd85e3bd21a4fb9c77df", null ]
+        ] ],
+        [ "Sensor", "structSensor.html", [
+          [ "begin", "structSensor.html#adcf987ab90ea531f8469ec25cbb14a85", null ],
+          [ "isActive", "structSensor.html#ac38a51e9e7aa634503dcd32830931fac", null ],
+          [ "set", "structSensor.html#a8bc88cdc22f1d5b2d67c1790dba8093f", null ],
+          [ "active", "structSensor.html#ad2dcd5fa3886a4a9c7a5261e1a3ddb51", null ],
+          [ "data", "structSensor.html#a4e4b92cf13d45726834a2e51c5b2ec74", null ],
+          [ "nextSensor", "structSensor.html#ad242559dd9ddbba6dbc463e06364d6ca", null ],
+          [ "signal", "structSensor.html#a03efc05452821e5fa4990bf6df365dba", null ]
+        ] ],
+        [ "SensorData", "structSensorData.html", [
+          [ "pin", "structSensorData.html#a38168d6e9536f80c0bd818ea7701bd35", null ],
+          [ "pullUp", "structSensorData.html#af6c7ef984646e6aa041bf96ff30198ed", null ],
+          [ "snum", "structSensorData.html#a8c649835983803786f3c862a3a213194", null ]
+        ] ],
+        [ "TextCommand", "structTextCommand.html", null ],
+        [ "Turnout", "structTurnout.html", [
+          [ "activate", "structTurnout.html#a0e04446b041e822c04ae98f185d8febf", null ],
+          [ "begin", "structTurnout.html#a3e39c675007579c6db294a0e1f57f39d", null ],
+          [ "inactivate", "structTurnout.html#a01b4e8e33fc8fca0458f20beee2f1ed5", null ],
+          [ "isActivated", "structTurnout.html#a8d2cd012d42732e65333fa80592a20fb", null ],
+          [ "set", "structTurnout.html#ab7d51e1b8aa3cf3a862e3b500be3a88c", null ],
+          [ "data", "structTurnout.html#a404b78691015f78baf8183b0db3dc5a2", null ],
+          [ "eepromPos", "structTurnout.html#a8899396b83282ac85ab7b02cc4f37a1d", null ],
+          [ "nextTurnout", "structTurnout.html#ab1de16672bf5e622f93dc0316a6dd532", null ]
+        ] ],
+        [ "TurnoutData", "structTurnoutData.html", [
+          [ "address", "structTurnoutData.html#a748ccb89448c3efd2b288d779ba231f4", null ],
+          [ "id", "structTurnoutData.html#a5a444c531b83c4aa95926a82b4c0f042", null ],
+          [ "subAddress", "structTurnoutData.html#ac5f5d5124dc7595c0717dd793031657a", null ],
+          [ "tStatus", "structTurnoutData.html#abc11a69999b966332b9d6f2314151ad1", null ]
         ] ]
       ] ],
       [ "Class Index", "classes.html", null ],
@@ -76,7 +116,13 @@ var NAVTREE =
       [ "File List", "files.html", [
         [ "src", "dir_d41d8cd98f00b204e9800998ecf8427e.html", [
           [ "DCCpp.h", "DCCpp_8h.html", [
-            [ "DCCPP_LIBRARY_VERSION", "DCCpp_8h.html#a8d9814dec9adda6df580a7f8fbebfa01", null ]
+            [ "DCCPP_LIBRARY_VERSION", "DCCpp_8h.html#a8d9814dec9adda6df580a7f8fbebfa01", null ],
+            [ "DCCPP_PRINT_DCCPP", "DCCpp_8h.html#a974da9ef1ab28fef455505016a3caa57", null ],
+            [ "USE_EEPROM", "DCCpp_8h.html#abd7d46fa3888b2e1bed34df076372b30", null ],
+            [ "USE_OUTPUT", "DCCpp_8h.html#a6f8d193bd84df6f05773b458355e7bd8", null ],
+            [ "USE_SENSOR", "DCCpp_8h.html#a22f58986dc11249373f6ee1d5fb50c0a", null ],
+            [ "USE_TEXTCOMMAND", "DCCpp_8h.html#ad7034344270036501578d215e708bc82", null ],
+            [ "USE_TURNOUT", "DCCpp_8h.html#a62257f60a9be8ccb699ec6f902c30630", null ]
           ] ]
         ] ]
       ] ]

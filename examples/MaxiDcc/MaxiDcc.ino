@@ -52,15 +52,25 @@ void setup()
 	buttonEncoder.begin(EVENT_ENCODER, 14, 8, 2);
 	buttonCancel.begin(EVENT_CANCEL, A3);
 	buttonEmergency.begin(EVENT_EMERGENCY, A4);
-	buttonF0.begin(EVENT_FUNCTION0, A1);
-	buttonF1.begin(EVENT_FUNCTION1, A2);
+#if defined(ARDUINO_ARCH_ESP32)
+  buttonF0.begin(EVENT_FUNCTION0, A5);
+  buttonF1.begin(EVENT_FUNCTION1, A6);
+#else
+  buttonF0.begin(EVENT_FUNCTION0, A1);
+  buttonF1.begin(EVENT_FUNCTION1, A2);
+#endif
 	buttonTurnout1.begin(EVENT_TURNOUT1, 30);
 	buttonTurnout2.begin(EVENT_TURNOUT2, 31);
 
 	DCCpp::begin();
-	// Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
+  // Configuration for my LMD18200. See the page 'Configuration lines' in the documentation for other samples.
+#if defined(ARDUINO_ARCH_ESP32)
+  DCCpp::beginMain(UNDEFINED_PIN, 33, 32, 36);
+  DCCpp::beginProg(UNDEFINED_PIN, 21, 22, 23);
+#else
 	DCCpp::beginMain(UNDEFINED_PIN, DCC_SIGNAL_PIN_MAIN, 11, A0);
 	DCCpp::beginProg(UNDEFINED_PIN, DCC_SIGNAL_PIN_PROG, 3, A1);
+#endif
 
 	locoId = 3;
 	locoStepsNumber = 128;
@@ -140,7 +150,6 @@ void loop()
 		DCCpp::setFunctionsMain(2, locoId, locoFunctions);
 		break;
 
-	case DCCINT(100, 0):
 	case EVENT_TURNOUT1:
 		if (turn1.isActivated())
 			turn1.inactivate();
@@ -148,7 +157,6 @@ void loop()
 			turn1.activate();
 		break;
 
-	case DCCINT(20, 0):
 	case EVENT_TURNOUT2:
 		if (turn2.isActivated())
 			turn2.inactivate();
@@ -159,4 +167,3 @@ void loop()
 		
 	}
 }
-

@@ -74,8 +74,8 @@ class DCCpp
 		static bool panicStopped;
 
 		static bool setThrottle(volatile RegisterList *inReg, int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward);
-		//static int readCv(volatile RegisterList *inReg, byte inCvId, int callBack = 100, int callBackSub = 200) { return inReg->readCV(inCvId, callBack, callBackSub); }
-		static void writeCv(volatile RegisterList *inReg, int inCvId, byte inCvValue, int callBack = 100, int callBackSub = 200);
+		//static int readCv(volatile RegisterList *inReg, int inCvId, int callBack = 100, int callBackSub = 200) { return inReg->readCV(inCvId, callBack, callBackSub); }
+		static bool writeCv(volatile RegisterList *inReg, int inCvId, byte inCvValue, int callBack = 100, int callBackSub = 200);
 		static int identifyLocoId(volatile RegisterList *inReg);
 		static void setFunctions(volatile RegisterList *inReg, int nReg, int inLocoId, FunctionsState &inStates);
 
@@ -84,7 +84,9 @@ class DCCpp
 		static volatile RegisterList mainRegs, progRegs;
 		static CurrentMonitor mainMonitor;
 		static CurrentMonitor progMonitor;
-	
+		static bool IsPowerOnMain;
+		static bool IsPowerOnProg;
+
 	public:
 		// begins
 		/** Begins the DCCpp library.
@@ -179,12 +181,22 @@ class DCCpp
 
 		// DCCpp global functions
 
-		/** Checks if the given RegisterList is from the main track or not.
+		/** Checks if the given RegisterList is for the main track or not.
 		@param apRegs RegisterList to check.
 		@return true if the RegisterList is mainRegs, the one from the main track.
 		*/
 		static bool IsMainTrack(volatile RegisterList *apRegs) { return apRegs == &mainRegs; }
 		
+		/** Checks if beginMain() has been called with the right arguments !
+		@return true if the main track is defined.
+		*/
+		static bool IsMainTrackDeclared() { return DCCppConfig::SignalEnablePinMain != UNDEFINED_PIN; }
+
+		/** Checks if beginProg() has been called with the right arguments !
+		@return true if the prog track is defined.
+		*/
+		static bool IsProgTrackDeclared() { return DCCppConfig::SignalEnablePinProg != UNDEFINED_PIN; }
+
 		/** Main loop function of the library.
 		*/
 		static void loop();
@@ -240,6 +252,7 @@ class DCCpp
 		@param inStepsNumber	According to the decoder configuration, set it to 14, 28 or 128 .
 		@param inNewSpeed	Speed of the loco, between 2 and the steps number - 1 (13, 27 or 127). 0 means normal complete stop. 1 means emergency stop.
 		@param inForward	True means forward move, false means backward.	
+		@return True if the value has been changed. At the moment, always return true...
 		*/
 		static inline bool setSpeedMain(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward) { return setThrottle(&(mainRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inForward); }
 
@@ -253,7 +266,7 @@ class DCCpp
 		@param inCvId	CV id from 0 to 255.
 		@param callBack		an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function. Default 100.
 		@param callBackSub	a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function. Default 200
-		@return CV value: the CV value if the value cannot be read.
+		@return CV value: the CV value or -1 if the value cannot be read.
 		*/
 		static inline int readCvMain(int inCvId, int callBack = 100, int callBackSub = 200) { return mainRegs.readCVmain(inCvId, callBack, callBackSub); }
 
@@ -267,7 +280,7 @@ class DCCpp
 		static inline void writeCvMain(int inCvId, byte inValue, int callBack = 100, int callBackSub = 200) { writeCv(&(mainRegs), inCvId, inValue, callBack, callBackSub); }
 
 		/** Set the functions states of the given decoder on the main track.
-		@param nReg	Register number. Avoid register 0, used for one shot commands like accessories or CV programming.
+		@param nReg	Register number. Original DCC++ use register 0 to send function states only a few times. DCCpp Can use any register to be able to send function packets repeatedly like the speed packets, 
 		@param inLocoId	Decoder address in short or long format.
 		@param inStates	FunctionsState class with the wanted new status.
 		*/
@@ -281,6 +294,7 @@ class DCCpp
 		@param inStepsNumber	According to the decoder configuration, set it to 14, 28 or 128 .
 		@param inNewSpeed	Speed of the loco, between 2 and the steps number - 1 (13, 27 or 127). 0 means normal complete stop. 1 means emergency stop.
 		@param inForward	True means forward move, false means backward.
+		@return True if the value has been changed. At the moment, always return true...
 		*/
 		static inline bool setSpeedProg(int nReg, int inLocoId, int inStepsNumber, int inNewSpeed, bool inForward) { return setThrottle(&(progRegs), nReg, inLocoId, inStepsNumber, inNewSpeed, inForward); }
 
@@ -294,7 +308,7 @@ class DCCpp
 		@param inCvId	CV id from 0 to 255.
 		@param callBack		an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function. Default 100.
 		@param callBackSub	a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function. Default 200
-		@return CV value: the CV value if the value cannot be read.
+		@return CV value: the CV value or -1 if the value cannot be read.
 		*/
 		static inline int readCvProg(int inCvId, int callBack = 100, int callBackSub = 200) { return progRegs.readCV(inCvId, callBack, callBackSub); }
 
@@ -303,11 +317,12 @@ class DCCpp
 		@param inValue	CV new value from 0 to 255.
 		@param callBack		an arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs that call this function. Default 100.
 		@param callBackSub	a second arbitrary integer (0-32767) that is ignored by the Base Station and is simply echoed back in the output - useful for external programs (e.g. DCC++ Interface) that call this function. Default 200
+		@return False if the writing have failed.
 		*/
-		static inline void writeCvProg(int inCvId, byte inValue, int callBack = 100, int callBackSub = 200) { writeCv(&(progRegs), inCvId, inValue, callBack, callBackSub); }
+		static inline bool writeCvProg(int inCvId, byte inValue, int callBack = 100, int callBackSub = 200) { return writeCv(&(progRegs), inCvId, inValue, callBack, callBackSub); }
 
 		/** Set the functions states of the given decoder on the programming track.
-		@param nReg	Register number. Avoid register 0, used for one shot commands like accessories or CV programming.
+		@param nReg	Register number. Original DCC++ use register 0 to send function states only a few times. DCCpp Can use any register to be able to send function packets repeatedly like the speed packets, 
 		@param inLocoId	Decoder address in short or long format.
 		@param inStates	FunctionsState class with the wanted new status.
 		*/

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['current',['current',['../structCurrentMonitor.html#a5d7913a8c985e532b36962d2088cb676',1,'CurrentMonitor']]],
-  ['currentsamplemax',['currentSampleMax',['../structCurrentMonitor.html#a12b999d776526131f8d008d3396589ff',1,'CurrentMonitor']]]
+  ['active',['active',['../structSensor.html#ad2dcd5fa3886a4a9c7a5261e1a3ddb51',1,'Sensor']]],
+  ['address',['address',['../structTurnoutData.html#a748ccb89448c3efd2b288d779ba231f4',1,'TurnoutData']]]
 ];

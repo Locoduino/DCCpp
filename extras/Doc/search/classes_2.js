@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['functionsstate',['FunctionsState',['../classFunctionsState.html',1,'']]]
+  ['eestore',['EEStore',['../structEEStore.html',1,'']]],
+  ['eestoredata',['EEStoreData',['../structEEStoreData.html',1,'']]]
 ];

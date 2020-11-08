@@ -116,9 +116,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>readCVraw</b> (int cv,
 <tr class="memitem:a8ae95645ad217c1ac99fa980cd530da1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ae95645ad217c1ac99fa980cd530da1"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>buildBaseAcknowlegde</b> (int inMonitorPin) volatile</td></tr>
 <tr class="separator:a8ae95645ad217c1ac99fa980cd530da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28d79af27a2e6a84a13d034e2f76168c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a28d79af27a2e6a84a13d034e2f76168c"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>checkAcknowlegde</b> (int inMonitorPin, int inBase) volatile</td></tr>
-<tr class="separator:a28d79af27a2e6a84a13d034e2f76168c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fafff00304576ee5aa366aa4474d57e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6fafff00304576ee5aa366aa4474d57e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkAcknowlegde</b> (int inMonitorPin, int inBase) volatile</td></tr>
+<tr class="separator:a6fafff00304576ee5aa366aa4474d57e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a968ee76cb89b4aff9f164b8f8da6ee0e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a968ee76cb89b4aff9f164b8f8da6ee0e"></a>
 byte&#160;</td><td class="memItemRight" valign="bottom"><b>setAckThreshold</b> (byte inNewValue)</td></tr>
 <tr class="separator:a968ee76cb89b4aff9f164b8f8da6ee0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,12 +140,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>readCV</b> (int cv, in
 <tr class="memitem:ab3895b85aeb0f01628dd96cfb486331b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab3895b85aeb0f01628dd96cfb486331b"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>readCVmain</b> (int cv, int callBack, int callBackSub) volatile</td></tr>
 <tr class="separator:ab3895b85aeb0f01628dd96cfb486331b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2429ef740892e49326bc70b8e32ab371"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2429ef740892e49326bc70b8e32ab371"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>writeCVByte</b> (int cv, int bValue, int callBack, int callBackSub) volatile</td></tr>
-<tr class="separator:a2429ef740892e49326bc70b8e32ab371"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12985892e0f3733e6f8fbc88d769e286"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a12985892e0f3733e6f8fbc88d769e286"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>writeCVBit</b> (int cv, int bNum, int bValue, int callBack, int callBackSub) volatile</td></tr>
-<tr class="separator:a12985892e0f3733e6f8fbc88d769e286"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70d2fe522578e3bc2c13ea3ff1b9cada"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a70d2fe522578e3bc2c13ea3ff1b9cada"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>writeCVByte</b> (int cv, int bValue, int callBack, int callBackSub) volatile</td></tr>
+<tr class="separator:a70d2fe522578e3bc2c13ea3ff1b9cada"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41d22d89cf99e64cb740393e2f9810e2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a41d22d89cf99e64cb740393e2f9810e2"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>writeCVBit</b> (int cv, int bNum, int bValue, int callBack, int callBackSub) volatile</td></tr>
+<tr class="separator:a41d22d89cf99e64cb740393e2f9810e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a7f04d6c410d2c2bd10ccb135ecf6ad"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0a7f04d6c410d2c2bd10ccb135ecf6ad"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>writeCVByteMain</b> (int cab, int cv, int bvalue) volatile</td></tr>
 <tr class="separator:a0a7f04d6c410d2c2bd10ccb135ecf6ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,8 +203,8 @@ static byte&#160;</td><td class="memItemRight" valign="bottom"><b>bitMask</b> []
 
 <p class="definition">Definition at line <a class="el" href="PacketRegister_8h_source.html#l00036">36</a> of file <a class="el" href="PacketRegister_8h_source.html">PacketRegister.h</a>.</p>
 </div><hr/>The documentation for this struct was generated from the following files:<ul>
-<li>D:/Mes documents/Trusty/Arduino/Libraries/DCCpp/src/<a class="el" href="PacketRegister_8h_source.html">PacketRegister.h</a></li>
-<li>D:/Mes documents/Trusty/Arduino/Libraries/DCCpp/src/<a class="el" href="PacketRegister_8cpp_source.html">PacketRegister.cpp</a></li>
+<li>D:/Documents/Arduino/Libraries/DCCpp/src/<a class="el" href="PacketRegister_8h_source.html">PacketRegister.h</a></li>
+<li>D:/Documents/Arduino/Libraries/DCCpp/src/<a class="el" href="PacketRegister_8cpp_source.html">PacketRegister.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -212,7 +212,7 @@ static byte&#160;</td><td class="memItemRight" valign="bottom"><b>bitMask</b> []
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structRegisterList.html">RegisterList</a></li>
-    <li class="footer">Generated on sam. avr. 4 2020 13:37:48 for DCCpp &nbsp; by
+    <li class="footer">Generated on dim. nov. 8 2020 16:11:48 for DCCpp &nbsp; by
     <a href="http://www.copperspice.com/documentation-doxypress.html">
     <img class="footer" src="doxypress.png" alt="DoxyPress"/></a> 1.3.6 </li>
   </ul>
